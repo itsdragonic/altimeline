@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Altimeline</title>
+  <link rel="shortcut icon" type="image/png" href="altimeline.png">
 </head>
 <body>
 <!DOCTYPE html>
@@ -12,9 +13,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Altimeline</title>
     <style>
+        @font-face {
+            font-family: "font";
+            src: url("font.ttf") format("truetype");
+        }
+
         body {
             text-align: center;
-            font-family: 'Lato', sans-serif;
+            font-family: "font", sans-serif;
+            font-size: 20px;
         }
 
         label {
@@ -74,17 +81,16 @@
             transition: transform 0.2s;
         }
     </style>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700">
 </head>
 <body>
     <div>
         <label for="seedInput">Seed:</label>
-        <input type="number" id="seedInput" placeholder="Enter seed">
+        <input type="text" id="seedInput" placeholder="Enter seed">
     </div>
     <div>
         <label for="timelineInput">Timeline:</label>
-        <input type="range" id="timelineInput" min="-2023" max="2023" value="0">
-        <span id="timelineValue">0</span>
+        <input type="range" id="timelineInput" min="-2023" max="2023" value="1">
+        <span id="timelineValue">1</span>
     </div>
     <div class="zoom_outer">
         <div id="zoom">
