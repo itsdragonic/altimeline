@@ -38,29 +38,37 @@
         }
 
         #zoom {
-            width: 100%;
-            height: 100%;
+            width: 800px;
+            height: 800px;
             transform-origin: 0px 0px;
-            transform: scale(1) translate(0px, 0px);
+            transform: scaleX(1) translate(0px, 0px) scaleY(1);
             cursor: grab;
+            position: relative;
+            padding: 5px;
             }
             div#zoom > img {
             width: 100%;
             height: auto;
-        }
-
-        .hover-text {
-            position: absolute;
-            display: none;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 5px;
-            border-radius: 3px;
-            pointer-events: none;
-            z-index: 1000;
+            transform-origin: top left;
         }
 
         #ocean {
             z-index: 1;
+        }
+
+        .nation-text {
+            position: absolute;
+            display: inline-block;
+            font-size: 10px;
+            transform: scaleY(1.1);
+            z-index: 1;
+            left: 10px;
+            top: 10px;
+
+            color: white;
+            padding: 1px;
+            border-radius: 4px;
+            text-shadow: -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000, 1px 1px 2px #000;
         }
 
         .pixelated {
@@ -99,9 +107,8 @@
             <img src="images/ocean.png" id="ocean" alt="Ocean Map">
         </div>
     </div>
-    <div class="hover-text">Text</div>
 </body>
 </html>
-  <script  src="./script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
