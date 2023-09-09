@@ -9,89 +9,42 @@ var events = {
       state: 1,
       strength: 23, // until -2000
       techecon: 2,
+
+      x: 1477,
+      y: 367,
+      size: 5,
     },
     "EGY": {
       name: "Egyptian Middle Kingdom",
       state: 1,
       strength: 1274, // until -749
       techecon: 2,
+
+      x: 1330,
+      y: 400,
+      size: 8,
     },
     "IRV": {
       name: "Indus Valley",
       state: 1,
       strength: 323, // until -1700
       techecon: 2,
+
+      x: 1682,
+      y: 443,
+      size: 5,
     },
     "CHI": {
       name: "Xia Dynasty",
       state: 1,
       strength: 5323,
-      techecon: 2,
+      techecon: 2, // until modern-day
+
+      x: 1883,
+      y: 365,
+      size: 10,
     },
   }
-}
-
-// Zooming in and out
-var scale = 1,
-panning = false,
-pointX = 0,
-pointY = 0,
-start = { x: 0, y: 0 },
-zoom = document.getElementById("zoom");
-
-function setTransform() {
-  zoom.style.transform = "translate(" + pointX + "px, " + pointY + "px) scale(" + scale + ")";
-}
-
-zoom.onmousedown = function (e) {
-e.preventDefault();
-start = { x: e.clientX - pointX, y: e.clientY - pointY };
-  panning = true;
-}
-
-zoom.onmouseup = function (e) {
-  panning = false;
-}
-
-zoom.onmousemove = function (e) {
-  e.preventDefault();
-  if (!panning) {
-    return;
-  }
-  pointX = (e.clientX - start.x);
-  pointY = (e.clientY - start.y);
-  setTransform();
-}
-zoom.onwheel = function (e) {
-  e.preventDefault();
-  var xs = (e.clientX - pointX) / scale,
-    ys = (e.clientY - pointY) / scale,
-    delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
-  (delta > 0) ? (scale *= 1.2) : (scale /= 1.2);
-  pointX = e.clientX - xs * scale;
-  pointY = e.clientY - ys * scale;
-
-  if (scale > 3) {
-    
-    // Add a CSS class for pixelation when zoomed in
-    document.getElementById("zoom").classList.add("pixelated");
-    
-    // Add a pixelation class to all images
-    const images = document.querySelectorAll("img.above-layer");
-    images.forEach((img) => {
-      img.classList.add("pixelated");
-    });
-  } else {
-    // Remove the pixelation CSS class when not zoomed in
-    document.getElementById("zoom").classList.remove("pixelated");
-    
-    // Remove the pixelation class from all images
-    const images = document.querySelectorAll("img.above-layer");
-    images.forEach((img) => {
-      img.classList.remove("pixelated");
-    });
-  }
-  setTransform();
 }
 
 var deviation = 0.9;
@@ -109,12 +62,16 @@ function seededRandom(seed) {
 }
 const rng = seededRandom(seed);
 
-function addCountry(id,names,year,states,strengths,technecons) {
+function addCountry(id,name,year,state,strength,technecon,x,y,size) {
   events[year][id] = {
-    name: names,
-    state: states,
-    strength: strengths,
-    techecon: technecons,
+    name: name,
+    state: state,
+    strength: strength,
+    techecon: technecon,
+
+    x: x,
+    y: y,
+    size: size,
   };
 }
 
@@ -132,7 +89,7 @@ function calculateEvents() {
       events[prevYear]["EGY"].state = 2;
     }
     if (year == -1994) {
-      addCountry("MES","Mesopotamian Civilizations",year,1,2050,5);
+      addCountry("MES","Mesopotamian Civilizations",year,1,1450,5,1400,372,5);
     }
     if (year == -1720) {
       events[prevYear]["EGY"].state = 1;
@@ -158,13 +115,10 @@ function calculateEvents() {
       events[prevYear]["MES"].state = 3;
     }
     if (year == -845) {
-      addCountry("GRE","Greek Kingdoms",year,1,750,5);
+      addCountry("GRE","Greek Kingdoms",year,1,750,5,1400,335,5);
     }
     if (year == -810) {
-      addCountry("CAR","Carthage",year,1,750,5);
-    }
-    if (year == -770) {
-      addCountry("GRE","Greek Kingdoms",year,1,750,5);
+      addCountry("CAR","Carthage",year,1,750,5,1198,345);
     }
     if (year == -670) {
       events[prevYear]["CAR"].state = 2;
@@ -172,12 +126,12 @@ function calculateEvents() {
     if (year == -615) {
     }
     if (year == -589) {
-      addCountry("IND","Indian Kingdoms",year,1,3250,5);
+      addCountry("IND","Indian Kingdoms",year,1,3250,5,1701,434,8);
       events[prevYear]["CHI"].name = "Chinese Warring Kingdoms";
       events[prevYear]["CHI"].state = 3;
     }
     if (year == -546) {
-      addCountry("PER","Achaemenid Empire",year,1,250,5);
+      addCountry("PER","Achaemenid Empire",year,1,250,5,1543,378,7);
     }
     if (year == -520) {
       events[prevYear]["PER"].state = 2;
@@ -186,7 +140,7 @@ function calculateEvents() {
       events[prevYear]["GRE"].state = 2;
     }
     if (year == -385) {
-      addCountry("ABY","Axumite Empire",year,1,1500,5);
+      addCountry("ABY","Axumite Empire",year,1,1500,5,1480,510,5);
       events[prevYear]["GRE"].state = 3;
     }
     if (year == -341) {
@@ -197,8 +151,8 @@ function calculateEvents() {
       events[prevYear]["GRE"].state = 5;
     }
     if (year == -330) {
-      addCountry("ROM","Roman Empire",year,1,900,6);
-      addCountry("KOR","Korea",year,1,2250,5);
+      addCountry("ROM","Roman Empire",year,1,900,6,1257,330,12);
+      addCountry("KOR","Korea",year,1,2250,5,2070,350,5);
     }
     if (year == -319) {
       events[prevYear]["GRE"].name = "Hellenic Kingdoms";
@@ -219,6 +173,9 @@ function calculateEvents() {
       events[prevYear]["ROM"].state = 4;
       events[prevYear]["PER"].state = 4;
       events[prevYear]["PER"].name = "Sassanid Empire";
+    }
+    if (year == -206) {
+      events[prevYear]["CHI"].name = "Han Dynasty";
     }
     if (year == -198) {
       events[prevYear]["ROM"].state = 5;
@@ -248,7 +205,7 @@ function calculateEvents() {
     }
 
     if (year == 250) {
-      addCountry("JAP","Japan",year,1,3500,5);
+      addCountry("JAP","Japan",year,1,3500,5,2150,350,8);
     }
     if (year == 300) {
       addCountry("GHA","Ghana Empire",year,1,1050,5);
@@ -645,75 +602,77 @@ function calculateEvents() {
         state: prevNation.state,
         strength: updatedStrength,
         techecon: prevNation.techecon,
+
+        x: prevNation.x,
+        y: prevNation.y,
+        size: prevNation.size,
       };
     }
   }
 }
 calculateEvents();
 
-function isPixelTransparent(imagePath, x, y) {
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
+// Zooming in and out
+var scale = 1,
+panning = false,
+pointX = 0,
+pointY = 0,
+additionalScaleY = 1;
+start = { x: 0, y: 0 },
+zoom = document.getElementById("zoom");
 
-  const image = new Image();
-  image.src = imagePath;
-
-  return new Promise((resolve, reject) => {
-    image.onload = () => {
-      canvas.width = image.width;
-      canvas.height = image.height;
-
-      ctx.drawImage(image, 0, 0);
-      const pixelData = ctx.getImageData(x, y, 1, 1).data;
-
-      const isTransparent = pixelData[3] === 0;
-      resolve(isTransparent);
-    };
-
-    image.onerror = () => {
-      reject(new Error("Failed to load the image."));
-    };
-  });
+function setTransform() {
+  zoom.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale}) scaleY(${additionalScaleY})`;
 }
 
-/*   isPixelTransparent(imagePath, mouseX, mouseY)
-  .then((result) => {
-    if (result) {
-      console.log(`Pixel (${mouseX},${mouseY}) is transparent.`);
-    } else {
-      console.log(`Pixel (${mouseX},${mouseY}) is not transparent.`);
-    }
-  })
-  .catch((error) => {
-    console.error(error);
-  });*/
+zoom.onmousedown = function (e) {
+  e.preventDefault();
+  start = { x: e.clientX - pointX, y: e.clientY - pointY };
+  panning = true;
+}
+
+zoom.onmouseup = function (e) {
+  panning = false;
+}
+
+zoom.onmousemove = function (e) {
+  e.preventDefault();
+  if (!panning) {
+    return;
+  }
+  pointX = (e.clientX - start.x);
+  pointY = (e.clientY - start.y);
+  setTransform();
+}
+zoom.onwheel = function (e) {
+  e.preventDefault();
+  var xs = (e.clientX - pointX) / scale,
+    ys = (e.clientY - pointY) / scale,
+    delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
+  (delta > 0) ? (scale *= 1.2) : (scale /= 1.2);
+  pointX = e.clientX - xs * scale;
+  pointY = e.clientY - ys * scale;
   
-// Hovering Text
-var hover = "";
-const corner = document.getElementById('map');
-const hoverText = document.querySelector('.hover-text');
-
-corner.addEventListener('mousemove', (event) => {
-  hoverText.style.left = `${event.clientX}px`;
-  hoverText.style.top = `${event.clientY + 10}px`;
-  
-  // Hover Text
-  const clickArea = document.getElementById('map');
-  const mouseX = event.clientX - clickArea.getBoundingClientRect().left;
-  const mouseY = event.clientY - clickArea.getBoundingClientRect().top;
-  console.log("test");
-
-  hoverText.textContent = hover;
-});
-
-corner.addEventListener('mouseenter', () => {
-  hoverText.style.left = '0';
-  hoverText.style.top = '0';
-});
-
-corner.addEventListener('mouseleave', () => {
-  hoverText.style.left = '-9999px';
-});
+  if (scale > 3) {
+    zoom.classList.add("pixelated");
+    
+    const images = document.querySelectorAll("img.above-layer");
+    images.forEach((img) => {
+      img.classList.add("pixelated");
+    });
+    
+    additionalScaleY = 0.8;
+  } else {
+    document.getElementById("zoom").classList.remove("pixelated");
+    
+    const images = document.querySelectorAll("img.above-layer");
+    images.forEach((img) => {
+      img.classList.remove("pixelated");
+    });
+    additionalScaleY = 1;
+  }
+  setTransform();
+}
 
 function swapItems(arr, name1, name2) {
   const index1 = arr.indexOf(name1);
@@ -739,10 +698,16 @@ function updateCountries() {
     nations.push(nation);
   }
 
+  // Delete images and text
   const imagesToDelete = document.querySelectorAll("img.above-layer");
   imagesToDelete.forEach((img) => {
     img.parentNode.removeChild(img);
   });
+
+  const textToDelete = document.querySelectorAll(".nation-text");
+  textToDelete.forEach((a) => {
+    a.parentNode.removeChild(a);
+  })
 
   swapItems(nations,"FRK","ROM");
   swapItems(nations,"GTH","ROM");
@@ -761,7 +726,7 @@ function updateCountries() {
   swapItems(nations,"FGU","POR");
   swapItems(nations,"CAN","USA");
   swapItems(nations,"MEX","CEN");
-
+  
   for (let i = 0; i < nations.length; i++) {
     if (events[timeline][nations[i]].strength > 0) {
       const img = document.createElement("img");
@@ -769,12 +734,24 @@ function updateCountries() {
       img.alt = events[timeline][nations[i]].name;
       img.classList.add("above-layer");
 
+      const txt = document.createElement("a");
+      txt.textContent = events[timeline][nations[i]].name;
+
+      txt.style.left = (events[timeline][nations[i]].x/3.125 - 20) + "px";
+      txt.style.top = (events[timeline][nations[i]].y/2.667) + "px";
+      txt.style.fontSize = events[timeline][nations[i]].size + "px";
+      txt.classList.add("nation-text");
+      zoom.appendChild(txt);
+
       // Apply a CSS filter based on the condition
       if (timeline > -321 && timeline < -180 && nations[i] === "IND") {
         img.style.filter = "hue-rotate(195deg) brightness(350%)";
       }
       if (timeline >= 1822 && nations[i] === "BRA") {
         img.style.filter = "hue-rotate(260deg) brightness(120%)";
+      }
+      if (timeline >= 1867 && nations[i] === "CAN") {
+        img.style.filter = "hue-rotate(30deg)";
       }
 
       // Update background images
@@ -795,7 +772,7 @@ function updateCountries() {
         backgroundImage.src = "images/1450bg.png";
       }
 
-      document.getElementById("zoom").appendChild(img);
+      zoom.appendChild(img);
     }
   }
 }
@@ -808,4 +785,15 @@ timelineInput.addEventListener('input', () => {
 
   updateCountries();
   //console.log(nations);
+});
+
+// Display/hide nation names
+document.addEventListener('keypress', function(event) {
+  if (event.key === 'n' || event.key === 'N') {
+    const nationTextElements = document.querySelectorAll('.nation-text');
+
+    nationTextElements.forEach(function(element) {
+      element.style.display = element.style.display === 'none' ? 'block' : 'none';
+    });
+  }
 });
