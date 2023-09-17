@@ -14,13 +14,37 @@
     <title>Altimeline</title>
     <style>
         @font-face {
-            font-family: "font";
+            font-family: "carolingia";
             src: url("font.ttf") format("truetype");
+        }
+
+        @keyframes pulsate {
+            0% {
+                text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.5), 1px -1px 2px rgba(0, 0, 0, 0.5), -1px 1px 2px rgba(0, 0, 0, 0.5), 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                text-shadow: -1px -1px 2px rgba(0, 0, 0, 1), 1px -1px 2px rgba(0, 0, 0, 1), -1px 1px 2px rgba(0, 0, 0, 1), 1px 1px 2px rgba(0, 0, 0, 1);
+            }
+            100% {
+                text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.5), 1px -1px 2px rgba(0, 0, 0, 0.5), -1px 1px 2px rgba(0, 0, 0, 0.5), 1px 1px 2px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        @keyframes pulsate2 {
+            0% {
+                text-shadow: -2px -2px 4px rgba(255, 255, 255, 0.5), 2px -2px 4px rgba(255, 255, 255, 0.5), -2px 2px 4px rgba(255, 255, 255, 0.5), 2px 2px 4px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                text-shadow: -2px -2px 4px rgba(255, 255, 255, 1), 2px -2px 4px rgba(255, 255, 255, 1), -2px 2px 4px rgba(255, 255, 255, 1), 2px 2px 4px rgba(255, 255, 255, 1);
+            }
+            100% {
+                text-shadow: -2px -2px 4px rgba(255, 255, 255, 0.5), 2px -2px 4px rgba(255, 255, 255, 0.5), -2px 2px 4px rgba(255, 255, 255, 0.5), 2px 2px 4px rgba(255, 255, 255, 0.5);
+            }
         }
 
         body {
             text-align: center;
-            font-family: "font", sans-serif;
+            font-family: "carolingia", sans-serif;
             font-size: 20px;
         }
 
@@ -31,10 +55,24 @@
 
         input[type="number"],
         input[type="range"] {
-            z-index: 1;
+            z-index: 2;
             width: 90%;
             padding: 5px;
             margin: 5px;
+            position: relative;
+        }
+
+        #timeline {
+            position: relative;
+            z-index: 2;
+            animation: pulsate2 2.5s infinite;
+            font-size: 25px;
+        }
+        #timelineValue {
+            position: relative;
+            z-index: 2;
+            animation: pulsate2 2.5s infinite;
+            font-size: 25px;
         }
 
         #zoom {
@@ -60,19 +98,25 @@
             position: absolute;
             display: inline-block;
             font-size: 10px;
-            transform: scaleY(1.1);
+            transform: skewX(0deg) scaleY(1.1);
             z-index: 1;
-            left: 10px;
+            left: -900px;
             top: 10px;
 
             color: white;
             padding: 1px;
             border-radius: 4px;
-            text-shadow: -1px -1px 2px #000, 1px -1px 2px #000, -1px 1px 2px #000, 1px 1px 2px #000;
+            animation: pulsate 2.5s infinite;
         }
 
         .pixelated {
             image-rendering: pixelated;
+        }
+
+        #overlay {
+            position: absolute;
+            z-index: 1;
+            opacity: 0.25;
         }
 
         img {
@@ -96,8 +140,8 @@
         <input type="text" id="seedInput" placeholder="Enter seed">
     </div>
     <div>
-        <label for="timelineInput">Timeline:</label>
-        <input type="range" id="timelineInput" min="-2023" max="2023" value="1">
+        <label id="timeline" for="timelineInput">Timeline:</label>
+        <input type="range" id="timelineInput" min="-2024" max="2022" value="1">
         <span id="timelineValue">1</span>
     </div>
     <div class="zoom_outer">
@@ -105,10 +149,12 @@
             <img src="images/world.png" id="map" alt="World Map">
             <img src="images/-2023bg.png" id="bg" alt="background">
             <img src="images/ocean.png" id="ocean" alt="Ocean Map">
+            <img src="images/transparent.png" id="overlay" alt="World Map">
         </div>
     </div>
 </body>
 </html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
   <script src="./script.js"></script>
 </body>
 </html>
