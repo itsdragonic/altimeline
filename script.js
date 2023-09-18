@@ -52,7 +52,9 @@ var events = {
 var startingEvents = events;
 
 // RNG Events
-var veryUnlikely = 0.10,
+var impossible = 0.01
+superUnlikely = 0.05;
+veryUnlikely = 0.10,
 unlikely = 0.20,
 uncommon = 0.35,
 possible = 0.50,
@@ -62,6 +64,7 @@ Default = 1;
 
 var rngEvents = {
   "Ukraine_War": 1,
+  "South_Sudan": 1,
   "Breakup_of_Yugoslavia": 1,
 }
 
@@ -1728,6 +1731,7 @@ function calculateEvents() {
     if (year == 1993) {
       events[prevYear]["ABY"].state = 5;
       events[prevYear]["CZE"].state = 5;
+      events[prevYear]["CZE"].name = "Czechia Slovakia";
     }
     if (year == 1995) {
       if (RNG("Breakup_of_Yugoslavia",year) <= unlikely) {
@@ -1747,7 +1751,11 @@ function calculateEvents() {
       }
     }
     if (year == 2011) {
-      events[prevYear]["KSH"].state = 4;
+      if (RNG("South_Sudan",year) <= unlikely) {
+        events[prevYear]["KSH"].strength += 10;
+      } else if (RNG("South_Sudan",year) <= Default) {
+        events[prevYear]["KSH"].state = 4;
+      }
     }
     if (year == 2014) {
       events[prevYear]["UKR"].state = 2;
@@ -1757,7 +1765,9 @@ function calculateEvents() {
     }
     if (year == 2023) {
       // Ukraine War
-      if (RNG("Ukraine_War",year) <= veryUnlikely) {
+      if (RNG("Ukraine_War",year) <= superUnlikely) {
+        events[prevYear]["UKR"].strength = 0;
+      } else if (RNG("Ukraine_War",year) <= veryUnlikely) {
         events[prevYear]["UKR"].state = 4;
         events[prevYear]["UKR"].name = "";
       } else if (RNG("Ukraine_War",year) <= unlikely) {
@@ -1794,9 +1804,9 @@ function calculateEvents() {
 calculateEvents();
 
 // Zooming in and out
-var scale = 1.75,
+var scale = 1.2,
 panning = false,
-pointX = 0,
+pointX = 10,
 pointY = 0,
 additionalScaleY = 1,
 skew = 0,
@@ -1900,6 +1910,12 @@ function endItem(arr, phrase) {
 const seedInput = document.getElementById('seedInput');
 const timelineInput = document.getElementById('timelineInput');
 const timelineValue = document.getElementById('timelineValue');
+
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = 2560;
+canvas.height = 1297;
 
 // Display countries on map
 function updateCountries() {
@@ -2007,10 +2023,14 @@ function updateCountries() {
   
   for (let i = 0; i < nations.length; i++) {
     if (events[timeline][nations[i]].strength > 0) {
-      const img = document.createElement("img");
-      img.src = `images/${nations[i]}/${nations[i]+events[timeline][nations[i]].state}.png`;
-      img.alt = events[timeline][nations[i]].name;
-      img.classList.add("above-layer");
+      const img = new Image();
+      img.src = `images/${nations[i]}/${nations[i] + events[timeline][nations[i]].state}.png`;
+      
+      /*
+      img.onload = function() {
+        ctx.drawImage(img, 0, 0, 2560, 1297);
+      };
+      */
 
       const txt = document.createElement("a");
       txt.textContent = events[timeline][nations[i]].name;
@@ -2188,34 +2208,29 @@ timelineInput.addEventListener('input', () => {
 });
 
 // Display / hide nation names
-document.addEventListener('keypress', function(event) {
-  if (event.ctrlKey && event.shiftKey && event.key === "N") {
-    const nationTextElements = document.querySelectorAll('.nation-text');
+function showNames() {
+  const nationTextElements = document.querySelectorAll('.nation-text');
 
-    nationTextElements.forEach(function(element) {
-      element.style.display = element.style.display === 'none' ? 'block' : 'none';
-    });
-  }
-});
+  nationTextElements.forEach(function(element) {
+    element.style.display = element.style.display === 'none' ? 'block' : 'none';
+  });
+}
 
 // Physical map option
 const mapImage = document.getElementById("map");
 const oceanImage = document.getElementById("ocean");
 const overlayImage = document.getElementById("overlay");
-
 let isMapShown = true;
 
-document.addEventListener("keydown", (event) => {
-  if (event.ctrlKey && event.shiftKey && event.key === "M") {
-    if (isMapShown) {
-      mapImage.src = "images/map2.png";
-      oceanImage.src = "images/ocean2.png";
-      overlayImage.src = "images/map2.png";
-    } else {
-      mapImage.src = "images/world.png";
-      oceanImage.src = "images/ocean.png";
-      overlayImage.src = "images/transparent.png";
-    }
-    isMapShown = !isMapShown;
+function showMap() {
+  if (isMapShown) {
+    mapImage.src = "images/map2.png";
+    oceanImage.src = "images/ocean2.png";
+    overlayImage.src = "images/map2.png";
+  } else {
+    mapImage.src = "images/world.png";
+    oceanImage.src = "images/ocean.png";
+    overlayImage.src = "images/transparent.png";
   }
-});
+  isMapShown = !isMapShown;
+}
