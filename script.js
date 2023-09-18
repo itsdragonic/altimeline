@@ -1794,7 +1794,7 @@ function calculateEvents() {
 calculateEvents();
 
 // Zooming in and out
-var scale = 1.2,
+var scale = 1.75,
 panning = false,
 pointX = 0,
 pointY = 0,
