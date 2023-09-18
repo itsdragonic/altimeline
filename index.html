@@ -132,6 +132,53 @@
             max-width: 100%;
             transition: transform 0.2s;
         }
+        
+        .button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 999;
+        }
+
+        .emoji-button {
+            background-color: #FEFEFE;
+            border: 1px solid lightgray;
+            border-radius: 25%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+
+        .emoji-button:hover {
+            background-color: lightgray;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 14px;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .emoji-button:hover .tooltip {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -151,6 +198,17 @@
             <img src="images/ocean.png" id="ocean" alt="Ocean Map">
             <img src="images/transparent.png" id="overlay" alt="World Map">
         </div>
+    </div>
+
+    <div class="button-container">
+        <button class="emoji-button" id="eye-button" onclick="showNames()">
+          👁️
+          <span class="tooltip">Display Names</span>
+        </button>
+        <button class="emoji-button" id="earth-button" onclick="showMap()">
+          🌎
+          <span class="tooltip">Show Physical Map</span>
+        </button>
     </div>
 </body>
 </html>
