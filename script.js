@@ -2025,6 +2025,7 @@ function updateCountries() {
     if (events[timeline][nations[i]].strength > 0) {
       const img = new Image();
       img.src = `images/${nations[i]}/${nations[i] + events[timeline][nations[i]].state}.png`;
+      img.classList.add("above-layer");
       
       /*
       img.onload = function() {
