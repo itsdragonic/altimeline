@@ -3,7 +3,7 @@ var timeline = 1;
 var nations = [];
 
 var events = {
-  "-2023": {
+  "-2024": {
     "NSE": {
       name: "Neo-Sumerian Empire",
       state: 1,
@@ -50,6 +50,7 @@ var events = {
   }
 }
 var startingEvents = events;
+var showText = true;
 
 // RNG Events
 var impossible = 0.01
@@ -96,7 +97,7 @@ function addCountry(id,name,year,state,strength,technecon,x,y,size) {
 
 function calculateEvents() {
   events = startingEvents;
-  for (let year = -2022; year <= 2023; year ++) {
+  for (let year = -2023; year <= 2023; year ++) {
     let prevYear = year - 1;
     events[year] = {};
 
@@ -1856,13 +1857,17 @@ zoom.onwheel = function (e) {
     
     additionalScaleY = 0.8;
     skew = -1;
+
     if (scale > 17) {
-      if (pointX > -3500) {
-        skew = 8;
+      showNames("stop");
+      if (pointX > -5000) {
+        skew = 10;
       } else {
-        skew = -8;
+        skew = -10;
       }
-    } 
+    } else {
+      showNames("e");
+    }
   } else {
     document.getElementById("zoom").classList.remove("pixelated");
     
@@ -1873,6 +1878,7 @@ zoom.onwheel = function (e) {
 
     additionalScaleY = 1;
     skew = 0;
+    showNames("e");
   }
   setTransform();
 }
@@ -2026,12 +2032,6 @@ function updateCountries() {
       const img = new Image();
       img.src = `images/${nations[i]}/${nations[i] + events[timeline][nations[i]].state}.png`;
       img.classList.add("above-layer");
-      
-      /*
-      img.onload = function() {
-        ctx.drawImage(img, 0, 0, 2560, 1297);
-      };
-      */
 
       const txt = document.createElement("a");
       txt.textContent = events[timeline][nations[i]].name;
@@ -2142,6 +2142,7 @@ function updateCountries() {
       zoom.appendChild(img);
     }
   }
+  showNames("e");
 }
 updateCountries();
 
@@ -2209,12 +2210,20 @@ timelineInput.addEventListener('input', () => {
 });
 
 // Display / hide nation names
-function showNames() {
+function showNames(txt) {
+  if (txt == undefined) {
+    showText = !showText;
+  }
   const nationTextElements = document.querySelectorAll('.nation-text');
-
-  nationTextElements.forEach(function(element) {
-    element.style.display = element.style.display === 'none' ? 'block' : 'none';
-  });
+  if (txt == 'stop') {
+    nationTextElements.forEach(function(element) {
+      element.style.display = 'none';
+    });
+  } else {
+    nationTextElements.forEach(function(element) {
+      element.style.display = showText ? 'block' : 'none';
+    });
+  }
 }
 
 // Physical map option
