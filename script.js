@@ -1110,7 +1110,7 @@ function calculateEvents() {
       events[prevYear]["GER"].state = 4;
       events[prevYear]["AUS"].state = 7;
     }
-    if (year == 1776) {
+    if (year == 1775) {
       addCountry("USA","United States of America",year,1,3250,6 ,706,343,11);
       events[prevYear]["CAN"].x = 630;
       events[prevYear]["CAN"].y = 240;
@@ -1172,6 +1172,9 @@ function calculateEvents() {
       addCountry("HAI","Haiti",year,1,700,6 ,740,480,4);
       addCountry("DOM","Dom. Rep.",year,1,700,6 ,760,490,4);
       addCountry("GUY","British Guiana",year,1,3250,6 ,840,550,4);
+    }
+    if (year == 1806) {
+      events[prevYear]["HRE"].name = "";
     }
     if (year == 1811) {
       addCountry("ARG","Argentina",year,1,3250,6 ,793,810,7);
@@ -2005,6 +2008,7 @@ function updateCountries() {
   endItem(nations, "HUN");
 
   frontItem(nations, "SWI");
+  frontItem(nations, "DUT");
   frontItem(nations, "BEL");
   frontItem(nations, "LIT");
   frontItem(nations, "RAJ");
@@ -2142,7 +2146,11 @@ function updateCountries() {
       zoom.appendChild(img);
     }
   }
-  showNames("e");
+  if (scale > 17) {
+    showNames("stop");
+  } else {
+    showNames("e");
+  }
 }
 updateCountries();
 
