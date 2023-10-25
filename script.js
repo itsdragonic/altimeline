@@ -3211,7 +3211,7 @@ canvas.height = 1297;
 const mapImage = document.getElementById("map");
 const oceanImage = document.getElementById("ocean");
 const overlayImage = document.getElementById("overlay");
-let isMapShown = true;
+let isMapShown = false;
 
 // Display countries on map
 function updateCountries() {
@@ -3765,6 +3765,7 @@ function showMap() {
   }
   isMapShown = !isMapShown;
 }
+showMap();
 
 // Achievements Modal
 const achievementsButton = document.getElementById("achievements-button");
