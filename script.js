@@ -14,7 +14,7 @@
       Image Editor: https://pixlr.com/e/#editor
       File Transfer: https://docstransfer.com
 
- //////////////////////////////////////////////////////////////*/
+////////////////////////////////////////////////////////////// */
 
 var seed = 0;
 var timeline = 1;
@@ -3815,7 +3815,8 @@ function grabData(url,val1,val2) {
 // Shared seeds
 var url = window.location.href;
 
-seedInput.value = grabData(url,'?seed=','?year=');
+seed = grabData(url,'?seed=','?year=');
+seedInput.value = seed;
 timelineInput.value = parseInt(grabData(url,'?year=','?seed='));
 timelineValue.textContent = parseInt(timelineInput.value);
 timeline = parseInt(timelineInput.value);
