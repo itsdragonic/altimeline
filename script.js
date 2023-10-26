@@ -3803,16 +3803,16 @@ function calcSeed(val) {
   //console.log(rngEvents);
 }
 
+// Shared seeds
 var url = window.location.href;
+const searchParams = new URLSearchParams(url);
 
-var parts = url.split('/');
-var seed = parts[parts.length - 1];
+if (searchParams.has('seed')) {
+  const seed = searchParams.get('seed');
 
-if (seed == "index.html" || seed == "altimeline") {
-  seed = "";
+  seedInput.value = seed;
+  calcSeed(seed);
 }
-seedInput.value = seed;
-calcSeed(seed);
 
 // Add event listeners
 seedInput.addEventListener("input", function (event) {
