@@ -3803,13 +3803,22 @@ function calcSeed(val) {
   //console.log(rngEvents);
 }
 
+function grabData(url,val1,val2) {
+  let foo = url.split(val1);
+
+  let foo1 = foo[1];
+  foo2 = foo1.split(val2);
+
+  return foo2[0]
+}
+
 // Shared seeds
 var url = window.location.href;
 
-var parts = url.split('?seed=');
-var seed = parts[parts.length - 1];
-
-seedInput.value = seed;
+seedInput.value = grabData(url,'?seed=','?year=');
+timelineInput.value = parseInt(grabData(url,'?year=','?seed='));
+timelineValue.textContent = parseInt(timelineInput.value);
+timeline = parseInt(timelineInput.value);
 calcSeed(seed);
 
 // Add event listeners
