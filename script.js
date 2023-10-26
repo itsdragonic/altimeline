@@ -3805,14 +3805,12 @@ function calcSeed(val) {
 
 // Shared seeds
 var url = window.location.href;
-const searchParams = new URLSearchParams(url);
 
-if (searchParams.has('seed')) {
-  const seed = searchParams.get('seed');
+var parts = url.split('?seed=');
+var seed = parts[parts.length - 1];
 
-  seedInput.value = seed;
-  calcSeed(seed);
-}
+seedInput.value = seed;
+calcSeed(seed);
 
 // Add event listeners
 seedInput.addEventListener("input", function (event) {
