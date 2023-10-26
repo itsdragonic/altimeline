@@ -82,7 +82,9 @@ var events = {
       big_china: false,
       communist_china: true,
       somaliland: false,
+      soviet_union: true,
 
+      greater_hungary: false,
       big_japan: false,
       fuhrerreich: false,
       ww2: true,
@@ -104,6 +106,7 @@ var events = {
       british_raj: true,
 
       pax_francia: false,
+      dutch_brazil: false,
       iberianUnion: false,
 
       am_colonization: true,
@@ -144,6 +147,7 @@ var rngEvents = {
   "Breakup_of_Yugoslavia": 1,
   "Quebec_Independence": 1,
   "Somaliland": 1,
+  "Falklands_War": 1,
   "East_African_Federation": 1,
   "European_Federation": 1,
   "Morocco_Expansion": 1,
@@ -161,6 +165,7 @@ var rngEvents = {
   "Man_in_the_High_Castle": 1,
   "Japan's_Fate": 1,
   "Lake_Congo_Project": 1,
+  "Greater_Hungary": 1,
   "WWII_Aftermath": 1,
   "WWII": 1,
   "Mongolian_Expansion": 1,
@@ -169,6 +174,7 @@ var rngEvents = {
   "Ottoman's_Fate": 1,
   "Austria's_Fate": 1,
   "Arabia's_Fate": 1,
+  "Russian_Revolution": 1,
   "Fall_of_Austrian_Empire": 1,
   "WWI_Aftermath": 1,
   "British_Revolution": 1,
@@ -184,6 +190,7 @@ var rngEvents = {
   "German_Unification": 1,
 
   "Alaskan_Purchase": 1,
+  "Gran_Colombia": 1,
   "Peru-Bolivia": 1,
   "War_of_the_Triple_Alliance": 1,
   "CSA_Expansion": 1,
@@ -199,6 +206,9 @@ var rngEvents = {
   // 1700s
   "American_Revolution": 1,
   "Seven_Years_War": 1,
+
+  // 1600s
+  "Dutch_Invasion_of_Brazil": 1,
 
   // Other
   "China_Colonizes_America": 1,
@@ -507,14 +517,14 @@ function calculateEvents() {
       addCountry("YEM","Himyar",year,1,3500,5 ,1560,505,6);
     }
     if (year == 203) {
-      if (RNG("Rome_Colonizes_America",year) <= incrediblyUnlikely) {
+      if (RNG("Rome_Colonizes_America",year) <= incrediblyUnlikely && c.christianity) {
         events[prevYear]["CSA"].strength = 3000;
         events[prevYear]["CSA"].state = "a1";
         events[prevYear]["CSA"].name = "Nova Christiana";
       }
     }
     if (year == 221) {
-      if (RNG("Rome_Colonizes_America",year) <= incrediblyUnlikely) {
+      if (RNG("Rome_Colonizes_America",year) <= incrediblyUnlikely && c.christianity) {
         events[prevYear]["CSA"].state = "a2";
       }
     }
@@ -1081,7 +1091,7 @@ function calculateEvents() {
       events[prevYear]["CHIa"].state = 2;
     }
     if (year == 1448) {
-      addCountry("KUW","Kuwait",year,1,1000,5 ,1570,405,4);
+      addCountry("KUW","Kuwait",year,1,400,5 ,1570,405,4);
     }
     if (year == 1450) {
       addCountry("AUS","Austria",year,1,1000,5 ,1340,285,4);
@@ -1314,21 +1324,29 @@ function calculateEvents() {
     }
     if (year == 1625) {
       addCountry("FRAk","St. Domingue",year,1,700,6 ,700,480,4);
+      addCountry("DUTb","Dutch Brazil",year,1,0,6 ,900,600,9);
       events[prevYear]["OTT"].state = 9;
       events[prevYear]["SWE"].state = 4;
     }
     if (year == 1630) {
-      addCountry("DUTb","Dutch Brazil",year,1,10,6 ,900,600,9);
+      events[prevYear]["DUTb"].strength = 9;
       addCountry("PORi","Timor",year,1,1553,6 ,2090,670,4);
     }
     if (year == 1635) {
-      addCountry("QIN","Qing Dynasty",year,1,700,6 ,1925,290,10);
+      addCountry("QIN","Qing Dynasty",year,1,700,9 ,1925,290,10);
     }
     if (year == 1637) {
       events[prevYear]["RUS"].state = 7;
       addCountry("ENGk","British Caribbean",year,1,700,6);
       events[prevYear]["GER"].state = 2;
       events[prevYear]["FRA"].state = 4;
+
+      // Dutch Brazil
+      if (RNG("Dutch_Invasion_of_Brazil",year) <= veryUnlikely) {
+        c.dutch_brazil = true;
+        events[prevYear]["DUTb"].strength = 0;
+        events[prevYear]["BRA"].name = "Dutch Brazil";
+      }
     }
     if (year == 1641) {
       events[prevYear]["SPAc"].state = 7;
@@ -1338,7 +1356,9 @@ function calculateEvents() {
 
       c.iberianUnion = false;
       if (!c.iberianUnion) {
-        events[prevYear]["BRA"].name = "Portuguese Brazil";
+        if (events[prevYear]["BRA"].name != "Dutch Brazil") {
+          events[prevYear]["BRA"].name = "Portuguese Brazil";
+        }
         events[prevYear]["POR"].name = "Portugal";
         events[prevYear]["SPA"].name = "Spain";
       }
@@ -1783,8 +1803,6 @@ function calculateEvents() {
     }
     if (year == 1829) {
       if (c.am_colonization) {
-        events[prevYear]["EQU"].strength = 3200;
-        events[prevYear]["COL"].strength = 3200;
         events[prevYear]["URU"].strength = 3200;
       }
       if (c.us_imperialism) {
@@ -1792,7 +1810,9 @@ function calculateEvents() {
       }
     }
     if (year == 1830) {
-      if (c.am_colonization) {
+      if (RNG("Gran_Colombia",year) > veryUnlikely && c.am_colonization) {
+        events[prevYear]["EQU"].strength = 3200;
+        events[prevYear]["COL"].strength = 3200;
         events[prevYear]["VEZ"].strength = 900;
         events[prevYear]["GCO"].strength = 0;
       }
@@ -1857,9 +1877,9 @@ function calculateEvents() {
         events[prevYear]["USA"].state = 8;
         events[prevYear]["TEX"].strength += 500;
       } else if (RNG("Mexican_American_War",year) <= unlikely) {
-        events[prevYear]["USA"].state = "c2";
+        events[prevYear]["USA"].state = "c12";
       } else if (RNG("Mexican_American_War",year) <= possible) {
-        events[prevYear]["USA"].state = "c1";
+        events[prevYear]["USA"].state = "c11";
       } else {
         events[prevYear]["USA"].state = 6;
       }
@@ -2046,6 +2066,8 @@ function calculateEvents() {
       addCountry("ENGn","British Colonies",year,1,0,6 ,1190,580,7);
     }
     if (year == 1890) {
+      events[prevYear]["MLY"].state = 2;
+
       if (c.af_colonization) {
         events[prevYear]["GERx"].strength = 30;
         events[prevYear]["SPAx"].strength = 300;
@@ -2060,7 +2082,6 @@ function calculateEvents() {
         }
       }
       events[prevYear]["PHI"].state = 3;
-      events[prevYear]["MLY"].state = 2;
 
       events[prevYear]["SOM"].strength = 0;
     }
@@ -2195,11 +2216,16 @@ function calculateEvents() {
     }
     if (year == 1917) {
       // Russion Revolution
-      events[prevYear]["RUS"].name = "Red Army";
-      events[prevYear]["RUS"].x += 80;
-      events[prevYear]["RUS"].y -= 12;
-      events[prevYear]["RUS"].size += 3;
-      events[prevYear]["SIB"].strength = 27;
+      if (RNG("Russian_Revolution",year) > unlikely) {
+        events[prevYear]["RUS"].name = "Red Army";
+        events[prevYear]["RUS"].x += 80;
+        events[prevYear]["RUS"].y -= 12;
+        events[prevYear]["RUS"].size += 3;
+        events[prevYear]["SIB"].strength = 27;
+        c.soviet_union = true;
+      } else {
+        c.soviet_union = false;
+      }
     }
     if (year == 1918) {
       events[prevYear]["SER"].state = 5;
@@ -2341,7 +2367,9 @@ function calculateEvents() {
       events[prevYear]["GRE"].state = 11;
     }
     if (year == 1922) {
-      events[prevYear]["RUS"].name = "Soviet Union";
+      if (RNG("Russian_Revolution",year) > unlikely) {
+        events[prevYear]["RUS"].name = "Soviet Union";
+      }
       if (c.kaiserreich) {
         events[prevYear]["FRA"].name = "French Commune";
         events[prevYear]["FRAx"].name = "French Republic";
@@ -2472,7 +2500,7 @@ function calculateEvents() {
       }
     }
     if (year == 1943) {
-      if (RNG("Peru-Bolivia",year) >= unlikely) {
+      if (RNG("Peru-Bolivia",year) >= unlikely && events[prevYear]["GCO"].strength > 0) {
         events[prevYear]["EQU"].state = 2;
         events[prevYear]["PEU"].state = 2;
       }
@@ -2502,16 +2530,14 @@ function calculateEvents() {
           events[prevYear]["KZH"].name = "Kazakhs";
           events[prevYear]["KZH"].state = 2;
 
-          events[prevYear]["CAN"].name = "Greater Nazi Reich";
-          events[prevYear]["CAN"].x -= 60;
-          events[prevYear]["CAN"].y += 20;
           events[prevYear]["GER"].state = 13;
-          
+
           events[prevYear]["UKR"].state = "a";
           events[prevYear]["UKR"].strength = 100;
           events[prevYear]["LIV"].strength = 100;
           events[prevYear]["LIT"].strength = 100;
         } else {
+          // Normal WWII Outcome
           events[prevYear]["GER"].name = "Germany";
           events[prevYear]["CZE"].state = 4;
           events[prevYear]["CZE"].strength = 500;
@@ -2521,6 +2547,15 @@ function calculateEvents() {
           events[prevYear]["ITA"].state = 8;
           events[prevYear]["ROA"].state = 5;
           events[prevYear]["BUL"].state = 10;
+
+          if (RNG("Greater_Hungary",year) <= unlikely) {
+            c.greater_hungary = true;
+          }
+        }
+        if (RNG("WWII",year) <= incrediblyUnlikely) {
+          events[prevYear]["CAN"].name = "Greater Nazi Reich";
+          events[prevYear]["CAN"].x -= 60;
+          events[prevYear]["CAN"].y += 20;
         }
       }
       addCountry("JAPn","DPR Japan",year,1,0,6 ,2130,315,6);
@@ -2911,6 +2946,11 @@ function calculateEvents() {
     if (year == 1975) {
       addCountry("PNG","Papau New Guinea",year,1,2250,6 ,2270,630,10);
     }
+    if (year == 1982) {
+      if (RNG("Falklands_War",year) <= veryUnlikely || c.kaiserreich || c.fuhrerreich) {
+        events[prevYear]["FAK"].name = "";
+      }
+    }
     if (year == 1986) {
       addCountry("AUZ","Australia",year,1,2250,6 ,2070,760,15);
       events[prevYear]["ENGa"].name = "";
@@ -2942,12 +2982,13 @@ function calculateEvents() {
       } else if (RNG("Cold_War_Winner",year) <= superUnlikely) {
         eventLog.push("*1991: The United States fractures");
         events[prevYear]["USA"].state = "a";
+        events[prevYear]["USA"].name = "Disunited States of America";
         events[prevYear]["USA"].size -= 3;
         events[prevYear]["USA"].x += 30;
         events[prevYear]["CAN"].strength += 500;
         events[prevYear]["USAc"].strength += 500;
         events[prevYear]["USAo"].strength = 0;
-      } else {
+      } else if (c.soviet_union) {
         // Fall of the Soviet Union
         eventLog.push("1991: Soviet Union dissolves");
         events[prevYear]["RUS"].name = "Russia";
@@ -3270,7 +3311,6 @@ function updateCountries() {
   swapItems(nations,"DUTc","CAN");
   swapItems(nations,"GUY","POR");
   swapItems(nations,"VEZ","GUY");
-  swapItems(nations,"SUR","POR");
   swapItems(nations,"FGU","POR");
   swapItems(nations,"CAN","USA");
   swapItems(nations,"MEX","CEN");
@@ -3294,6 +3334,9 @@ function updateCountries() {
   if (timeline >= 1800) {
     endItem(nations, "SPAc");
     frontItem(nations, "URU");
+  }
+  if (events[timeline]["conditions"].dutch_brazil) {
+    endItem(nations, "SUR");
   }
   endItem(nations, "IRO");
   endItem(nations, "ENGa");
@@ -3347,6 +3390,10 @@ function updateCountries() {
   if (events[timeline]["conditions"].big_albania) {
     frontItem(nations, "ALB");
   }
+  if (events[timeline]["conditions"].greater_hungary) {
+    frontItem(nations, "HUN");
+    frontItem(nations, "SER");
+  }
   if (timeline >= 1700 && events[timeline]["QUE"].name == "Louisiana") {
     frontItem(nations, "QUE");
   }
@@ -3393,6 +3440,7 @@ function updateCountries() {
       frontItem(nations, "PAR");
     }
   }
+
   // Pax Francia
   if (events[timeline]["USA"]) {
     if (events[timeline]["CAN"].name == "Quebec" && events[timeline]["CAN"].state >= 6) {
@@ -3448,6 +3496,7 @@ function updateCountries() {
       uk = "brightness(0%) grayscale(100%) invert(69%) sepia(19%) saturate(732%) hue-rotate(314deg) brightness(93%) contrast(86%)";
       germany = "brightness(0%) grayscale(100%) invert(23%) sepia(13%) saturate(212%) hue-rotate(357deg) brightness(93%) contrast(79%)";
       nuclear = "hue-rotate(337deg) saturate(74%) brightness(98%)";
+      dutch = "brightness(0%) grayscale(100%) invert(86%) sepia(24%) saturate(4919%) hue-rotate(320deg) brightness(94%) contrast(89%)";
       exampleHere = "brightness(0%) grayscale(100%)";
       
       // Apply necessary CSS filters
@@ -3500,6 +3549,7 @@ function updateCountries() {
       if (timeline >= 1979 && nations[i] === "DENc") {
         img.style.filter = "brightness(115%)";
       }
+
       // Rome
       if ("ROM" in events[timeline]) {
         if (events[timeline]["conditions"].carthage_wins && nations[i] === "ROM") {
@@ -3557,6 +3607,9 @@ function updateCountries() {
       if (nations[i] === "LBR" && events[timeline][nations[i]].name === "U.S. Africa") {
         img.style.filter = "hue-rotate(323deg) saturate(393%) brightness(112%)";
       }
+      if (nations[i] === "FAK" && events[timeline][nations[i]].name === "") {
+        img.style.filter = "hue-rotate(196deg) saturate(84%) brightness(131%)";
+      }
       if (timeline >= 1867 && nations[i] === "CAN") {
         img.style.filter = canada;
       }
@@ -3607,9 +3660,6 @@ function updateCountries() {
       if (timeline > 1799 && nations[i] === "POR") {
         img.style.filter = "hue-rotate(300deg) brightness(90%)";
       }
-      if (timeline > 1799 && nations[i] === "BRA") {
-        img.style.filter = "hue-rotate(300deg) brightness(90%)";
-      }
       if (timeline > 1799 && nations[i] === "PORa") {
         img.style.filter = "hue-rotate(300deg) brightness(90%)";
       }
@@ -3618,6 +3668,14 @@ function updateCountries() {
       }
       if (timeline > 1799 && nations[i] === "PORz") {
         img.style.filter = "hue-rotate(300deg) brightness(90%)";
+      }
+
+      // Brazil
+      if (timeline > 1799 && nations[i] === "BRA") {
+        img.style.filter = "hue-rotate(300deg) brightness(90%)";
+      }
+      if (events[timeline]["conditions"].dutch_brazil && nations[i] == "BRA") {
+        img.style.filter = "hue-rotate(160deg) saturate(56%) brightness(136%)";
       }
       if (nations[i] == "BRA" && events[timeline][nations[i]].name === "Brazil") {
         img.style.filter = brazil;
@@ -3701,20 +3759,36 @@ function isValidYearRange(input) {
   return false;
 }
 
-// Add event listeners
-seedInput.addEventListener("input", function (event) {
-  seed = event.target.value;
+function calcSeed(val) {
+  seed = val;
   seedNumber = stringToNumbers(seed);
   
   for (let e in rngEvents) {
     // Generate seed-based random number (+easter egg seeds)
     if (seed == "0" || seed == "") {
       rngEvents[e] = 1;
-    } else if (seed == "test" || seed == "insanity") {
+    }
+    else if (seed == "test" || seed == "insanity") {
       if (e == "Nuclear_Armageddon") {
         rngEvents[e] = 1;
       } else {rngEvents[e] = 0;}
-    } else {
+    }
+    else if (seed == "Kaiserreich" || seed == "kaiserreich") {
+      if (e == "WWI_Aftermath") {
+        rngEvents[e] = 0;
+      } else {rngEvents[e] = 1;}
+    }
+    else if (seed == "Fuhrerreich" || seed == "fuhrerreich") {
+      if (e == "WWII") {
+        rngEvents[e] = 0;
+      } else {rngEvents[e] = 1;}
+    }
+    else if (seed == "Fallout" || seed == "fallout") {
+      if (e == "Nuclear_Armageddon") {
+        rngEvents[e] = 0;
+      } else {rngEvents[e] = 1;}
+    }
+    else {
       if (isValidYearRange(seed) != "" || false) {
         rngLimit = isValidYearRange(seed);
       }
@@ -3727,6 +3801,22 @@ seedInput.addEventListener("input", function (event) {
   calculateEvents();
   updateCountries();
   //console.log(rngEvents);
+}
+
+var url = window.location.href;
+
+var parts = url.split('/');
+var seed = parts[parts.length - 1];
+
+if (seed == "index.html" || seed == "altimeline") {
+  seed = "";
+}
+seedInput.value = seed;
+calcSeed(seed);
+
+// Add event listeners
+seedInput.addEventListener("input", function (event) {
+  calcSeed(event.target.value);
 });
 
 timelineInput.addEventListener('input', () => {
