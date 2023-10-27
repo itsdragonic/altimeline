@@ -5,7 +5,7 @@ See the history of our world on a map by scrolling through the timeline.
 
 Once you select the timeline bar, you can select anywhere on the timeline or use the up and down arrows to look year by year.
 
-[WARNING] Laters years (from 1600-present) can get very laggy and finicky.
+[WARNING] Later years (from 1600-present) can get very laggy and finicky.
 
 ### Alternate History
 
