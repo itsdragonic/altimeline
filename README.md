@@ -3,7 +3,7 @@ https://itsdragonic.github.io/altimeline/
 
 See the history of our world on a map by scrolling through the timeline.
 
-Once you select the timeline bar, you can use the up and down arrows to look year by year.
+Once you select the timeline bar, you can select anywhere on the timeline or use the up and down arrows to look year by year.
 
 [WARNING] Laters years (from 1600-present) can get very laggy and finicky.
 
