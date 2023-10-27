@@ -9,10 +9,12 @@ Once you select the timeline bar, you can use the up and down arrows to look yea
 
 ### Alternate History
 
-(BETA) Entering a seed value will lead to alternate historical paths.
+Entering a seed value will lead to alternate historical paths.
 
 Seed "0" is our timeline.
 
 Typing any string of characters will lead to unique alternate histories.
 
-(coming soon) Special seeds such as "kaiserreich," "fuhrerreich," or "fallout" will have specific alternate histories.
+Special seeds such as "kaiserreich," "fuhrerreich," or "fallout" give famous alternate histories.
+
+You can share timelines and years you find in this format: https://itsdragonic.github.io/altimeline/?year=1936?seed=insanity
