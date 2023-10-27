@@ -1108,7 +1108,7 @@ function calculateEvents() {
       events[prevYear]["NOR"].name = "Norway";
     }
     if (year == 1453) {
-      if (RNG("Byzantium",year) <= unlikely) {
+      if (RNG("Byzantium",year) <= unlikely && c.roman_empire) {
         c.byzantium = true;
         c.ottoman_romania = false;
         c.am_colonization = false;
