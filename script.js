@@ -108,6 +108,8 @@ var events = {
       pax_francia: false,
       dutch_brazil: false,
       iberianUnion: false,
+      byzantium: false,
+      ottoman_romania: false,
 
       am_colonization: true,
       af_colonization: true,
@@ -212,10 +214,11 @@ var rngEvents = {
 
   // Other
   "China_Colonizes_America": 1,
-  "Rome_Colonizes_America": 1,
   "Big_Portugal": 1,
 
+  "Byzantium": 1,
   "Rome_Survives": 1,
+  "Rome_Colonizes_America": 1,
   "Carthage_Wins_Punic_Wars": 1,
 }
 
@@ -1023,6 +1026,7 @@ function calculateEvents() {
     if (year == 1350) {
       events[prevYear]["PAP"].state = 2;
       addCountry("ROA","Wallachia",year,1,2250,6 ,1430,300,4);
+      c.ottoman_romania = true;
     }
     if (year == 1357) {
       events[prevYear]["KOR"].state = 2;
@@ -1104,11 +1108,24 @@ function calculateEvents() {
       events[prevYear]["NOR"].name = "Norway";
     }
     if (year == 1453) {
-      events[prevYear]["BYZ"].strength = 0;
+      if (RNG("Byzantium",year) <= unlikely) {
+        c.byzantium = true;
+        c.ottoman_romania = false;
+        c.am_colonization = false;
+        events[prevYear]["BYZ"].strength += 700;
+        events[prevYear]["OTT"].state = 3;
+      } else {
+        events[prevYear]["BYZ"].strength = 0;
+      }
       events[prevYear]["QQO"].state = 2;
       events[prevYear]["TUR"].state = 5;
     }
     if (year == 1458) {
+      if (c.byzantium) {
+        events[prevYear]["OTT"].state = 2;
+        events[prevYear]["BYZ"].size += 3;
+        events[prevYear]["BYZ"].x -= 20;
+      }
       events[prevYear]["SWE"].name = "Kalmar Union";
       events[prevYear]["SWE"].state = 7;
       events[prevYear]["NOR"].name = "";
@@ -1127,15 +1144,24 @@ function calculateEvents() {
       events[prevYear]["QQO"].name = "Aq Qoyunlu";
     }
     if (year == 1474) {
-      events[prevYear]["OTT"].state = 5;
+      if (c.byzantium) {
+        events[prevYear]["OTT"].strength = 0;
+      } else {
+        events[prevYear]["OTT"].state = 5;
+      }
       events[prevYear]["SER"].strength = 0;
     }
     if (year == 1477) {
       events[prevYear]["JAP"].state = 5;
       events[prevYear]["AUS"].state = 2;
+      events[prevYear]["BYZ"].state = 2;
     }
     if (year == 1492) {
       events[prevYear]["SPA"].state = 7;
+      if (c.byzantium) {
+        events[prevYear]["BYZ"].state = 1;
+        events[prevYear]["FAT"].strength = 0;
+      }
     }
     if (year == 1494) {
       if (c.am_colonization) {
@@ -1180,7 +1206,6 @@ function calculateEvents() {
       events[prevYear]["SPAc"].state = 2;
       addCountry("KZH","Yarkent",year,1,195,6 ,1725,325,9);
       events[prevYear]["LIT"].state = 4;
-      events[prevYear]["ROA"].strength = 0;
     }
     if (year == 1524) {
       events[prevYear]["OTT"].state = 6;
@@ -1204,8 +1229,10 @@ function calculateEvents() {
       events[prevYear]["SPAc"].state = 4;
       events[prevYear]["BRA"].state = 2;
       events[prevYear]["OTT"].state = 7;
-      events[prevYear]["HUN"].strength = 0;
-      events[prevYear]["AUS"].state = 4;
+      if (!c.byzantium) {
+        events[prevYear]["HUN"].strength = 0;
+        events[prevYear]["AUS"].state = 4;
+      }
 
       if (c.am_colonization) {
         events[prevYear]["INC"].strength = 0;
@@ -1325,7 +1352,6 @@ function calculateEvents() {
     if (year == 1625) {
       addCountry("FRAk","St. Domingue",year,1,700,6 ,700,480,4);
       addCountry("DUTb","Dutch Brazil",year,1,0,6 ,900,600,9);
-      events[prevYear]["OTT"].state = 9;
       events[prevYear]["SWE"].state = 4;
     }
     if (year == 1630) {
@@ -1421,6 +1447,7 @@ function calculateEvents() {
       events[prevYear]["SPAc"].state = 8;
     }
     if (year == 1686) {
+      events[prevYear]["OTT"].state = 9;
       events[prevYear]["AUS"].state = 5;
     }
     if (year == 1700) {
@@ -1762,12 +1789,14 @@ function calculateEvents() {
       events[prevYear]["BRA"].y = 650;
       events[prevYear]["BRA"].name = "Brazil";
 
-      events[prevYear]["GRE"].strength = 500;
-      events[prevYear]["GRE"].name = "Greece";
-      events[prevYear]["GRE"].state = 7;
-      events[prevYear]["GRE"].x = 1395;
-      events[prevYear]["GRE"].y = 346;
-      events[prevYear]["GRE"].size = 4;
+      if (!c.byzantium) {
+        events[prevYear]["GRE"].strength = 500;
+        events[prevYear]["GRE"].name = "Greece";
+        events[prevYear]["GRE"].state = 7;
+        events[prevYear]["GRE"].x = 1395;
+        events[prevYear]["GRE"].y = 346;
+        events[prevYear]["GRE"].size = 4;
+      }
     }
     if (year == 1824) {
       if (c.am_colonization) {
@@ -2012,6 +2041,7 @@ function calculateEvents() {
       events[prevYear]["ROA"].strength = 1000;
       events[prevYear]["ROA"].state = 2;
       events[prevYear]["ROA"].name = "Romania";
+      c.ottoman_romania = false;
       events[prevYear]["SER"].strength = 1000;
       events[prevYear]["BUL"].strength = 1000;
       events[prevYear]["SER"].state = 3;
@@ -2195,9 +2225,12 @@ function calculateEvents() {
       events[prevYear]["QIN"].name = "Republic of China";
       events[prevYear]["QIN"].x -= 40;
       events[prevYear]["GRE"].state = 9;
+      addCountry("ALB","Albania",year,1,0,6 ,1390,332,3);
     }
     if (year == 1913) {
-      addCountry("ALB","Albania",year,1,440,6 ,1390,332,3);
+      if (!c.byzantium) {
+        events[prevYear]["ALB"].strength = 696;
+      }
     }
     if (year == 1914) {
       if (RNG("Big_Albania",year) <= unlikely) {
@@ -2251,8 +2284,11 @@ function calculateEvents() {
       events[prevYear]["KZH"].size = 10;
 
       // Treaty of Versailles (WWI Aftermath)
-      events[prevYear]["SYR"].strength = 400;
-      events[prevYear]["ENGb"].strength = 500;
+      if (!c.byzantium) {
+        events[prevYear]["SYR"].strength = 400;
+        events[prevYear]["ENGb"].strength = 500;
+      }
+      events[prevYear]["BYZ"].state = 2;
 
       if (c.unified_germany) {
         c.ww2 = false;
@@ -2427,7 +2463,7 @@ function calculateEvents() {
         events[prevYear]["ISL"].name = "Saudi Arabia";
       }
       
-      if (!c.kaiserreich && RNG("Arabia's_Fate",year) > unlikely) {
+      if (!c.kaiserreich && !c.byzantium && RNG("Arabia's_Fate",year) > unlikely) {
         events[prevYear]["MES"].strength = 300;
         events[prevYear]["MES"].name = "Iraq";
         events[prevYear]["MES"].state = 4;
@@ -2837,7 +2873,7 @@ function calculateEvents() {
       }
     }
     if (year == 1966) {
-      if (!c.fuhrerreich) {
+      if (!c.fuhrerreich && !c.byzantium) {
         events[prevYear]["LIB"].strength = 400;
         events[prevYear]["LIB"].state = 2;
         events[prevYear]["LIB"].x -= 10;
@@ -3524,9 +3560,14 @@ function updateCountries() {
       if (events[timeline][nations[i]].name === "Philippines") {
         img.style.filter = philippines;
       }
+      // condition-based color
       if (events[timeline][nations[i]].name === "Iran " && events[timeline]["conditions"].occupied_iran) {
         img.style.filter = uk;
       }
+      if (nations[i] == "ROA" && events[timeline]["conditions"].ottoman_romania) {
+        img.style.filter = "hue-rotate(297deg) saturate(165%) brightness(90%)";
+      }
+
       if (events[timeline][nations[i]].name === "Malaysia") {
         img.style.filter = "hue-rotate(124deg) saturate(272%) brightness(31%)";
       }
@@ -3804,23 +3845,34 @@ function calcSeed(val) {
 }
 
 function grabData(url,val1,val2) {
-  let foo = url.split(val1);
+  if (url.includes(val1)) {
+    let foo = url.split(val1);
 
-  let foo1 = foo[1];
-  foo2 = foo1.split(val2);
+    let foo1 = foo[1];
+    foo2 = foo1.split(val2);
 
-  return foo2[0]
+    return foo2[0]
+  } else return 0;
 }
 
 // Shared seeds
 var url = window.location.href;
 
 seed = grabData(url,'?seed=','?year=');
-seedInput.value = seed;
-timelineInput.value = parseInt(grabData(url,'?year=','?seed='));
-timelineValue.textContent = parseInt(timelineInput.value);
+altimeline = parseInt(grabData(url,'?year=','?seed='));
+timelineInput.value = altimeline;
+if (timelineInput.value == 0) {
+  timelineInput.value = 1;
+}
+if (seed == 0) {
+  seed = "";
+} else {
+  calcSeed(seed);
+}
+timelineValue.textContent = altimeline;
 timeline = parseInt(timelineInput.value);
-calcSeed(seed);
+seedInput.value = seed;
+updateCountries();
 
 // Add event listeners
 seedInput.addEventListener("input", function (event) {
