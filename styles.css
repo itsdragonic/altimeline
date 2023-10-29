@@ -31,11 +31,16 @@ body {
     text-align: center;
     font-family: "carolingia", sans-serif;
     font-size: 20px;
+    overflow: hidden;
 }
 
 label {
     display: inline-block;
     margin-bottom: 10px;
+}
+
+p {
+    font-family: "Lato";
 }
 
 input[type="number"],
@@ -229,6 +234,8 @@ img {
     top: 5px;
     left: 10px;
     cursor: pointer;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .close-button:hover {
