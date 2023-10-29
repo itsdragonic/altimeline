@@ -4024,7 +4024,7 @@ if (seed == 0) {
 } else {
   calcSeed(seed);
 }
-timelineValue.textContent = altimeline;
+timelineValue.textContent = timelineInput.value;
 timeline = parseInt(timelineInput.value);
 timeline--;
 seedInput.value = seed;
@@ -4037,6 +4037,9 @@ seedInput.addEventListener("input", function (event) {
 
 timelineInput.addEventListener('input', () => {
   timelineValue.textContent = parseInt(timelineInput.value) + 1;
+  if (timelineValue.textContent == 0) {
+    timelineValue.textContent = 1;
+  }
   timeline = timelineInput.value;
 
   updateCountries();
