@@ -2615,6 +2615,7 @@ function calculateEvents() {
     if (year == 1941) {
       events[prevYear]["QIN"].state = 4;
       events[prevYear]["JAPc"].state = 4;
+      events[prevYear]["FRAi"].strength = 0;
       c.occupied_iran = true;
       events[prevYear]["PER"].name = "Iran ";
       if (c.ww2) {
@@ -2630,7 +2631,7 @@ function calculateEvents() {
       }
     }
     if (year == 1943) {
-      if (RNG("Peru-Bolivia",year) >= unlikely && events[prevYear]["GCO"].strength > 0) {
+      if (RNG("Peru-Bolivia",year) >= unlikely && events[prevYear]["GCO"].strength < 0) {
         events[prevYear]["EQU"].state = 2;
         events[prevYear]["PEU"].state = 2;
       }
@@ -2701,6 +2702,7 @@ function calculateEvents() {
       events[prevYear]["SYR"].state = 2;
       events[prevYear]["SYR"].name = "Syria";
       events[prevYear]["SYR"].x += 30;
+      events[prevYear]["FRAi"].strength = 9;
 
       // WW2 Aftermath
       if (!c.fuhrerreich) {
@@ -2912,8 +2914,8 @@ function calculateEvents() {
         if (RNG("Decolonization",year) >= unlikely && c.usa_exists) {
         events[prevYear]["ENGx"].state = 2;
         events[prevYear]["ENGx"].name = "Kenya";
-        events[prevYear]["ENGx"].x = 1450;
-        events[prevYear]["ENGx"].y = 650;
+        events[prevYear]["ENGx"].x = 1500;
+        events[prevYear]["ENGx"].y = 605;
         events[prevYear]["ENGx"].size = 6;
 
         events[prevYear]["KSH"].strength = 150;
