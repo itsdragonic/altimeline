@@ -11,7 +11,7 @@
       Base64 Encoder: https://www.base64-image.de/
       Base64 Decoder: https://base64.guru/converter/decode/image
 
-////////////////////////////////////////////////////////////// */
+  ////////////////////////////////////////////////////////////// */
 
 var seed = 0;
 var timeline = 1;
@@ -81,6 +81,7 @@ var events = {
       isChineseCivilWar: false,
       somaliland: false,
       soviet_union: true,
+      scotland: false,
       nuclear: false,
 
       greater_hungary: false,
@@ -91,12 +92,15 @@ var events = {
       occupied_iran: false,
       israel: true,
       big_albania: false,
+      south_vietnam: false,
 
       big_mexico: false,
       big_usa: false,
       csa_cen: false,
       csa_victory: false,
       us_imperialism: false,
+      manifest_destiny: true,
+      burr_plot: false,
       unified_germany: true,
 
       french_victory: false,
@@ -142,6 +146,7 @@ var rngEvents = {
   "Ukraine_War": 1,
   "South_Sudan": 1,
   "Neo_Chinese_Empire": 1,
+  "Scotland_Independence": 1,
 
   // 1900s
   "Breakup_of_Czechoslovakia": 1,
@@ -152,10 +157,12 @@ var rngEvents = {
   "East_African_Federation": 1,
   "European_Federation": 1,
   "Morocco_Expansion": 1,
+  "Hala'ib_Triangle": 1,
 
   "Nuclear_Armageddon": 1,
   "Chinese_Communist_Revolution": 1,
   "Tibet": 1,
+  "Vietnam_War": 1,
   "Korean_War": 1,
   "Cold_War_Winner": 1,
   "American_Expansion": 1,
@@ -201,6 +208,8 @@ var rngEvents = {
   "Texas_Independence": 1,
   "Oregon_Territory": 1,
   "US_Imperialism": 1,
+  "War_of_1812": 1,
+  "Burr_Plot": 1,
 
   "Australia_Colonization": 1,
   "Napoleonic_Wars": 1,
@@ -211,6 +220,10 @@ var rngEvents = {
 
   // 1600s
   "Dutch_Invasion_of_Brazil": 1,
+  "New_Sweden": 1,
+
+  // 1500s
+  "German_Venezuela": 1,
 
   // Other
   "China_Colonizes_America": 1,
@@ -411,7 +424,7 @@ function calculateEvents() {
     if (year == -240) {
       // Punic Wars
       if (RNG("Carthage_Wins_Punic_Wars",year) <= veryUnlikely) {
-        c.am_colonization = false;
+        //c.am_colonization = false;
         c.af_colonization = false;
         c.carthage_wins = true;
         c.roman_empire = false;
@@ -1043,7 +1056,7 @@ function calculateEvents() {
       events[prevYear]["MOR"].name = "Maranids";
     }
     if (year == 1280) {
-      addCountry("SCO","Scotland",year,1,1250,6);
+      addCountry("SCO","Scotland",year,1,1250,6 ,1220,225,5);
       events[prevYear]["ENG"].state = 8;
       addCountry("THA","Sukhothal",year,1,1250,6 ,1890,530,5);
       events[prevYear]["NAP"].name = "Naples";
@@ -1135,7 +1148,7 @@ function calculateEvents() {
     if (year == 1389) {
       events[prevYear]["TUR"].strength = 120;
       events[prevYear]["TUR"].name = "Timurid Empire";
-      events[prevYear]["TUR"].x += 60;
+      events[prevYear]["TUR"].x += 280;
     }
     if (year == 1392) {
       addCountry("KON","Kongo",year,1,1550,6 ,1300,648,7);
@@ -1182,7 +1195,7 @@ function calculateEvents() {
       if (RNG("Byzantium",year) <= unlikely && c.roman_empire) {
         c.byzantium = true;
         c.ottoman_romania = false;
-        c.am_colonization = false;
+        //c.am_colonization = false;
         events[prevYear]["BYZ"].strength += 700;
         events[prevYear]["OTT"].state = 3;
       } else {
@@ -1292,9 +1305,13 @@ function calculateEvents() {
         events[prevYear]["AZX"].strength = 0;
       }
       addCountry("DENc","Greenland (Den.)",year,1,3250,6 ,1030,195,8);
+      addCountry("VEZ","Klein-Venedig",year,"a",0,6 ,755,550,7);
       events[prevYear]["LIV"].name = "Livonia";
       events[prevYear]["CZE"].strength = 0;
       events[prevYear]["AUS"].state = 3;
+    }
+    if (year == 1528) {
+      events[prevYear]["VEZ"].strength = 18;
     }
     if (year == 1529) {
       events[prevYear]["MAJ"].strength = 0;
@@ -1327,6 +1344,14 @@ function calculateEvents() {
       events[prevYear]["ENG"].state = 10;
       addCountry("MAD","Merina",year,1,3250,6 ,1550,740,5);
       events[prevYear]["YEM"].strength = 0;
+
+      if (RNG("German_Venezuela",year) <= unlikely) {
+        events[prevYear]["VEZ"].name = "Welserland";
+        events[prevYear]["VEZ"].strength += 700;
+        events[prevYear]["VEZ"].state = 2;
+      } else {
+        events[prevYear]["VEZ"].name = "Venezuela";
+      }
     }
     if (year == 1555) {
       events[prevYear]["MOR"].name = "Saadis";
@@ -1444,6 +1469,7 @@ function calculateEvents() {
     if (year == 1637) {
       events[prevYear]["RUS"].state = 7;
       addCountry("ENGk","British Caribbean",year,1,700,6);
+      addCountry("SWEc","New Sweden",year,1,17,6 ,717,338,4);
       events[prevYear]["GER"].state = 2;
       events[prevYear]["FRA"].state = 4;
 
@@ -1478,7 +1504,7 @@ function calculateEvents() {
       events[prevYear]["ENG"].y -= 20;
       events[prevYear]["ENG"].x -= 20;
       events[prevYear]["ENG"].state = 11;
-      addCountry("SWI","Switzerland",year,1,3250,6 ,1305,290,2);
+      addCountry("SWI","Switzerland",year,1,3250,6 ,1305,295,2);
       events[prevYear]["QIN"].state = 2;
       events[prevYear]["CHI"].strength = 0;
 
@@ -1491,6 +1517,12 @@ function calculateEvents() {
     if (year == 1655) {
       events[prevYear]["KIL"].name = "Zanzibar";
       addCountry("DUTs","Cape Colony",year,1,3250,6 ,1260,840,7);
+
+      if (RNG("New_Sweden",year) <= unlikely) {
+        events[prevYear]["SWEc"].state = 2;
+        events[prevYear]["SWEc"].strength = 500;
+        events[prevYear]["SWEc"].size += 3;
+      }
     }
     if (year == 1658) {
       events[prevYear]["PORa"].state = 2;
@@ -1501,6 +1533,15 @@ function calculateEvents() {
       events[prevYear]["IRO"].y = 320;
       events[prevYear]["IRO"].size = 9;
       events[prevYear]["MOR"].name = "Morocco";
+    }
+    if (year == 1667) {
+      if (RNG("New_Sweden",year) <= superUnlikely) {
+        events[prevYear]["SWEc"].state = 3;
+        events[prevYear]["SWEc"].x += 30;
+        events[prevYear]["SWEc"].y -= 10;
+      } else {
+        events[prevYear]["SWEc"].strength = 0;
+      }
     }
     if (year == 1670) {
       events[prevYear]["CAN"].state = 3;
@@ -1541,6 +1582,9 @@ function calculateEvents() {
     }
     if (year == 1705) {
       events[prevYear]["DUT"].state = 2;
+    }
+    if (year == 1707) {
+      events[prevYear]["SCO"].strength = 0;
     }
     if (year == 1710) {
       events[prevYear]["SWE"].state = 3;
@@ -1756,6 +1800,15 @@ function calculateEvents() {
       events[prevYear]["FRAk"].name = "";
       addCountry("HAI","Haiti",year,1,700,6 ,740,480,4);
     }
+    if (year == 1805) {
+      if (RNG("Burr_Plot",year) <= superUnlikely) {
+        c.burr_plot = true;
+        c.manifest_destiny = false;
+        events[prevYear]["QUE"].strength = 112;
+        events[prevYear]["QUE"].name = "Kingdom of Burr";
+        events[prevYear]["QUE"].x -= 45;
+      }
+    }
     if (year == 1806) {
       events[prevYear]["HRE"].name = "Confed. of Rhine";
       addCountry("SOK","Sokoto",year,1,98,6 ,1270,530,10);
@@ -1770,12 +1823,16 @@ function calculateEvents() {
         events[prevYear]["FRA"].state = 7;
         events[prevYear]["GER"].state = 4;
       }
+
+      events[prevYear]["EGY"].state = 1;
+      events[prevYear]["EGY"].name = "Muhammad Ali";
+      events[prevYear]["EGY"].strength = 33;
+      events[prevYear]["EGY"].x -= 40;
       
       // Latin American Countries
       addCountry("ARG","Rio de la Plata",year,1,0,6 ,793,810,7);
       addCountry("PAR","Paraguay",year,1,0,6 ,850,770,4);
       addCountry("CHL","Chile",year,1,0,6 ,765,790,7);
-      addCountry("VEZ","Venezuela",year,1,0,6 ,755,550,7);
       addCountry("GCO","Gran Colombia",year,1,0,6 ,700,584,6);
       addCountry("CEN","Central America",year,1,0,6 ,595,520,6);
       addCountry("MEX","Mexico",year,1,0,6 ,510,446,10);
@@ -1784,6 +1841,7 @@ function calculateEvents() {
       addCountry("EQU","Equador",year,1,0,6 ,680,610,5);
       addCountry("COL","Colombia",year,1,0,6 ,710,580,8);
       addCountry("URU","Uruguay",year,1,0,6 ,879,830,5);
+      events[prevYear]["VEZ"].state = 1;
     }
     if (year == 1810) {
       if (c.am_colonization) {
@@ -1809,6 +1867,12 @@ function calculateEvents() {
     if (year == 1814) {
       if (c.napoleonic_wars) {
         events[prevYear]["FRA"].state = 5;
+      }
+      if (RNG("War_of_1812",year) <= veryUnlikely || events[prevYear]["SWEc"].strength > 0) {
+        events[prevYear]["DUTc"].strength = 300;
+        events[prevYear]["DUTc"].name = "New England";
+        events[prevYear]["DUTc"].state = "a";
+        events[prevYear]["DUTc"].y -= 20;
       }
     }
     if (year == 1815) {
@@ -1854,11 +1918,13 @@ function calculateEvents() {
       events[prevYear]["OMA"].state = 3;
     }
     if (year == 1822) {
-      if (!c.usa_exists) {
+      if (!c.usa_exists || !c.manifest_destiny) {
         events[prevYear]["MEX"].state = "a";
       }
       events[prevYear]["SPAc"].state = 12;
-      events[prevYear]["USA"].state = 4;
+      if (c.manifest_destiny) {
+        events[prevYear]["USA"].state = 4;
+      }
       events[prevYear]["BRA"].state = 7;
       events[prevYear]["AFG"].state = 4;
       events[prevYear]["AFG"].name = "Afgans";
@@ -1897,7 +1963,7 @@ function calculateEvents() {
       if (c.usa_exists) {
         events[prevYear]["LBR"].strength = 2250;
       }
-      if (RNG("US_Imperialism",year) <= unlikely) {
+      if (RNG("US_Imperialism",year) <= unlikely && c.usa_exists) {
         c.us_imperialism = true;
         events[prevYear]["LBR"].name = "U.S. Africa";
       }
@@ -1905,6 +1971,9 @@ function calculateEvents() {
     }
     if (year == 1828) {
       events[prevYear]["CAN"].state = 6;
+      if (!c.manifest_destiny) {
+        events[prevYear]["CAN"].state = "a";
+      }
       events[prevYear]["MAD"].state = 2;
       if (RNG("Australia_Colonization",year) <= veryUnlikely) {
         events[prevYear]["DUTz"].strength = 1000;
@@ -1942,6 +2011,10 @@ function calculateEvents() {
       addCountry("BEL","Belgium",year,1,3250,6);
       addCountry("TEX","Texas",year,1,0,8 ,565,385,8);
     }
+    if (year == 1831) {
+      events[prevYear]["EGY"].name = "Muhammad Ali ";
+      events[prevYear]["EGY"].state = 3;
+    }
     if (year == 1835) {
       events[prevYear]["ENGs"].state = 2;
       if (c.am_colonization) {
@@ -1950,9 +2023,17 @@ function calculateEvents() {
     }
     if (year == 1836) {
       events[prevYear]["TEX"].state = 2;
+      if (!c.usa_exists || !c.manifest_destiny || c.pax_francia) {
+        events[prevYear]["TEX"].state = "a";
+      }
     }
     if (year == 1837) {
-      events[prevYear]["USA"].state = 5;
+      if (c.manifest_destiny) {
+        events[prevYear]["USA"].state = 5;
+      }
+      if (events[prevYear]["QUE"].name == "Kingdom of Burr") {
+        events[prevYear]["QUE"].name = "Republic of Burr";
+      }
 
       events[prevYear]["PEU"].state = 3;
       events[prevYear]["PEU"].name = "Peru-Bolivia";
@@ -1979,24 +2060,26 @@ function calculateEvents() {
       addCountry("DOM","Dom. Rep.",year,1,700,6 ,760,490,4);
     }
     if (year == 1848) {
-      events[prevYear]["USA"].x = 400;
-      events[prevYear]["USA"].y -= 10;
-      events[prevYear]["USA"].size +=3;
-      if (RNG("Mexican_American_War",year) <= impossible) {
-        c.big_mexico = true;
-        events[prevYear]["USA"].state = 8;
-      } else if (RNG("Mexican_American_War",year) <= superUnlikely) {
-        c.big_mexico = true;
-        events[prevYear]["USA"].state = 8;
-        events[prevYear]["TEX"].strength += 500;
-      } else if (RNG("Mexican_American_War",year) <= unlikely) {
-        events[prevYear]["USA"].state = "c12";
-      } else if (RNG("Mexican_American_War",year) <= possible) {
-        events[prevYear]["USA"].state = "c11";
-      } else {
-        events[prevYear]["USA"].state = 6;
+      if (c.manifest_destiny) {
+        events[prevYear]["USA"].x = 400;
+        events[prevYear]["USA"].y -= 10;
+        events[prevYear]["USA"].size +=3;
+        if (RNG("Mexican_American_War",year) <= impossible) {
+          c.big_mexico = true;
+          events[prevYear]["USA"].state = 8;
+        } else if (RNG("Mexican_American_War",year) <= superUnlikely) {
+          c.big_mexico = true;
+          events[prevYear]["USA"].state = 8;
+          events[prevYear]["TEX"].strength += 500;
+        } else if (RNG("Mexican_American_War",year) <= unlikely) {
+          events[prevYear]["USA"].state = "c12";
+        } else if (RNG("Mexican_American_War",year) <= possible) {
+          events[prevYear]["USA"].state = "c11";
+        } else {
+          events[prevYear]["USA"].state = 6;
+        }
+        addCountry("USAo","Oregon Territory",year,1,0,6);
       }
-      addCountry("USAo","Oregon Territory",year,1,0,6);
     }
     if (year == 1849) {
       if (RNG("Oregon_Territory",year) <= unlikely && c.usa_exists) {
@@ -2004,7 +2087,7 @@ function calculateEvents() {
       }
     }
     if (year == 1854) {
-      if (RNG("Mexican_American_War",year) > possible) {
+      if (RNG("Mexican_American_War",year) > possible && c.manifest_destiny) {
         events[prevYear]["USA"].state = 7;
       }
       events[prevYear]["DUTs"].state = 2;
@@ -2027,7 +2110,7 @@ function calculateEvents() {
 
     }
     if (year == 1860) {
-      if (c.usa_exists) {
+      if (c.usa_exists && events[prevYear]["DUTc"].strength < 0) {
         eventLog.push("1861: American Civil War");
         events[prevYear]["CSA"].strength = 5;
       }
@@ -2075,15 +2158,19 @@ function calculateEvents() {
         events[prevYear]["RUSc"].strength += 300;
       } else if (RNG("Alaskan_Purchase",year) <= unlikely) {
         events[prevYear]["RUSc"].strength += 300;
-      } else if (c.usa_exists) {
+      } else if (c.usa_exists && c.manifest_destiny) {
         events[prevYear]["USAc"].strength = 555;
         events[prevYear]["RUSc"].strength = 0;
       }
+      events[prevYear]["CAN"].state = 7;
       if (!c.usa_exists || c.pax_francia) {
         events[prevYear]["RUSc"].state = "a";
+        events[prevYear]["CAN"].state = "a";
+      }
+      if (!c.manifest_destiny) {
+        events[prevYear]["CAN"].state = "a";
       }
 
-      events[prevYear]["CAN"].state = 7;
       events[prevYear]["GER"].state = 7;
       events[prevYear]["GER"].name = "N. German Confed."
       events[prevYear]["GER"].x -= 30;
@@ -2096,9 +2183,13 @@ function calculateEvents() {
       if (RNG("CSA_Expansion",year) <= likely) {
         events[prevYear]["CSA"].state = 4;
       }
+
+      events[prevYear]["EGY"].strength = 400;
+      events[prevYear]["EGY"].name = "Egyptian Khedivate";
+      events[prevYear]["DAR"].strength = 0;
     }
     if (year == 1870) {
-      if (RNG("Mexican_American_War",year) > possible) {
+      if (RNG("Mexican_American_War",year) > possible && c.manifest_destiny) {
         events[prevYear]["USA"].state = 8;
       }
       events[prevYear]["ARG"].state = 2;
@@ -2125,15 +2216,21 @@ function calculateEvents() {
       }
       events[prevYear]["PAP"].strength = 0;
     }
+    if (year == 1875) {
+      events[prevYear]["EGY"].state = 5;
+    }
     if (year == 1877) {
       events[prevYear]["ROA"].strength = 1000;
       events[prevYear]["ROA"].state = 2;
       events[prevYear]["ROA"].name = "Romania";
       c.ottoman_romania = false;
       events[prevYear]["SER"].strength = 1000;
-      events[prevYear]["BUL"].strength = 1000;
       events[prevYear]["SER"].state = 3;
-      events[prevYear]["BUL"].state = 10;
+
+      if (!c.byzantium) {
+        events[prevYear]["BUL"].strength = 1000;
+        events[prevYear]["BUL"].state = 10;
+      }
 
       if (RNG("CSA_Expansion",year) <= possible) {
         events[prevYear]["CSA"].state = 5;
@@ -2161,6 +2258,10 @@ function calculateEvents() {
         events[prevYear]["CEN"].state = 1;
         events[prevYear]["CEN"].name = "";
       }
+    }
+    if (year == 1882) {
+      events[prevYear]["EGY"].name = "Egypt (UK)";
+      events[prevYear]["EGY"].size += 3;
     }
     if (year == 1885) {
       events[prevYear]["ENGa"].state = 3;
@@ -2218,6 +2319,13 @@ function calculateEvents() {
       if (c.af_colonization) {
         events[prevYear]["ENGx"].strength = 300;
         events[prevYear]["ENGs"].state = 3;
+
+        // Hala'ib Triangle
+        if (RNG("Hala'ib_Triangle",year) <= possible) {
+          events[prevYear]["EGY"].state = 6;
+        } else {
+          events[prevYear]["EGY"].state = 7;
+        }
         events[prevYear]["BUN"].strength = 0;
         events[prevYear]["KIL"].strength = 0;
         events[prevYear]["DAR"].strength = 0;
@@ -2252,6 +2360,9 @@ function calculateEvents() {
           events[prevYear]["FRAs"].strength = 61;
         }
 
+        if (events[prevYear]["OTT"].strength < 0) {
+          events[prevYear]["ITAx"].state = 2;
+        }
         events[prevYear]["MAL"].strength = 0;
         events[prevYear]["SON"].strength = 0;
         events[prevYear]["JOL"].strength = 0;
@@ -2381,7 +2492,6 @@ function calculateEvents() {
         events[prevYear]["SYR"].strength = 400;
         events[prevYear]["ENGb"].strength = 500;
       }
-      events[prevYear]["BYZ"].state = 2;
 
       if (c.unified_germany) {
         c.ww2 = false;
@@ -2419,12 +2529,17 @@ function calculateEvents() {
         events[prevYear]["GEO"].strength = 1000;
         events[prevYear]["UKR"].state = "a";
         events[prevYear]["UKR"].strength = 1000;
-
         events[prevYear]["KZH"].strength = 500;
+
+        events[prevYear]["BYZ"].state = 2;
+
       } else if (RNG("WWI_Aftermath",year) <= Default) {
 
         // Normal WWI
         c.ww2 = true;
+        if (RNG("German_Venezuela",year) <= unlikely) {
+          events[prevYear]["VEZ"].name = "Welserland ";
+        }
         if (RNG("Arabia's_Fate",year) <= unlikely) {
           // Arabic Union
           events[prevYear]["ISL"].name = "Arabic Union";
@@ -2475,6 +2590,15 @@ function calculateEvents() {
       events[prevYear]["LIT"].strength = 20;
       events[prevYear]["LIT"].state = 5;
 
+      if (c.byzantium) {
+        events[prevYear]["OTT"].strength = 200;
+        events[prevYear]["OTT"].state = 12;
+        events[prevYear]["OTT"].name = "Kurdistan";
+        events[prevYear]["OTT"].x = 1520;
+        events[prevYear]["OTT"].y = 337;
+        events[prevYear]["OTT"].size = 4;
+      }
+
       if (RNG("Mongolian_Expansion",year) <= unlikely) {
         events[prevYear]["MON"].state = "a";
       } else if (RNG("Mongolian_Expansion",year) <= Default) {
@@ -2504,7 +2628,7 @@ function calculateEvents() {
         events[prevYear]["FRAx"].name = "French Republic";
       }
 
-      if (!c.kaiserreich) {
+      if (!c.kaiserreich && !c.byzantium) {
         events[prevYear]["OTT"].state = 12;
         events[prevYear]["OTT"].name = "Turkey";
         events[prevYear]["OTT"].x += 30;
@@ -2648,7 +2772,6 @@ function calculateEvents() {
       }
     }
     if (year == 1945) {
-      // WW2 Aftermath 7452534675436784564
       if (c.ww2) {
         if (RNG("WWII",year) <= superUnlikely) {
           // Fuhrerreich
@@ -2662,6 +2785,10 @@ function calculateEvents() {
           events[prevYear]["KZH"].x += 30;
           events[prevYear]["KZH"].name = "Kazakhs";
           events[prevYear]["KZH"].state = 2;
+          events[prevYear]["GEO"].strength = 100;
+          events[prevYear]["ARM"].strength = 100;
+          events[prevYear]["HOR"].strength = 100;
+          events[prevYear]["HOR"].name = " ";
 
           events[prevYear]["GER"].state = 13;
 
@@ -2833,6 +2960,9 @@ function calculateEvents() {
       } else {
         events[prevYear]["DRK"].state = 2;
       }
+
+      events[prevYear]["EGY"].name = "Egypt";
+      events[prevYear]["EGY"].x += 40;
     }
     if (year == 1954) {
       if (c.fuhrerreich && RNG("Lake_Congo_Project",year) <= superUnlikely) {
@@ -2847,6 +2977,7 @@ function calculateEvents() {
       events[prevYear]["VIE"].name = "N. Vietnam";
       events[prevYear]["CHM"].strength = 20;
       events[prevYear]["CHM"].name = "S. Vietnam";
+      events[prevYear]["CHM"].state = 2;
       events[prevYear]["CHM"].y += 45;
     }
     if (year == 1956) {
@@ -2866,12 +2997,6 @@ function calculateEvents() {
       // Decolonization
       if (c.af_colonization) {
         if (!c.fuhrerreich) {
-          events[prevYear]["ITAx"].state = 3;
-          events[prevYear]["ITAx"].name = "Eritrea"
-          events[prevYear]["ITAx"].x = 1520;
-          events[prevYear]["ITAx"].y = 500;
-          events[prevYear]["ITAx"].size = 5;
-    
           events[prevYear]["KON"].state = 3;
           events[prevYear]["KON"].name = "Zaire";
           events[prevYear]["KON"].x += 40;
@@ -2880,6 +3005,12 @@ function calculateEvents() {
           events[prevYear]["SOM"].strength = 150;
           events[prevYear]["SOM"].name = "Somalia";
           events[prevYear]["SOM"].state = 3;
+
+          events[prevYear]["ITAx"].state = 3;
+          events[prevYear]["ITAx"].name = "Eritrea";
+          events[prevYear]["ITAx"].x = 1520;
+          events[prevYear]["ITAx"].y = 500;
+          events[prevYear]["ITAx"].size = 5;
         }
 
         events[prevYear]["MAD"].strength = 150;
@@ -3076,6 +3207,9 @@ function calculateEvents() {
     if (year == 1975) {
       // Vietnam War Over
       events[prevYear]["VIE"].name = "Vietnam";
+      if (RNG("Vietnam_War",year) <= uncommon) {
+        c.south_vietnam = true;
+      }
 
       events[prevYear]["SUR"].name = "Suriname";
       if (events[prevYear]["PORa"].state == "b") {
@@ -3174,6 +3308,8 @@ function calculateEvents() {
         events[prevYear]["LIT"].state = 1;
         events[prevYear]["UKR"].strength = 1000;
         events[prevYear]["UKR"].state = 1;
+        events[prevYear]["POL"].strength = 500;
+        events[prevYear]["POL"].state = 9;
         c.occupied_iran = false;
       }
       }
@@ -3251,6 +3387,11 @@ function calculateEvents() {
     }
     if (year == 2014) {
       events[prevYear]["UKR"].state = 2;
+      if (RNG("Scotland_Independence",year) <= uncommon) {
+        events[prevYear]["SCO"].state = 2;
+        events[prevYear]["SCO"].strength = 100;
+        c.scotland = true;
+      }
     }
     if (year == 2022) {
       events[prevYear]["UKR"].state = 3;
@@ -3339,7 +3480,7 @@ zoom.onwheel = function (e) {
   pointX = e.clientX - xs * scale;
   pointY = e.clientY - ys * scale;
   
-  if (scale > 4) {
+  if (scale > 3) {
     zoom.classList.add("pixelated");
     
     const images = document.querySelectorAll("img.above-layer");
@@ -3347,7 +3488,7 @@ zoom.onwheel = function (e) {
       img.classList.add("pixelated");
     });
     
-    additionalScaleY = 0.8;
+    additionalScaleY = 0.85;
     skew = -1;
 
     if (scale > 17) {
@@ -3475,7 +3616,6 @@ function updateCountries() {
 
   swapItems(nations,"UKR","HUN");
   swapItems(nations,"ENGk","SPAc");
-  swapItems(nations,"DUTc","CAN");
   swapItems(nations,"GUY","POR");
   swapItems(nations,"VEZ","GUY");
   swapItems(nations,"FGU","POR");
@@ -3516,6 +3656,7 @@ function updateCountries() {
   if (events[timeline]["conditions"].isChineseCivilWar) {
     frontItem(nations, "QIN");
   }
+  frontItem(nations, "SOK");
   frontItem(nations, "EAF");
   frontItem(nations, "SWI");
   frontItem(nations, "DUT");
@@ -3554,6 +3695,9 @@ function updateCountries() {
   if (timeline >= 1900 && events[timeline]["SER"].name == "Greater Yugoslavia") {
     frontItem(nations, "SER");
   }
+  if (events[timeline]["EGY"].name == "Muhammad Ali " || events[timeline]["EGY"].name == "Egyptian Khedivate" || events[timeline]["EGY"].name == "Egypt") {
+    frontItem(nations, "EGY");
+  }
   if (events[timeline]["conditions"].kaiserreich) {
     frontItem(nations, "AFG");
   }
@@ -3564,7 +3708,7 @@ function updateCountries() {
     frontItem(nations, "HUN");
     frontItem(nations, "SER");
   }
-  if (timeline >= 1700 && events[timeline]["QUE"].name == "Louisiana") {
+  if (timeline >= 1700 && (events[timeline]["QUE"].name == "Louisiana" || events[timeline]["QUE"].name.includes("Burr"))) {
     frontItem(nations, "QUE");
   }
   if (timeline >= 1800 && events[timeline]["USA"].name == " ") {
@@ -3578,6 +3722,9 @@ function updateCountries() {
   }
   if (events[timeline]["conditions"].napoleonic_wars) {
     frontItem(nations, "FRA");
+  }
+  if (events[timeline]["conditions"].scotland) {
+    frontItem(nations, "SCO");
   }
   if (events[timeline]["conditions"].somaliland) {
     frontItem(nations, "ITAx");
@@ -3604,6 +3751,8 @@ function updateCountries() {
   frontItem(nations, "TIB");
   frontItem(nations, "GER");
   frontItem(nations, "EU");
+  frontItem(nations, "DUTc");
+  frontItem(nations, "SWEc");
 
   // Americas
   if (timeline >= 1989) {
@@ -3645,7 +3794,13 @@ function updateCountries() {
       const img = new Image();
       //img.src = `images/${nations[i]}/${nations[i] + events[timeline][nations[i]].state}.png`;
       //Base64
-      img.src = `${states[nations[i].toLowerCase() + events[timeline][nations[i]].state]}`;
+      const src = `${states[nations[i].toLowerCase() + events[timeline][nations[i]].state]}`;
+      img.src = src;
+
+      img.onerror = function() {
+          console.log(events[timeline][nations[i]]);
+      };
+
       img.classList.add("above-layer");
       img.style.loading = "lazy";
       img.style.decoding = "async";
@@ -3699,6 +3854,9 @@ function updateCountries() {
       if (events[timeline][nations[i]].name === "Philippines") {
         img.style.filter = philippines;
       }
+      if (events[timeline][nations[i]].name === "Egypt (UK)") {
+        img.style.filter = "hue-rotate(298deg) saturate(148%) brightness(93%)";
+      }
       // condition-based color
       if (events[timeline][nations[i]].name === "Iran " && events[timeline]["conditions"].occupied_iran) {
         img.style.filter = uk;
@@ -3707,6 +3865,9 @@ function updateCountries() {
         img.style.filter = "hue-rotate(297deg) saturate(165%) brightness(90%)";
       }
 
+      if (nations[i] == "VIE" && events[timeline]["conditions"].south_vietnam) {
+        img.style.filter = "hue-rotate(107deg) saturate(361%) brightness(210%)";
+      }
       if (events[timeline][nations[i]].name === "Malaysia") {
         img.style.filter = "hue-rotate(124deg) saturate(272%) brightness(31%)";
       }
@@ -3749,7 +3910,7 @@ function updateCountries() {
 
       if ("CHM" in events[timeline]) {
         if (events[timeline]["CHM"].name === "S. Vietnam" && nations[i] == "CHM") {
-          img.style.filter = "hue-rotate(45deg) saturate(3604%) brightness(99%)";
+          img.style.filter = "hue-rotate(45deg) saturate(3004%) brightness(99%)";
         }
       }
 
@@ -3759,6 +3920,9 @@ function updateCountries() {
       }
       if (events[timeline]["RUS"].name === "Russian Anarchy" && (nations[i] == "RUS" || nations[i] == "RUSc")) {
         img.style.filter = "grayscale(90%)";
+      }
+      if (events[timeline]["RUS"].name === "Russian Anarchy" && nations[i] === "HOR") {
+        img.style.filter = "grayscale(50%) brightness(70%)";
       }
 
       // Communist Colors
@@ -3792,6 +3956,9 @@ function updateCountries() {
       if (nations[i] === "USAc" && events[timeline]["conditions"].big_japan) {
         img.style.filter = "hue-rotate(147deg) saturate(101%) brightness(260%)";
       }
+      if (nations[i] === "QUE" && events[timeline]["conditions"].burr_plot) {
+        img.style.filter = "hue-rotate(131deg) saturate(95%) brightness(89%)";
+      }
       if (nations[i] === "USA" && (events[timeline][nations[i]].name === " " || events[timeline][nations[i]].name === "13 Colonies")) {
         img.style.filter = "hue-rotate(144deg) saturate(33%) brightness(140%)";
       }
@@ -3809,6 +3976,9 @@ function updateCountries() {
       }
       if (timeline >= 1867 && nations[i] == "USA" && events[timeline][nations[i]].name === " ") {
         img.style.filter = canada;
+      }
+      if (nations[i] === "USA" && events[timeline]["CAN"].name === "Greater Nazi Reich") {
+        img.style.filter = "";
       }
       if (timeline >= 1760 && nations[i] === "CAN") {
         if (events[timeline]["conditions"].pax_francia) {
@@ -3835,6 +4005,9 @@ function updateCountries() {
         if (nations[i] == "FRA" || nations[i] == "FRAc" || nations[i] == "FRAi" || nations[i] == "FRAx" || nations[i] == "FRAk" || nations[i] == "FGU") {
           img.style.filter = "grayscale(90%)";
         }
+      }
+      if (events[timeline][nations[i]].name === "Welserland") {
+        img.style.filter = "hue-rotate(329deg) saturate(36%) brightness(39%)";
       }
 
       if (events[timeline][nations[i]].name === "Italian East Africa" && nations[i] === "ABY") {
