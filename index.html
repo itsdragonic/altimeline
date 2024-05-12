@@ -1,101 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>Altimeline</title>
-  <link rel="shortcut icon" type="image/png" href="altimeline.png">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700">
-</head>
-<body>
-<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <title>Altimeline II</title>
+    <link rel="shortcut icon" type="image/png" href="altimeline.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Altimeline</title>
 </head>
+
 <body>
-    <div id="seed" class="input-field">
-        <label for="seedInput">Seed:</label>
+    <!-- HUD Elements -->
+    <div id="seed">
+        <label for="seedInput">Seed:  </label>
         <input type="text" id="seedInput" required spellcheck="false" placeholder="Enter Seed">
     </div>
-    
+
     <div class="range">
-        <label id="timeline" for="timelineInput">Timeline:</label>
-        <input type="range" id="timelineInput" min="-2024" max="2022" value="1">
+        <label id="timeline" for="timelineInput">Timeline: </label>
         <span id="timelineValue">1</span>
     </div>
-    
-    <div class="zoom_outer">
-        <div id="zoom">
-            <img src="map.png" id="map" alt="Loading...">
-            <img src="" id="bg" alt="Loading...">
-            <img src="ocean.png" id="ocean" alt="Loading...">
-            <img src="" id="overlay" alt="Loading...">
-        </div>
+
+    <!-- Map -->
+    <div id="box">
+        <canvas width='1000px' height='563px'><canvas>
     </div>
 
-     <!-- Add the modal -->
-     <div class="modal" id="achievements-modal">
-        <div class="modal-content">
-          <span class="close-button" id="close-achievements-modal">X</span>
-          <h2>Achievements to Find</h2>
-          <!-- Add your achievement content here -->
-          
-          <p>Find a timeline where Germany wins WWI</p>
-          <p>Find a timeline where Germany wins WWII</p>
-          <p>Find a timeline where Napoleon wins</p>
-          <p>Find a timeline where the Confederates win the American Civil War</p>
-          <p>Find a nuclear apocalypse timeline</p>
-
-          <p>Find a timeline where Ukraine wins the Russo-Ukranian War</p>
-          <p>Find a timeline where Rome colonizes the Americas</p>
-          <p>Find a timeline with a ginormous French colonial empire</p>
-          <p>Find "The European Federation"</p>
-          <p>Find "Liechtensteinian Alaska"</p>
-          
-          <p>Find 4 Countries occupying Australia at the same time</p>
-          <p>Find a timeline where Canada unites with the U.S.</p>
-          <p>Find a timeline where the USSR wins the Cold War</p>
-          <p>Find the United States fragmented into all 50 states</p>
-          <p>Find "The Confederation of the Golden Circle"</p>
-          <p>Find a timeline where Paraguay wins the War of the Triple Alliance</p>
-
-          <p>Find "The Chinese Empire"</p>
-          <p>Find a timeline where China colonizes the Americas</p>
-          <p>Find a timeline where India is never colonized</p>
-          <p>Find Japanese Empire that survives</p>
-          <p>Find both Korea, Japan, and Vietnam split in 2</p>
-
-          <p>Find the 'Congo Lake Project' [very difficult]</p>
-          <p>Find 'The Man in the High Castle...' [insanely difficult]</p>
-
-          <!-- Add more achievements as needed -->
-        </div>
-      </div>
-      <!-- End of modal -->
-
-    <div class="button-container">
-        <div class="emoji-button hidden" id="eye-button" onclick="showNames()">
-          👁️
-          <span class="tooltip">Display Names</span>
-        </div>
-        <div class="emoji-button hidden" id="earth-button" onclick="showMap()">
-          🌎
-          <span class="tooltip">Physical Map</span>
-        </div>
-        <div class="emoji-button hidden" id="achievements-button">
-            🌟
-            <span class="tooltip">Achievements</span>
-        </div>
-        <div class="emoji-button" id="gear-button">
-          <span class="gear-text">⚙️</span>
-        </div>
-      </div>      
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <script defer src="image.js"></script>
+    <script defer src="data.js"></script>
+    <script defer src="script.js"></script>
+    <script defer src="events.js"></script>
 </body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
-  
-  <script src="image.js"></script>
-  <script src="script.js"></script>
-</body>
+</html>
