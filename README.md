@@ -1,5 +1,5 @@
 # Altimeline
-[This is an older version of Altimeline]
+[This is an older version of Altimeline II]
 
 See the history of our world on a map by scrolling through the timeline.
 
@@ -16,5 +16,3 @@ Seed "0" is our timeline.
 Typing any string of characters will lead to unique alternate histories.
 
 Special seeds such as "kaiserreich," "fuhrerreich," or "fallout" give famous alternate histories.
-
-You can share timelines and years you find in this format: https://itsdragonic.github.io/altimeline/?year=1936?seed=insanity
