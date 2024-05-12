@@ -1,5 +1,5 @@
 # Altimeline
-https://itsdragonic.github.io/altimeline/
+[This is an older version of Altimeline]
 
 See the history of our world on a map by scrolling through the timeline.
 
