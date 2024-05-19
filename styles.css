@@ -266,12 +266,13 @@ input[type=range]:focus::-ms-fill-upper {
     border: none;
     cursor: pointer;
     transition: transform 0.1s ease;
-  }
-  .settings-button:hover {
+}
+.settings-button:hover {
     transform: scale(1.2);
-  }
-  /* Modal styling */
-  .modal {
+}
+
+/* Modal styling */
+.modal {
     display: none;
     position: fixed;
     top: 50%;
@@ -282,20 +283,20 @@ input[type=range]:focus::-ms-fill-upper {
     border: 5px solid #8b4513;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
-  }
-  .modal-header {
+}
+.modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     background: #8b4513;
     color: white;
-  }
-  .modal-content {
+}
+.modal-content {
     padding: 20px;
     text-align: left;
-  }
-  .close-button {
+}
+.close-button {
     background: transparent;
     border: none;
     font-size: 20px;
@@ -304,56 +305,19 @@ input[type=range]:focus::-ms-fill-upper {
     color: white;
     transition: transform 0.1s ease;
     transition: color 0.2s ease;
-  }
-  .close-button:hover {
+}
+.close-button:hover {
     transform: scale(1.2);
     color: rgb(158, 16, 16);
-  }
-  .credits {
+}
+.credits {
     margin-bottom: 20px;
     font-size: 20px;
     text-align: center;
-  }
-  /* Toggle Switch Styling */
-  .switch-wrap {
-    cursor: pointer;
-    background: #15273b;
-    padding: 7px;
-    width: 120px;
-    height: calc(120px / 2 + 7px);
-    border-radius: calc((120px / 2 + 7px) / 2);
-    margin-bottom: 10px;
-    position: relative;
-  }
-  .switch-wrap input {
-    position: absolute;
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  .switch {
-    height: 100%;
-    display: grid;
-    align-items: right;
-    justify-content: right;
-    grid-template-columns: 0fr 1fr 1fr;
-    transition: .2s;
-  }
-  .switch::after {
-    content: '';
-    border-radius: 50%;
-    background: #ccc;
-    grid-column: 2;
-    transition: background .2s;
-  }
-  .switch-wrap input:checked + .switch {
-    grid-template-columns: 1fr 1fr 0fr; 
-  }
-  .switch-wrap input:checked + .switch::after {
-    background-color: #52cf71;
-  }
-  /* Overlay */
-  .overlay {
+}
+  
+/* Overlay */
+#overlay {
     display: none;
     position: fixed;
     top: 0;
@@ -362,4 +326,4 @@ input[type=range]:focus::-ms-fill-upper {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
-  }
+}
