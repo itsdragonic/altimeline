@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Altimeline II</title>
-    <link rel="shortcut icon" type="image/png" href="altimeline.png">
+    <link rel="shortcut icon" type="image/png" href="images/altimeline.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,25 +14,76 @@
 <body>
     <!-- HUD Elements -->
     <div id="seed">
-        <label for="seedInput">Seed:  </label>
-        <input type="text" id="seedInput" required spellcheck="false" placeholder="Enter Seed">
+        <input type="text" id="seedInput" maxlength="16" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
+        <img id="randomSeed" title="Generate Random Seed" src="images/dice.png"></img>
     </div>
 
     <div class="range">
-        <label id="timeline" for="timelineInput">Timeline: </label>
+        <label id="timeline" for="timelineInput">Year </label>
         <span id="timelineValue">1</span>
+    </div>
+
+    <img id="loading" src="images/loading.gif" alt="Loading..." width="40" height="40"/>
+
+    <!-- World News -->
+    <div id="newsContainer"></div>
+        
+    <!-- Settings Button -->
+    <img class="settings-button" id="settingsButton" src="images/cog.png" title="Settings"></img>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+    <div class="modal-header">
+        <span>Settings</span>
+        <button class="close-button" id="closeButton">X</button>
+    </div>
+    <div class="modal-content">
+        <div class="credits">
+        <b>Altimeline II</b>
+         by Dragonic
+        </div>
+
+        <div class="toggle-switch">
+        <label>
+            Physical Map 
+            <input type="checkbox">
+            <span class="switch"></span>
+        </label>
+        </div>
+
+        <div class="toggle-switch">
+        <label>
+            Show Names 
+            <input type="checkbox">
+            <span class="switch"></span>
+        </label>
+        </div>
+
+        <div class="toggle-switch">
+        <label>
+            Show World Events 
+            <input type="checkbox">
+            <span class="switch"></span>
+        </label>
+        </div>
+
+    </div>
     </div>
 
     <!-- Map -->
     <div id="box">
-        <canvas width='1000px' height='563px'><canvas>
+        <canvas id='main' width='1000px' height='563px'><canvas>
+        <canvas id='preload'></canvas>
+        <canvas id='buffer'></canvas>
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
-    <script defer src="image.js"></script>
-    <script defer src="data.js"></script>
-    <script defer src="script.js"></script>
-    <script defer src="events.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <script defer src="scripts/image.js"></script>
+    <script defer src="scripts/data.js"></script>
+    <script defer src="scripts/script.js"></script>
+    <script defer src="scripts/events.js"></script>
 </body>
 </html>
