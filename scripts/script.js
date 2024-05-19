@@ -222,18 +222,54 @@ window.addEventListener('resize', function() {
 });
 window.dispatchEvent(new Event('resize'));
 
-// Modal
-document.getElementById('settingsButton').addEventListener('click', function() {
-    document.getElementById('modal').style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
+
+// Settings Modal
+const settingsButton = document.getElementById('settingsButton');
+const closeButton = document.getElementById('closeButton');
+const overlay = document.getElementById('overlay');
+const modal = document.getElementById('modal');
+
+settingsButton.addEventListener('click', function() {
+    if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    } else {
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+    }
 });
 
-document.getElementById('closeButton').addEventListener('click', function() {
-    document.getElementById('modal').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
+closeButton.addEventListener('click', function() {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
 });
 
-document.getElementById('overlay').addEventListener('click', function() {
-    document.getElementById('modal').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
+overlay.addEventListener('click', function() {
+    modal.style.display = 'none';
+    overlay.style.display = 'none';
+});
+
+// Toggles
+var physicalMap = false;
+var showNames = true;
+var showNews = true;
+
+// Checkboxes
+document.getElementById('phy').addEventListener('change', function() {
+    physicalMap = this.checked;
+    console.log('Physical map status:', physicalMap);
+    updateCivs();
+    fallback();
+});
+document.getElementById('show').addEventListener('change', function() {
+    showNames = this.checked;
+    console.log('Show names status:', showNames);
+    updateCivs();
+    fallback();
+});
+document.getElementById('news').addEventListener('change', function() {
+    showNews = this.checked;
+    console.log('Show news status:', showNews);
+    updateCivs();
+    fallback();
 });
