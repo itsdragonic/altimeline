@@ -31,7 +31,7 @@
     <!-- Settings Button -->
     <img class="settings-button" id="settingsButton" src="images/cog.png" title="Settings"></img>
 
-    <div class="overlay" id="overlay"></div>
+    <div id="overlay"></div>
 
     <!-- Modal -->
     <div class="modal" id="modal">
@@ -48,7 +48,7 @@
         <div class="toggle-switch">
         <label>
             Physical Map 
-            <input type="checkbox">
+            <input type="checkbox" id="phy">
             <span class="switch"></span>
         </label>
         </div>
@@ -56,7 +56,7 @@
         <div class="toggle-switch">
         <label>
             Show Names 
-            <input type="checkbox">
+            <input type="checkbox" id="show" checked>
             <span class="switch"></span>
         </label>
         </div>
@@ -64,11 +64,10 @@
         <div class="toggle-switch">
         <label>
             Show World Events 
-            <input type="checkbox">
+            <input type="checkbox" id="news" checked>
             <span class="switch"></span>
         </label>
         </div>
-
     </div>
     </div>
 
