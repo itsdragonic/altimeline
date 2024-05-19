@@ -22,10 +22,6 @@ var waittime = 2000;
 
 var worldTech = 100;
 
-var showNames = true;
-var physicalMap = false;
-var showNews = true;
-
 // RNG Events
 let impossible = 0.01,
     incrediblyUnlikely = 0.025,
@@ -312,7 +308,7 @@ calculateEvents();
 var loading = document.getElementById("loading");
 
 
-function loadImage(src) {
+async function loadImage(src) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
@@ -341,7 +337,15 @@ async function updateCivs() {
     await Promise.all(images);
   } catch (error) {
     console.error('Failed to load images', error);
+    loading.style.display = 'none';
     return;
+  }
+
+  // Load physical map
+  let physical;
+  if (physicalMap) {
+    physical = await loadImage("images/map.png");
+    ctx2.drawImage(physical, 0, 0, buffer.width, buffer.height);
   }
 
   for (let i = 0; i < nations.length; i++) {
@@ -349,18 +353,30 @@ async function updateCivs() {
     const civ = civs[timeline][nation];
     const img = await loadImage(`${states[nation.toLowerCase() + civ.state]}`);
 
-    if (JSON.stringify(civ.color) !== "[]" && civ.color !== undefined) {
+    if (Array.isArray(civ.color) && civ.color.length === 3) {
       changeColor(img, civ.color[0], civ.color[1], civ.color[2]);
     } else {
       ctx2.drawImage(img, 0, 0, buffer.width, buffer.height);
     }
   }
 
+  // Redraw physical map with transparency
+  if (physicalMap) {
+    ctx2.globalAlpha = 0.25;
+    ctx2.drawImage(physical, 0, 0, buffer.width, buffer.height);
+    ctx2.globalAlpha = 1.0;
+  }
+
   // Draw Map
-  const oceanImage = await loadImage(states.ocean);
+  let oceanImage;
+  if (physicalMap) {
+    oceanImage = await loadImage("images/ocean.png");
+  } else {
+    oceanImage = await loadImage(states.ocean);
+  }
   ctx2.drawImage(oceanImage, 0, 0, buffer.width, buffer.height);
 
-  // News
+  // Handle news display
   const allnews = newsContainer.children;
   for (let i = 0; i < allnews.length; i++) {
     allnews[i].style.display = 'none';
@@ -368,10 +384,12 @@ async function updateCivs() {
   Object.keys(news).forEach(key => {
     const item = news[key];
     const element = document.getElementById(item.id);
-
-    // Set the new 'display' property conditionally
-    if (item.startDate <= timeline && timeline <= item.startDate + item.duration) {
-      element.style.display = 'flex';
+    if (element && showNews) {
+      if (item.startDate <= timeline && timeline <= item.startDate + item.duration) {
+        element.style.display = 'flex';
+      }
+    } else {
+      console.warn(`Element with ID ${item.id} not found`);
     }
   });
 
@@ -383,6 +401,7 @@ async function updateCivs() {
 }
 
 updateCivs();
+
 
 function toPlainString(num) {
   return (''+ +num).replace(/(-?)(\d*)\.?(\d*)e([+-]\d+)/,
@@ -656,5 +675,4 @@ function fallback() {
     redraw();
   }, 500);
 }
-
 fallback();
