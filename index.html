@@ -68,19 +68,27 @@
             <span class="switch"></span>
         </label>
         </div>
+
+        <div class="toggle-switch">
+            <label>
+                Show Jagged Edges
+                <input type="checkbox" id="jagged" checked>
+                <span class="switch"></span>
+            </label>
+        </div>
     </div>
     </div>
 
     <!-- Map -->
     <div id="box">
         <canvas id='main' width='1000px' height='563px'><canvas>
-        <canvas id='preload'></canvas>
         <canvas id='buffer'></canvas>
     </div>
 
     <!-- Scripts -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script defer src="scripts/image.js"></script>
+    <script defer src="scripts/regions.js"></script>
     <script defer src="scripts/data.js"></script>
     <script defer src="scripts/script.js"></script>
     <script defer src="scripts/events.js"></script>
