@@ -3,12 +3,6 @@ var ctx = canvas.getContext('2d');
 var buffer = document.getElementById('buffer');
 var ctx2 = buffer.getContext('2d');
 
-/*  
-    HIGH RES: 2560x1297
-    MEDIUM RES: 1500x760
-    LOW RES: 1000x507
-*/
-
 buffer.width = 2560;
 buffer.height = 1297;
 
@@ -25,9 +19,7 @@ function clearCanvas() {
     ctx.restore();
 }
 
-function redraw() {
-    clearCanvas();
-
+function drawMap(ctx, canvas, thickLines) {
     let img = new Image;
     if (physicalMap) {
         img.src = "images/map.png";
@@ -51,11 +43,18 @@ function redraw() {
         let img4 = new Image;
         img4.src = "images/world.png";
         ctx.drawImage(img4, 0, 0, canvas.width, canvas.height);
+
+        /*let img5 = new Image;
+        img5.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHcAAABqCAYAAACGcc7PAAAAAXNSR0IArs4c6QAABbBJREFUeF7tnVGW3CgMRdO7y9dsYNaXDeRrdpc59mkqmMIgoScBrtdfOSlbwLs8IbCr++sHf1oK/Ck+/NpJrq06GyzsCfbf3/+dzf7652dqfhvNtuloNNgENW/3G/A2mm3T0YXgHl05dCtT9nLOJtz3WXNJx+XHWXp+pex0Tf7Z9/9N1Xdq48FuvGvuzYG1lKztawF6is5TGtUK5XR906HINmcVYxa4tTXHEg+ppyTWH4RDJQ3NqrZHYbzNesDsTJNltE+StJtih7m2Um2ngkw6L4avGxWyKk4B+M7Zd1VmPojRfpVCvNxZ9i3StbO2UxYRe4Cr1WQpahK9OCwY6Ve3MGpVusP2UN4YuVceETEfDjy9DaT3F9TyNGmWO1u8d4J7jMMLsGTiwdtWGlF8+YytkURAyQCglafQvduAzapllN4SJucxGuIHLnRjpsPbQgjQiyGcsL0wqs9RcF3Sc7E/PAe24joqVTxyvfXYb23pKikcxHWRDkY691JF7+wwBMQVKmY3uLunUC/AT3DuuQbTve9T5DFw6d66/6P2vF5pOY2K7m3kd2/IhOu1uCriekH2gvt23qsY68deil6PkXAvT2VYTI3NUSRgFFweXoyxrN6FAgyDS6cC6YJegidcLBNoNOtZNAIuUzIU6TWYJUVD4DIlO9K9pmjVwx7C9eUCja51MQQujxmhDLvBpGsxAi4fEnRx4C+QAIbBpXvxAHsRe4BRcE/3EnAPB/bz3hqMhMv0jGUnitZyLxwu3StiAruo5V40XLoXhk0e6M69aLhcd+VMYFeGweVpFYyZOJAnXD7HFWPwudAVLt3qA00aFQ2XbpUqH3Bd8Q7W0eJZS2kLKhZMAbAsTeRbIwlcvuxmUXvCvSlN9+DSqRPgWJsUw2WxZJXa9/58vS1/r0jLuXStLxdz9MrRY17ofjXh0rVm/SEBKtXw+SV0yyM/fs8HgsYe5Abi4dJmzUTn2rV3j9B7bnvXgRxu95d0uY+CDdwqMPJlsQtcrrHrzy6NixNcVsbrc331UOriF1y6diO6313tufiAS9fux7V0cbUwPuHStfvS7b0gR7ibshWn5TQ+jYtrJyc1nTQxN9U5tNvagip1Trz+9mZNNtqPzgyNg/2XRJrJr9C9enwlAtw718zhHv/WDCDUBo6NFSDKQyL1NlQD9hjW3fHjLWBtA5/q4BudEuBSd1F2UxjqlL37yO9mYvce8tduE2UERyOFhlaC6GozYqoRSBaRRDPU0sAK946AaG1JB+OpX5CzavdJcLXGqWozCraXlq0gPzY1K1NyrtPd30EaYqGdXUONFDc93r0GuIdUl1dlLIITrkW9yr2WNAruSvya++Q970pgo9fcbrmPnrmR8VYDGwn3sWCl57yREy21FbXmLldE1c58tQBWdGs+hk+H+3pZIYmiOQM3VsXauaS+PgLucim5AUXc19XBRq25S6VkQSrtAhbEULvM44aPcq4Cyu2EVMTw4KWKGQH3PHXRrGWqETQurrwpIh1v75GnNA5qKENxIjvZTXdDI2ifElmWnkt/d3Js9FYotef+LX0whLu3J1Dz0DVOpHPzgcBdfECVfK3RVc3Fgs+Ce67DI3vLO/1WPimaxXwmXHiq3mHvGQl6BbgXyJaqmnCvU2cluOYtE+ESbmRmnNrWY5wL3gJNhYJq/GlwVxsPitNQnJXEMO19ud6+818FrgnsMSym5fXgeh1krDJph9Ip6qaZIpjdWhOB6fmvKjPgQt1aAmZ6ngfXxa05YDqXcFHL2tJxpqRly/lxS02m5HnHj1xrg30e6Vy396jo2Pqs2R4uwd6ng0i45kd63Nfq8no43KN7qIKK25427Gi4MPcyHfddPAOuGTDB9sEeV0yDm7qnTdEEKwM7E27q4dvfVah1PXsfOX08a1LKlV3gyh1Egv12lwX0Du3CDnBDBXlSY/8DG0UxiXl8N9UAAAAASUVORK5CYII=";
+        ctx2.drawImage(img5, 1618, 349);*/
     }
   
     // Draw Text
     ctx.fillStyle = 'white';
     ctx.lineWidth = zoomAmount > 4 ? 1 : zoomAmount > 2 ? 2 : 3;
+    if (thickLines) {
+        ctx.lineWidth = 5;
+    }
 
     ctx.lineJoin = 'miter';
     ctx.miterLimit = 2; // adjust
@@ -76,84 +75,118 @@ function redraw() {
             const scaledX = civ.x * 0.96 * canvas.width / buffer.width;
             const scaledY = civ.y * canvas.height / buffer.height;
     
-            ctx.strokeText(civ.name, scaledX, scaledY);
-            ctx.fillText(civ.name, scaledX, scaledY);
+            if (civ.hideName == false || civ.hideName == null) {
+                ctx.strokeText(civ.name, scaledX, scaledY);
+                ctx.fillText(civ.name, scaledX, scaledY);
+            }
         }
-    }    
+    }
+}
+
+function redraw() {
+    clearCanvas();
+    drawMap(ctx, canvas, false);   
 }  
 
 var zoomAmount = 1;
-window.onload = function() {		
+var intervalId;
+var lastX, lastY, dragStart, dragged;
+var scaleFactor = 1.1;
+
+function loadScreen() {
+    clearInterval(intervalId);
+    zoomAmount = 1;
+
+    // Reset the canvas context transformation
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
     redraw();
-    setInterval(() => {
+
+    intervalId = setInterval(() => {
         redraw();
     }, 500);
 
-    var lastX=canvas.width/2, lastY=canvas.height/2;
+    lastX = canvas.width / 2;
+    lastY = canvas.height / 2;
 
-    var dragStart,dragged;
+    dragStart = null;
+    dragged = false;
 
-    canvas.addEventListener('mousemove',function(evt) {
-        lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-        lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-        dragged = true;
-        if (dragStart) {
-            var pt = ctx.transformedPoint(lastX,lastY);
-            ctx.translate(pt.x-dragStart.x,pt.y-dragStart.y);
-            redraw();
-        }
-    }, false);
+    canvas.addEventListener('mousemove', handleMouseMove, false);
+    canvas.addEventListener('mousedown', handleMouseDown, false);
+    canvas.addEventListener('mouseup', handleMouseUp, false);
+    canvas.addEventListener('DOMMouseScroll', handleScroll, false);
+    canvas.addEventListener('mousewheel', handleScroll, false);
+}
 
-    canvas.addEventListener('mousedown',function(evt) {
-        document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
-        lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-        lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-        dragStart = ctx.transformedPoint(lastX,lastY);
-        dragged = false;
-        canvas.style.cursor = 'move';
-    }, false);
-
-    canvas.addEventListener('mouseup',function(evt) {
-        dragStart = null;
-        if (!dragged) zoom(evt.shiftKey ? -1 : 1 );
-        canvas.style.cursor = 'pointer';
-    }, false);
-
-    var scaleFactor = 1.1;
-
-    var zoom = function(clicks) {
-        //if (zoomAmount >= 0.3) {
-        var pt = ctx.transformedPoint(lastX,lastY);
-        ctx.translate(pt.x,pt.y);
-        var factor = Math.pow(scaleFactor,clicks);
-        ctx.scale(factor,factor);
-        zoomAmount *= factor;
-        if (zoomAmount > 0.5) {
-            ctx.imageSmoothingEnabled = false;
-        } else {
-            ctx.imageSmoothingEnabled = true;
-        }
-        ctx.translate(-pt.x,-pt.y);
+function handleMouseMove(evt) {
+    lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+    lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+    dragged = true;
+    if (dragStart) {
+        var pt = ctx.transformedPoint(lastX, lastY);
+        ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
         redraw();
     }
+}
 
-    var handleScroll = function(evt) {
-        var delta = evt.wheelDelta ? evt.wheelDelta/40 : evt.detail ? -evt.detail : 0;
-        if (zoomAmount < 0.3) {
-            delta = Math.abs(delta);
-        } else if (zoomAmount > 2000) {
-            delta = -Math.abs(delta);
-        }
+function handleMouseDown(evt) {
+    document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
+    lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
+    lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
+    dragStart = ctx.transformedPoint(lastX, lastY);
+    dragged = false;
+    canvas.style.cursor = 'move';
+}
 
-        if (delta) zoom(delta);
-        
-        return evt.preventDefault() && false;
-    };
-  
-    canvas.addEventListener('DOMMouseScroll',handleScroll,false);
-    canvas.addEventListener('mousewheel',handleScroll,false);
-};
+function handleMouseUp(evt) {
+    dragStart = null;
+    if (!dragged) zoom(evt.shiftKey ? -1 : 1);
+    canvas.style.cursor = 'pointer';
+}
 
+function zoom(clicks) {
+    var pt = ctx.transformedPoint(lastX, lastY);
+    ctx.translate(pt.x, pt.y);
+    var factor = Math.pow(scaleFactor, clicks);
+    ctx.scale(factor, factor);
+    zoomAmount *= factor;
+    ctx.imageSmoothingEnabled = zoomAmount <= 0.5;
+    ctx.translate(-pt.x, -pt.y);
+    redraw();
+}
+
+function handleScroll(evt) {
+    var delta = evt.wheelDelta ? evt.wheelDelta / 40 : evt.detail ? -evt.detail : 0;
+    if (zoomAmount < 0.3) {
+        delta = Math.abs(delta);
+    } else if (zoomAmount > 2000) {
+        delta = -Math.abs(delta);
+    }
+
+    if (delta) zoom(delta);
+
+    return evt.preventDefault() && false;
+}
+
+function refresh() {
+    canvas.removeEventListener('mousemove', handleMouseMove);
+    canvas.removeEventListener('mousedown', handleMouseDown);
+    canvas.removeEventListener('mouseup', handleMouseUp);
+    canvas.removeEventListener('DOMMouseScroll', handleScroll);
+    canvas.removeEventListener('mousewheel', handleScroll);
+
+    loadScreen();
+    trackTransforms(ctx);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    refresh();
+});
+
+window.addEventListener('resize', function () {
+    refresh();    
+});
 
 // Adds ctx.getTransform() - returns an SVGMatrix
 // Adds ctx.transformedPoint(x,y) - returns an SVGPoint
@@ -231,16 +264,30 @@ function generateRandomString() {
 
 // Generate Random Seed Button
 const generateSeedButton = document.getElementById('randomSeed');
-
-generateSeedButton.addEventListener('mouseover', () => {
-    generateSeedButton.title = 'Generate Random Seed';
-});
+const generateDownloadButton = document.getElementById('downloadButton');
 
 generateSeedButton.addEventListener('click', () => {
     seedInput.value = generateRandomString();
-    calcSeed(seedInput.value);
 
+    calcSeed(seedInput.value);
     fallback();
+});
+
+generateDownloadButton.addEventListener('click', () => {
+    let tempCanvas = document.createElement('canvas');
+    let tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = buffer.width;
+    tempCanvas.height = buffer.height;
+
+    tempCtx.fillStyle = 'white';
+    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+    drawMap(tempCtx, buffer, true);
+
+    let link = document.createElement('a');
+    link.href = tempCanvas.toDataURL('image/png');
+    link.download = 'year' + timeline + '.png';
+    link.click();
 });
 
 // Scale map
