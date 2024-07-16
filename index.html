@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!--
+  //////////////////////////////////////////////////////////////
+
+  Altimeline II
+      by Dragonic - 2024
+
+      Resources:
+          History of the World: https://www.youtube.com/watch?v=-6Wu0Q7x5D0
+          Image Coordinates: https://www.programminghead.com/Projects/find-coordinates-of-image-online.html
+          
+          Base64 Encoder: https://www.base64-image.de/
+          Base64 Decoder: https://base64.guru/converter/decode/image
+
+  //////////////////////////////////////////////////////////////
+-->
+
 <head>
     <meta charset="UTF-8">
     <title>Altimeline II</title>
@@ -14,7 +30,7 @@
 <body>
     <!-- HUD Elements -->
     <div id="seed">
-        <input type="text" id="seedInput" maxlength="16" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
+        <input type="text" id="seedInput" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
         <img id="randomSeed" title="Generate Random Seed" src="images/dice.png"></img>
     </div>
 
@@ -28,8 +44,9 @@
     <!-- World News -->
     <div id="newsContainer"></div>
         
-    <!-- Settings Button -->
-    <img class="settings-button" id="settingsButton" src="images/cog.png" title="Settings"></img>
+    <!-- Settings & Download Button -->
+    <button id="settingsButton" title="Settings"></button>
+    <button id="downloadButton" title="Download"></button>
 
     <div id="overlay"></div>
 
@@ -81,15 +98,16 @@
 
     <!-- Map -->
     <div id="box">
-        <canvas id='main' width='1000px' height='563px'><canvas>
+        <canvas id='main' width='1000' height='563'><canvas>
         <canvas id='buffer'></canvas>
     </div>
 
     <!-- Scripts -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script defer src="scripts/image.js"></script>
-    <script defer src="scripts/regions.js"></script>
+    <script defer src="scripts/rearrange.js"></script>
     <script defer src="scripts/data.js"></script>
+    <script defer src="scripts/regions.js"></script>
     <script defer src="scripts/script.js"></script>
     <script defer src="scripts/events.js"></script>
 </body>
