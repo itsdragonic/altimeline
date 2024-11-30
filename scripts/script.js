@@ -286,7 +286,11 @@ generateDownloadButton.addEventListener('click', () => {
 
     let link = document.createElement('a');
     link.href = tempCanvas.toDataURL('image/png');
-    link.download = 'year' + timeline + '.png';
+    if (seed != "" && seed != 0 && seed != null) {
+        link.download = `year${timeline}_seed${seed}.png`;
+    } else {
+        link.download = `year${timeline}.png`;
+    }
     link.click();
 });
 
@@ -301,30 +305,46 @@ window.dispatchEvent(new Event('resize'));
 
 
 // Settings Modal
-const settingsButton = document.getElementById('settingsButton');
-const closeButton = document.getElementById('closeButton');
-const overlay = document.getElementById('overlay');
-const modal = document.getElementById('modal');
+document.getElementById("settings").addEventListener("click", function() {
+    document.getElementById("popup").classList.toggle("hidden");
+    addOverlay(); // Call function to add overlay
+});
+  
+document.getElementById("close-popup").addEventListener("click", function() {
+    document.getElementById("popup").classList.add("hidden");
+    removeOverlay(); // Call function to remove overlay
+});
+  
+const links = document.querySelectorAll(".sidebar ul li a");
+  
+links.forEach(link => {
+    link.addEventListener("click", function(e) {
+        e.preventDefault();
 
-settingsButton.addEventListener('click', function() {
-    if (modal.style.display === 'block') {
-        modal.style.display = 'none';
-        overlay.style.display = 'none';
-    } else {
-        modal.style.display = 'block';
-        overlay.style.display = 'block';
+        // Toggle active class on sidebar links
+        links.forEach(link => link.classList.remove("active"));
+        this.classList.add("active");
+
+        // Show the relevant section
+        const targetSection = document.querySelector(this.getAttribute("href"));
+        document.querySelectorAll(".content-section").forEach(section => section.classList.add("hidden"));
+        targetSection.classList.remove("hidden");
+    });
+});
+  
+function addOverlay() {
+    // Create overlay element
+    const overlay = document.createElement("div");
+    overlay.classList.add("overlay"); // Add class for styling
+    document.body.appendChild(overlay); // Append overlay to the body
+}
+  
+function removeOverlay() {
+    const overlay = document.querySelector(".overlay");
+    if (overlay) {
+        overlay.parentNode.removeChild(overlay); // Remove overlay if exists
     }
-});
-
-closeButton.addEventListener('click', function() {
-    modal.style.display = 'none';
-    overlay.style.display = 'none';
-});
-
-overlay.addEventListener('click', function() {
-    modal.style.display = 'none';
-    overlay.style.display = 'none';
-});
+}
 
 // Toggles
 var physicalMap = false;
