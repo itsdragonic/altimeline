@@ -19,7 +19,6 @@ let impossible = 0.01,
 
 /* 
 <-- To-Do List -->
-  australia bug
 
 <-- Band-aids over underlying issues -->
   *Handle Overlapping and Overwhelming timelines*
@@ -28,7 +27,6 @@ let impossible = 0.01,
   Arabia & Persia in 1000s
   Sardinia/Savoy/Piedmont
   australia antipode
-  oregon joint occupation
 
 <-- Cool Seeds -->
     Nova Roma:  
@@ -36,10 +34,11 @@ let impossible = 0.01,
     No Greece:  
 
     WTF: 7n35545u
+         04681My9
 
 <-- Last ID used -->
-    RNG: 86
-    News: 56
+    RNG: 100
+    News: 65
 
 <-- Region Theory -->
   Beginning: Regular year-based increments
@@ -60,7 +59,7 @@ let impossible = 0.01,
 
 var newsContainer = document.getElementById('newsContainer');
 
-function changeColor(img, id, r, g, b) {
+function changeColor(img, color) {
   const canvas1 = document.createElement('canvas');
   const ctx1 = canvas1.getContext('2d');
   canvas1.width = img.width;
@@ -73,7 +72,7 @@ function changeColor(img, id, r, g, b) {
   const data = imageData.data;
 
   // Color to change
-  const specificColor = { r: r, g: g, b: b, a: 255 };
+  const specificColor = { r: color[0], g: color[1], b: color[2], a: 255 };
 
   // Iterate through each pixel and replace
   for (let i = 0; i < data.length; i += 4) {
@@ -91,12 +90,129 @@ function changeColor(img, id, r, g, b) {
   }
 
   ctx1.putImageData(imageData, 0, 0);
-  ctx2.drawImage(canvas1, id.x, id.y);
+  return canvas1;
+}
+
+function mergeCivs(img, x, y, id, color, img2, id2, showWhite, output) {
+  const canvas1 = document.createElement('canvas');
+  const ctx1 = canvas1.getContext('2d');
+
+  let idx = id.x;
+  let idy = id.y;
+  if (x != undefined && y != undefined) {
+    idx = x;
+    idy = y;
+  }
+
+  // Calculate the minimum x and y values
+  let xValue = Math.min(idx, id2.x);
+  let yValue = Math.min(idy, id2.y);
+
+  // Calculate the maximum x and y values
+  const maxX = Math.max(idx + img.width, id2.x + img2.width);
+  const maxY = Math.max(idy + img.height, id2.y + img2.height);
+
+  // Calculate the required width and height for the canvas
+  const canvasWidth = maxX - xValue;
+  const canvasHeight = maxY - yValue;
+
+  // Set the canvas width and height
+  canvas1.width = canvasWidth;
+  canvas1.height = canvasHeight;
+
+  // Draw the first image at its respective position
+  ctx1.drawImage(img, idx - xValue, idy - yValue);
+
+  // Draw the second image at its respective position
+  ctx1.drawImage(changeColor(img2, color), id2.x - xValue, id2.y - yValue);
+
+  // Get image data
+  const imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+  const data = imageData.data;
+
+  // Iterate through each pixel and replace
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
+
+    if (r === 0 && g === 0 & b === 0 & a === 255) {
+      if (showWhite || color == undefined || color == null || color == []) {
+        data[i] = 255;
+        data[i + 1] = 255;
+        data[i + 2] = 255;
+        data[i + 3] = 255;
+      } else {
+        data[i] = color[0];
+        data[i + 1] = color[1];
+        data[i + 2] = color[2];
+        data[i + 3] = 255;
+      }
+    }
+  }
+
+  ctx1.putImageData(imageData, 0, 0);
+  switch (output) {
+    case 0:
+      return canvas1;
+      break;
+    case 1:
+      return xValue;
+      break;
+    case 2:
+      return yValue;
+      break;
+  }
+}
+
+function drawOutline(ctx2,img,x,y) {
+  const canvas1 = document.createElement('canvas');
+  const ctx1 = canvas1.getContext('2d');
+  canvas1.width = img.width;
+  canvas1.height = img.height;
+
+  ctx1.drawImage(img, 0, 0);
+
+  // Get image data
+  const imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+  const data = imageData.data;
+
+  // Iterate through each pixel and replace
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
+
+    // Outline border
+    if (!(r === 0 && g === 0 && b === 0 && a === 255) && a != 0) {
+      const left = (i % (canvas1.width * 4) !== 0) ? data[i - 4 + 3] === 0 : true;
+      const right = ((i + 4) % (canvas1.width * 4) !== 0) ? data[i + 4 + 3] === 0 : true;
+      const up = (i >= canvas1.width * 4) ? data[i - canvas1.width * 4 + 3] === 0 : true;
+      const down = (i < data.length - canvas1.width * 4) ? data[i + canvas1.width * 4 + 3] === 0 : true;
+      const topLeft = (i % (canvas1.width * 4) !== 0 && i >= canvas1.width * 4) ? data[i - canvas1.width * 4 - 4 + 3] === 0 : true;
+      const topRight = ((i + 4) % (canvas1.width * 4) !== 0 && i >= canvas1.width * 4) ? data[i - canvas1.width * 4 + 4 + 3] === 0 : true;
+      const bottomLeft = (i % (canvas1.width * 4) !== 0 && i < data.length - canvas1.width * 4) ? data[i + canvas1.width * 4 - 4 + 3] === 0 : true;
+      const bottomRight = ((i + 4) % (canvas1.width * 4) !== 0 && i < data.length - canvas1.width * 4) ? data[i + canvas1.width * 4 + 4 + 3] === 0 : true;
+
+      if (left || right || up || down || topLeft || topRight || bottomLeft || bottomRight) {
+        data[i] = 0;
+        data[i + 1] = 0;
+        data[i + 2] = 0;
+        data[i + 3] = 255;
+      }
+    }
+  }
+
+  ctx1.putImageData(imageData, 0, 0);
+  ctx2.drawImage(canvas1, x, y);
 }
 
 // Calculate & Update
 function calculateEvents() {
 
+  civs = firstYear;
   news = {};
   for (let year = oppositeYear; year <= presentYear; year++) {
     let nextYear = year + 1;
@@ -113,7 +229,7 @@ function calculateEvents() {
       }
     }
 
-    // All human history...
+    // All of human history...
     worldEvents(year);
   }
 
@@ -185,10 +301,41 @@ async function updateCivs() {
     const nation = nations[i];
     const civ = civs[timeline][nation];
     const currentCiv = states[nation.toLowerCase() + civ.state];
-    const img = await loadImage(`${currentCiv.img}`);
+    let img = await loadImage(`${currentCiv.img}`);
+    let x, y, defaultColor, showWhite;
 
     if (Array.isArray(civ.color) && civ.color.length === 3) {
-      changeColor(img, currentCiv, civ.color[0], civ.color[1], civ.color[2]);
+      img = changeColor(img, civ.color);
+    }
+
+    if (Array.isArray(civ.merge) && civ.merge.length > 0) {
+      if (civ.whiteLines) {
+        showWhite = true;
+      }
+
+      defaultColor = civ.color;
+      if (civ.color == undefined || civ.color == null || civ.color == []) {
+        defaultColor = [100, 100, 100];
+      }
+
+      const images = civ.merge.map((civName) => {
+        let img2 = states[civName.toLowerCase() + civs[timeline][civName].state];
+        return loadImage(img2.img).then((image) => ({ image, img2 }));
+      });
+    
+      // Wait for all images to load
+      const loadedImages = await Promise.all(images);
+    
+      // Perform the merging operations
+      loadedImages.forEach(({ image, img2 }) => {
+        img = mergeCivs(img, x, y, currentCiv, defaultColor, image, img2, showWhite, 0);
+        x = mergeCivs(img, x, y, currentCiv, defaultColor, image, img2, showWhite, 1);
+        y = mergeCivs(img, x, y, currentCiv, defaultColor, image, img2, showWhite, 2);
+      });
+    
+      // Draw the final image
+      drawOutline(ctx2,img,x,y);
+
     } else {
       ctx2.drawImage(img, currentCiv.x, currentCiv.y);
     }
@@ -196,7 +343,7 @@ async function updateCivs() {
   clearInterval(redrawInterval);
 
   // Wait time + loading wheel
-  const waittime = timeline > 1600 ? 2000 : 500;
+  const waittime = timeline > 1600 ? 1500 : 500;
   setTimeout(() => {
     loading.style.display = 'none';
   }, waittime);
@@ -243,44 +390,6 @@ function calcSeed(val) {
 
 }
 
-function rng(val) {
-  if (val == 320) { // for testing
-    return 0;
-  } else if (seed == "0" || seed == "" || seed == null) {
-    return 1;
-  } else if (seed == "test" || seed == "insanity") {
-    return 0;
-  } else {
-    let rng = new Math.seedrandom(seedNumber + val);
-    return rng();
-  }
-}
-
-function rngRange(val, lowerBound, upperBound) {
-  if (seed == "0" || seed == "") {
-    return Math.ceil((upperBound + lowerBound) / 2);
-  } else {
-    return Math.ceil(rng(val + 1) * (upperBound - lowerBound + 1)) + lowerBound;
-  }
-}
-
-function rngInfluence(val, normalVal, conditionals,) {
-  if (seed == "0" || seed == "") {
-      return normalVal;
-  } else {
-    let newValue = normalVal;
-
-    conditionals.forEach(condition => {
-        const [name, weight] = condition;
-        if (name === true) {
-          newValue -= rngRange(rng(val),0,2*weight);
-        }
-    });
-
-    return newValue;
-  }
-}
-
 function frontItem(array, phraseToMove) {
   const index = array.indexOf(phraseToMove);
 
@@ -314,10 +423,17 @@ function grabData(url,val1,val2) {
 // Seeds
 const seedInput = document.getElementById('seedInput');
 
-seedInput.addEventListener("input", function (event) {
-  calcSeed(event.target.value);
 
-  fallback();
+let typingTimer;
+const typingDelay = 400;
+
+seedInput.addEventListener("input", function (event) {
+  clearTimeout(typingTimer); // clear the previous timer
+  
+  typingTimer = setTimeout(() => {
+    calcSeed(event.target.value);
+    fallback();
+  }, typingDelay);
 });
 
 // Timeline
@@ -535,3 +651,83 @@ function fallback() {
     redraw();
   }, 500);
 }
+
+// Event List
+
+// Reference to the events container
+const eventsDiv = document.getElementById("events");
+
+// Iterate over all events
+for (let id in allEvents) {
+    const event = allEvents[id];
+
+    // Create a wrapper div for each event
+    const eventWrapper = document.createElement("div");
+    eventWrapper.classList.add("event");
+
+    // Add event name as a label
+    const label = document.createElement("label");
+    label.textContent = event.name;
+    eventWrapper.appendChild(label);
+
+    // Create input based on type
+    let input;
+
+    if (event.type === "boolean") {
+        input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = event.value;
+        input.id = id;
+    } else if (event.type === "range") {
+        input = document.createElement("input");
+        input.type = "range";
+        input.min = 0;
+        input.max = 1;
+        input.step = 0.01;
+        input.value = event.value;
+
+        input.style.width = "30%";
+        input.style.display = "block";
+        input.style.margin = "0 auto";
+    }
+
+    // Add input to wrapper
+    eventWrapper.appendChild(input);
+    eventsDiv.appendChild(eventWrapper);
+
+    // Update allValues on input change
+    input.addEventListener("input", () => {
+        if (event.type === "boolean") {
+          allValues[id] = (event.inverted ? !input.checked : input.checked) ? 1 : 0;
+
+          // Update dependent events
+          if (dependencies[id] && input.checked) {
+            dependencies[id].forEach((dependentId) => {
+                allValues[dependentId] = 1; // Set dependent value to 1
+                let dependentInput = document.getElementById(dependentId);
+                if (dependentInput) {
+                  dependentInput.checked = true; // Reflect in UI
+                  //console.log(`Updated UI for dependent event ${dependentId}`);
+                } else {
+                  //console.warn(`Dependent input with ID ${dependentId} not found!`);
+                }
+            });
+          }
+
+        } else if (event.type === "range") {
+          if (event.inverted) {
+            allValues[id] = parseFloat(1 - Math.pow(input.value, 1/10));
+          } else {
+            allValues[id] = parseFloat(Math.pow(input.value, 2));
+          }
+        }
+        
+        //console.log(allValues);
+        calculateEvents();
+        updateCivs();
+        redraw();
+    });
+}
+
+const end = document.createElement("p");
+eventsDiv.appendChild(end);
