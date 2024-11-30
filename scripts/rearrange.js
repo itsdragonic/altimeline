@@ -16,7 +16,6 @@ function rearrange(nations) {
     endItem(nations, "CAN");
     frontItem(nations, "FRAk");
     frontItem(nations, "MEXa");
-    frontItem(nations, "USAo");
     frontItem(nations, "CEN");
 
     frontItem(nations, "DUTc");
@@ -24,6 +23,14 @@ function rearrange(nations) {
     frontItem(nations, "USA"); 
     frontItem(nations, "CSA");
     frontItem(nations, "TEX");
+
+    frontItem(nations, "ORE");
+    frontItem(nations, "LOU");
+    frontItem(nations, "ALA");
+
+    if (c.big_mexico) {
+        frontItem(nations,"MEX");
+    }
 
     // South America
     if (timeline >= 1800) {
@@ -72,9 +79,6 @@ function rearrange(nations) {
     } else {
         frontItem(nations, "MON");
     }
-    /*if (events[timeline]["conditions"].occupied_iran) {
-      endItem(nations, "PER");
-    }*/
     endItem(nations, "CAM");
     if (civ["CHI"].ideology == "communism") {
         endItem(nations, "QIN");
@@ -133,10 +137,12 @@ function rearrange(nations) {
     frontItem(nations, "ENG");
     frontItem(nations, "AQU");
 
+    frontItem(nations, "ICE");
     frontItem(nations, "SWI");
     frontItem(nations, "DUT");
     frontItem(nations, "BEL");
     frontItem(nations, "LIT");
+    frontItem(nations, "ALB");
 
     frontItem(nations, "FLO");
     frontItem(nations, "VEZ");
@@ -152,6 +158,13 @@ function rearrange(nations) {
         endItem(nations, "ISL");
         endItem(nations, "OTT");
     }
+    if (c.big_arabia) {
+        frontItem(nations, "ISL");
+        frontItem(nations, "ISR");
+    }
+    if (c.occupied_iran) {
+        endItem(nations, "PER");
+    }
 
     // Seven Years War
     if (civ["AUS"].strong) {
@@ -166,6 +179,9 @@ function rearrange(nations) {
     // WWII
     if (civ["SER"].weak) {
         endItem(nations, "SER");
+    }
+    if (civ["HUN"].strong) {
+        frontItem(nations, "HUN");
     }
 
     // Modern Era
