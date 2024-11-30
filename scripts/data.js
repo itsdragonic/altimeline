@@ -1,8 +1,8 @@
 const presentYear = 2024;
 const oppositeYear = -presentYear;
-var civs = {};
+var firstYear = {};
 
-civs[oppositeYear] = {
+firstYear[oppositeYear] = {
   "BG": {
     name: "background civs",
     state: 1,
@@ -73,6 +73,190 @@ civs[oppositeYear] = {
   },
 }
 
+var allEvents = {
+  1: {
+    name: "Rome Wins Punic War",
+    group: "Western Europe",
+    type: "boolean",
+    value: true,
+    inverted: false,
+  },
+  2: {
+    name: "Rome Colonizes America",
+    group: "Western Europe",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  6: {
+    name: "Persia Conquers Greece",
+    group: "Eastern Europe",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  7: {
+    name: "Rome Falls",
+    group: "Western Europe",
+    type: "boolean",
+    value: true,
+    inverted: false,
+  },
+  8: {
+    name: "Mongols Invade Japan",
+    group: "East Asia",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  10: {
+    name: "Japan Becomes Christian",
+    group: "East Asia",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  14: {
+    name: "Russo-Japanese War (Japan Victory)",
+    group: "East Asia",
+    type: "boolean",
+    value: true,
+    inverted: false,
+  },
+  15: {
+    name: "The Korean War",
+    group: "East Asia",
+    type: "range",
+    value: 1,
+    inverted: false,
+  },
+  16: {
+    name: "Collapse of Gran Colombia",
+    group: "South America",
+    type: "boolean",
+    value: true,
+    inverted: false,
+  },
+  17: {
+    name: "Collapse of Peru-Bolivia",
+    group: "South America",
+    type: "boolean",
+    value: true,
+    inverted: false,
+  },
+  // rng 25-29?
+  // !!30
+  30: {
+    name: "Randomize Brazil Colonizer",
+    group: "South America",
+    type: "range",
+    value: 1,
+    inverted: false,
+  },
+  31: {
+    name: "America's Name",
+    group: "North America",
+    type: "range",
+    value: 1,
+    inverted: false,
+  },
+  32: {
+    name: "Seven Years War",
+    group: "World",
+    type: "range",
+    value: 1,
+    inverted: false,
+  },
+  // *
+  33: {
+    name: "The Fate of Austria*",
+    group: "Western Europe",
+    type: "range",
+    value: 1,
+    inverted: false,
+  },
+  34: {
+    name: "Big Albania",
+    group: "Eastern Europe",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  35: {
+    name: "Big Arabia",
+    group: "Middle East",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  36: {
+    name: "Big Portugal",
+    group: "Western Europe",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+    // doesn't work
+  37: {
+    name: "Hala'ib Triangle",
+    group: "North Africa",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+    // doesn't work
+  43: {
+    name: "South Sudan",
+    group: "North Africa",
+    type: "boolean",
+    value: true,
+    inverted: false,
+  },
+
+
+
+  97: {
+    name: "United States Turns Socialist",
+    group: "North America",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  98: {
+    name: "Enable Different Colonization Outcomes",
+    group: "World",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  99: {
+    name: "1984",
+    group: "World",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  },
+  100: {
+    name: "European Federation",
+    group: "Western Europe",
+    type: "boolean",
+    value: false,
+    inverted: true,
+  }
+};
+
+var dependencies = {
+  // Rome has to win Punic Wars to Rome colonizes America or fall
+  2: ["1"],
+  7: ["1"],
+  //99: ["97"],
+};
+
+var allValues = {}
+for (let i=0;i<200;i++) {
+  allValues[i] = null;
+}
+
 var colonizeNewWorld = {
   "ENG": 40,
   "SPA": 80,
@@ -91,13 +275,55 @@ var colonizeOldWorld = {
   "FRA": 50,
   "POR": 30,
   "DUT": 30,
+  "SWE": 3,
+  "AUS": 3,
+  "DEN": 3,
   "CHI": 0,
   "JAP": 0,
   "USA": 0,
   "none": 10,
 };
+civs = firstYear;
 
-function colonizingPercentage(rng,array,bias,biasAmount,canBeFree) {
+function rng(val) {
+  if (allValues[val] != null) { // for testing
+    return allValues[val];
+  } else if (seed == "0" || seed == "" || seed == null) {
+    return 1;
+  } else if (seed == "test" || seed == "insanity") {
+    return 0;
+  } else {
+    let rng = new Math.seedrandom(seedNumber + val);
+    return rng();
+  }
+}
+
+function rngRange(val, lowerBound, upperBound) {
+  if (seed == "0" || seed == "") {
+    return Math.ceil((upperBound + lowerBound) / 2);
+  } else {
+    return Math.ceil(rng(val + 1) * (upperBound - lowerBound + 1)) + lowerBound;
+  }
+}
+
+function rngInfluence(val, normalVal, conditionals,) {
+  if (seed == "0" || seed == "") {
+      return normalVal;
+  } else {
+    let newValue = normalVal;
+
+    conditionals.forEach(condition => {
+        const [name, weight] = condition;
+        if (name === true) {
+          newValue -= rngRange(rng(val),0,2*weight);
+        }
+    });
+
+    return newValue;
+  }
+}
+
+function colonizingPercentage(RNG,array,bias,biasAmount,canBeFree) {
   // Create an array to hold the cumulative weights
   let cumulativeWeights = [];
   let totalWeight = 0;
@@ -106,7 +332,7 @@ function colonizingPercentage(rng,array,bias,biasAmount,canBeFree) {
     colonizers["none"] = 0;
   }
 
-  if (seed == "0" || seed == "" || seed == null) {
+  if (seed == "0" || seed == "" || seed == null || rng(98) < possible) {
     return bias;
   }
 
@@ -120,7 +346,7 @@ function colonizingPercentage(rng,array,bias,biasAmount,canBeFree) {
   }
 
   // Generate a random number between 0 and the total weight
-  var random = rng * totalWeight;
+  var random = RNG * totalWeight;
 
   // Find the key that corresponds to the random number
   for (var i = 0; i < cumulativeWeights.length; i++) {
@@ -130,17 +356,17 @@ function colonizingPercentage(rng,array,bias,biasAmount,canBeFree) {
   }
 }
 
-function owner(civ,id,color,name,name2,nameFirst) {
+function owner(civ,id,colors,name,name2,nameFirst) {
   if (civ[id].owner == "none") {
     civ[id].name = name;
-    civ[id].color = color;
+    civ[id].color = colors;
   } else if (civ[id].owner != null) {
     if (nameFirst) {
       civ[id].name = civ[civ[id].owner].adjective + " " + name2;
     } else {
       civ[id].name = `${name2} ( ${civ[civ[id].owner].adjective.slice(0,2)}. )`;
     }
-    civ[id].color = civ[civ[id].owner].colonizationColor;
+    civ[id].color = civ[civ[id].owner].color;
   }
 }
 
@@ -201,6 +427,7 @@ function addCountry(id, name, state, x, y, size) {
   };
 }
 
+
 addCountry("BER", "Berbers", null, 1255, 385, 5);
 
 // Civilizations
@@ -239,7 +466,7 @@ addCountry("AZX", "Teotihuacan", 1, 500, 500, 5);
 addCountry("NEP", "Nepal", 1, 1845, 430, 4);
 
 addCountry("GTH", "Gothic Kingdoms", 1, 1270, 300, 5);
-addCountry("FRK", "Gallic Empire", 1, 1245, 260, 7);
+addCountry("FRK", "Gauls", null, 1245, 280, 7);
 addCountry("AQU", "Aquitaine", 1, 1235, 295, 5);
 addCountry("ENG", "Wessex", 1, 1210, 250, 5);
 addCountry("TUR", "Turkish Khaganate", 2, 1340, 280, 7);
@@ -315,8 +542,8 @@ addCountry("DUT", "U.P.", 1, 1290, 233, 4);
 addCountry("DAR", "Darfur Sennar", 1, 1380, 540, 6);
 
 addCountry("DENc", "Greenland ( Den. )", 2, 1000, 160, 8);
-addCountry("CAN", "British Colonies", 1, 810, 290, 9);
-addCountry("QUE", "French Colonies", 1, 750, 270, 9);
+addCountry("CAN", "Canada", 1, 810, 290, 9);
+addCountry("QUE", "Quebec", 1, 750, 270, 9);
 addCountry("DUTc", "New Netherlands", 1, 760, 330, 4);
 addCountry("GER", "Prussia", 1, 1340, 230, 5);
 addCountry("DUTi", "Dutch East Indies", 1, 2000, 680, 9);
@@ -340,11 +567,12 @@ addCountry("PORz", "Portuguese Australia", 1);
 addCountry("FRAz", "French Australia", 1);
 addCountry("DUTz", "Dutch Australia", 1);
 addCountry("ENGa", "Pacific Islands", 1, 2170, 860, 9);
-addCountry("RUSc", "Russian America", 1, 360, 180, 7);
+addCountry("ALA", "Russian America", 1, 360, 180, 7);
 addCountry("ENGs", "South Africa", 1, 1270, 910, 9);
 
+addCountry("LOU", "Louisiana", 1, 510, 320, 11);
 addCountry("GUY", "British Guiana", 1, 820, 585, 4);
-addCountry("FLO", "Spanish Florida", 1);
+addCountry("FLO", "Spanish Florida", 2);
 addCountry("HAI", "Haiti", 1, 710, 500, 4);
 addCountry("SOK", "Sokoto", 1, 1270, 565, 10);
 addCountry("ARG", "Rio de la Plata", 1, 762, 885, 8);
@@ -366,7 +594,7 @@ addCountry("AUZ", "Australia", 1, 2120, 850, 15);
 addCountry("FRAx", "French Africa", 1, 1250, 365, 5);
 addCountry("FRAs", "French Sudan", 1);
 addCountry("DOM", "Dom. Rep.", 1, 745, 505, 4);
-addCountry("USAo", "Oregon Territory", 1);
+addCountry("ORE", "Oregon Territory", 1, 300, 270, 9);
 addCountry("FRAi", "Indochina", 1, 1985, 500, 5); //fix
 addCountry("MEXa", "Mexican Empire ( Fr. )", 1, 520, 490, 6);
 addCountry("PNG", "Papau New Guinea", 1, 2340, 725, 10);
@@ -378,19 +606,20 @@ addCountry("ENGx", "British Colonies", 1, 1360, 484, 10);
 addCountry("ENGn", "British Colonies", 1, 1200, 580, 7);
 
 addCountry("JAPc", "", 1, 2060, 300, 5);
-addCountry("CUB", "Cuba ( US )", 1, 680, 480, 7);
+addCountry("CUB", "Cuba", 1, 680, 480, 7);
 addCountry("ALB", "Albania", 1, 1390, 325, 3);
 addCountry("SIB", "White Army", 1, 1770, 140, 20);
 addCountry("ENGb", "British Middle East", 1, 1440, 370, 7);
 addCountry("SYR", "Syria", 1, 1440, 375, 6);
 addCountry("UKR", "Ukraine", "a", 1445, 260, 6);
 addCountry("FIN", "Finland", 1, 1380, 160, 7);
+addCountry("GERe","East Germany", 1, 1340, 225, 5)
 addCountry("ANT", "Antarctica", 1, 1155, 1260, 20);
 addCountry("JAPn", "DPR Japan", 1, 2130, 325, 6);
 addCountry("PAK", "Pakistan", 1, 1670, 430, 10);
 addCountry("nuclear", "Nuclear Armageddon", 1);
 addCountry("AFR", "African Nation States", 1, 1000, 600, 10);
-addCountry("EU", "European Federation", 1, 1250, 350, 5);
+addCountry("EU", "European Federation", 1, 1110, 270, 7);
 addCountry("EAF", "East African Federation", 2, 1520, 675, 7);
 
 // News
@@ -542,9 +771,9 @@ function worldEvents(year) {
     civ["VIE"].y += 30;
     civ["MEX"].y += 20;
 
-    civ["RUSc"].x = 360;
-    civ["RUSc"].y = 140;
-    civ["RUSc"].size = 8;
+    civ["ALA"].x = 360;
+    civ["ALA"].y = 140;
+    civ["ALA"].size = 8;
   }
 
   // European Colonization
@@ -776,7 +1005,6 @@ function worldEvents(year) {
     civ["FRA"].y += 15;
     civ["FRA"].size -= 2;
     civ["FRA"].color = [88, 86, 83];
-    civ["FRA"].colonizationColor = [88, 86, 83];
 
     civ["ISR"].name = "Israel";
 
@@ -802,7 +1030,7 @@ function worldEvents(year) {
       civ["QIN"].state = 4;
     }*/
     civ["VIE"].owner = "JAP";
-    //c.occupied_iran = true;
+    c.occupied_iran = true;
     civ["PER"].name = "Iran ";
     //if (c.ww2) {
     civ["GER"].state = 14;
@@ -819,15 +1047,14 @@ function worldEvents(year) {
   }
   if (nextYear == 1943) {
     civ["ITA"].color = [88, 86, 83];
-    civ["ITA"].colonizationColor = [88, 86, 83];
     civ["ITA"].y -= 20;
     civ["NAP"].strength = 2;
     civ["NAP"].name = "Allies";
-    civ["NAP"].color = civ["ENG"].colonizationColor;
-    civ["FRA"].colonizationColor = [57, 113, 228];
+    civ["NAP"].color = civ["ENG"].color;
+    civ["FRA"].color = [57, 113, 228];
   }
   if (nextYear == 1944) {
-    civ["ICE"].name = "Iceland";
+    civ["ICE"].owner = "none";
 
     /*if (c.ww2) {
       if (RNG("WWII",year) <= superUnlikely) {
@@ -843,59 +1070,83 @@ function worldEvents(year) {
     civ["FRA"].name = "France";
     civ["FRA"].y -= 15;
     civ["FRA"].size += 2;
-    civ["FRA"].color = [];
-    civ["ITA"].colonizationColor = [86, 167, 79];
   }
   if (nextYear == 1945) {
-    /*if (c.ww2) {
-      if (RNG("WWII",year) <= superUnlikely) {
-        // Fuhrerreich
-        eventLog.push("*1945: Nazi Germany wins World War II");
-        c.fuhrerreich = true;
-        civ["ITAx"].state = "a";
-        civ["SIB"].state = "a";
-        civ["SIB"].strength = 100;
-        civ["RUS"].name = "Russian Anarchy";
-        civ["KZH"].strength = 100;
-        civ["KZH"].x += 30;
-        civ["KZH"].name = "Kazakhs";
-        civ["KZH"].state = 2;
-        civ["GEO"].strength = 100;
-        civ["ARM"].strength = 100;
-        civ["HOR"].strength = 100;
-        civ["HOR"].name = " ";
- 
-        civ["GER"].state = 13;
- 
-        civ["UKR"].state = "a";
-        civ["UKR"].strength = 100;
-        civ["LIV"].strength = 100;
-        civ["LIT"].strength = 100;
-      } else {*/
-    // Normal WWII Outcome
-    civ["GER"].name = "W. Germany";
-    civ["CZE"].name = "Czechoslovakia";
-    civ["CZE"].state = 4;
-    civ["CZE"].strength = 500;
-    civ["POL"].strength = 500;
-    civ["POL"].state = 9;
-    civ["GER"].state = 15;
-    civ["ITA"].state = 8;
-    civ["ITA"].color = [];
-    civ["AUS"].strength = 300;
-    civ["BUL"].state = 10;
-    civ["VIE"].owner = "none";
+    if (rng(92) <= superUnlikely) {
+      // Fuhrerreich
+      c.fuhrerreich = true;
+      civ["ITAx"].state = "a";
+      civ["SIB"].state = "a";
+      civ["SIB"].strength = 100;
+      civ["RUS"].name = "Russian Anarchy States";
+      civ["RUS"].color = [88, 86, 83];
+      civ["RUS"].ideology = "anarchy";
+      civ["KZH"].strength = 100;
+      civ["KZH"].x += 30;
+      civ["KZH"].name = "Kazakhs";
+      civ["KZH"].state = 2;
+      civ["GEO"].strength = 100;
+      civ["ARM"].strength = 100;
+      civ["HOR"].strength = 100;
+      civ["HOR"].hideName = true;
+      civ["HOR"].color = [104, 102, 100];
 
-    /*if (RNG("Greater_Hungary",year) <= unlikely) {
-      c.greater_hungary = true;
+      civ["GER"].state = 13;
+
+      civ["UKR"].state = "a";
+      civ["UKR"].strength = 100;
+      civ["LIV"].strength = 100;
+      civ["LIT"].strength = 100;
+      c.ww1Winner = Axis;
+      c.ww1Loser = Allies;
+    } else {
+
+      // Normal WWII Outcome
+      civ["GER"].name = "West Germany";
+      civ["GER"].size = 5;
+      civ["GERe"].strength = 200;
+      civ["CZE"].name = "Czechoslovakia";
+      civ["CZE"].state = 4;
+      civ["CZE"].strength = 500;
+      civ["POL"].strength = 500;
+      civ["POL"].state = 9;
+      civ["GER"].state = 15;
+      civ["ITA"].state = 8;
+      civ["ITA"].color = [];
+      civ["AUS"].strength = 300;
+      civ["BUL"].state = 10;
+      civ["VIE"].owner = "none";
+
+      c.occupied_iran = false;
+
+      // big hungary
+      if (rng(91) <= unlikely) {
+        civ["HUN"].state = 2;
+        civ["HUN"].strong = true;
+        civ["CZE"].name = "Czechia";
+      }
     }
-  }
-  if (RNG("WWII",year) <= incrediblyUnlikely) {
+
+    // Adjust colonies
+    for (let i=0;i<c.ww1Winner.length;i++) {
+      if (colonizeOldWorld[c.ww1Winner[i]] > 0) {
+        colonizeOldWorld[c.ww1Winner[i]] += 500;
+      }
+    }
+    for (let i=0;i<c.ww1Loser.length;i++) {
+      colonizeOldWorld[c.ww1Loser[i]] = 0;
+    }
+    for (const key in civs[nextYear]) {
+      if (c.ww1Loser.includes(civ[key].owner)) {
+        civ[key].owner = colonizingPercentage(rng(93),colonizeOldWorld,"ENG",1);
+      }
+    }
+  
+  /*if (RNG("WWII",year) <= incrediblyUnlikely) {
     civ["CAN"].name = "Greater Nazi Reich";
     civ["CAN"].x -= 60;
     civ["CAN"].y += 20;
-  }
-}*/
+  }*/
   }
   if (nextYear == 1946) {
     // WW2 Aftermath
@@ -940,8 +1191,68 @@ function worldEvents(year) {
     }*/
   }
 
+  // 1984
+  if (nextYear == 1947 && rng(97) < superUnlikely && rng(99) < unlikely) {
+    civ["FRA"].color = [79, 62, 147];
+    civ["FRA"].adjective = "Oceanian";
+    c.orwell1984 = true;
+  }
+  if (nextYear == 1950 && c.orwell1984) {
+    civ["ENG"].color = [79, 62, 147];
+    civ["ENG"].adjective = "Oceanian";
+    civ["ENG"].name = "Oceania";
+    civ["FRA"].name = "Oceania";
+    civ["USA"].name = "Oceania";
+    civ["USA"].size ++;
+    c.colonizingAfrica = -9999;
+  }
+
+  if (nextYear == 1955 && c.orwell1984) {
+    const valuesToAdd = ["AUZ", "ENGs", "MEX", "PNG", "ZEA"];
+
+    valuesToAdd.forEach((value) => {
+      if (!civ["USA"].merge.includes(value)) {
+        civ["USA"].merge.push(value);
+      }
+      civ[value].strength = 0;
+    });
+  }
+
+  if (nextYear == 1960 && c.orwell1984) {
+    const valuesToAdd = ["CUB", "CEN", "HAI", "VEZ", "DUTi", "PORi"];
+
+    valuesToAdd.forEach((value) => {
+      if (!civ["USA"].merge.includes(value)) {
+        civ["USA"].merge.push(value);
+      }
+      civ[value].strength = 0;
+    });
+
+    civ["PORa"].strength = 0;
+    civ["KON"].strength = 0;
+    civ["LIB"].strength = 0;
+  }
+
+  if (nextYear == 1970 && c.orwell1984) {
+    const valuesToAdd = ["DOM", "COL", "GUY", "FGU", "SUR", "BRA", "PAR", "ARG", "CHL", "BOL", "URU", "PEU", "EQU", "FRAa", "ENGa", "FAK", "ANT"];
+
+    valuesToAdd.forEach((value) => {
+      if (!civ["USA"].merge.includes(value)) {
+        civ["USA"].merge.push(value);
+      }
+      civ[value].strength = 0;
+    });
+  }
+
   // Modern Era
   if (nextYear == 1961) {
     // Cuban Missile Crisis
+  }
+
+  if (nextYear == 2019 && civ["CHI"].strength > 0 && rng(94) > possible) {
+    worldNews(`Covid-19 Pandemic`,
+      `A novel coronavirus, later named COVID-19, has been identified in Wuhan, China. The virus has rapidly spread across the globe, leading to quarantining.`,
+      `https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg/1200px-Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg`,
+      false, 63, nextYear, 3, false);
   }
 }
