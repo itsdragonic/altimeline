@@ -32,6 +32,7 @@
     <div id="seed">
         <input type="text" id="seedInput" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
         <img id="randomSeed" title="Generate Random Seed" src="images/dice.png"></img>
+        <button class="button" id="settings" title="Settings"></button>
     </div>
 
     <div class="range">
@@ -44,56 +45,78 @@
     <!-- World News -->
     <div id="newsContainer"></div>
         
-    <!-- Settings & Download Button -->
-    <button id="settingsButton" title="Settings"></button>
-    <button id="downloadButton" title="Download"></button>
+    <!-- Download Button -->
+    <button class="button" id="downloadButton" title="Download Image"></button>
 
-    <div id="overlay"></div>
-
-    <!-- Modal -->
-    <div class="modal" id="modal">
-    <div class="modal-header">
-        <span>Settings</span>
-        <button class="close-button" id="closeButton">X</button>
-    </div>
-    <div class="modal-content">
-        <div class="credits">
-        <b>Altimeline II</b>
-         by Dragonic
+    <!-- Settings Button -->
+    <div id="popup" class="hidden">
+        <div class="settings-window">
+        <div class="header">
+            <h1>Settings</h1>
+            <button class="close-button" id="close-popup">&times;</button>
         </div>
 
-        <div class="toggle-switch">
-        <label>
-            Physical Map 
-            <input type="checkbox" id="phy">
-            <span class="switch"></span>
-        </label>
-        </div>
+        <div class="settings-body">
+            <nav class="sidebar">
+            <ul>
+                <li><a href="#events"
+                        class="active">Edit Events</a></li>
+                <li><a href="#visuals">Visual Settings</a></li>
+                <li><a href="#credits">Credits</a></li>
+            </ul>
+            </nav>
 
-        <div class="toggle-switch">
-        <label>
-            Show Names 
-            <input type="checkbox" id="show" checked>
-            <span class="switch"></span>
-        </label>
-        </div>
+            <div class="content">
+            <div id="events" class="content-section">
+                <!-- Event List -->
+                <p><b><u>Edit Events</u></b></p>
+            </div>
 
-        <div class="toggle-switch">
-        <label>
-            Show World Events 
-            <input type="checkbox" id="news" checked>
-            <span class="switch"></span>
-        </label>
-        </div>
+            <div id="visuals" class="content-section hidden">
+                <!-- Settings -->
+                <div class="toggle-switch">
+                    <label>
+                        Physical Map 
+                        <input type="checkbox" id="phy">
+                        <span class="switch"></span>
+                    </label>
+                    </div>
+            
+                    <div class="toggle-switch">
+                    <label>
+                        Show Names 
+                        <input type="checkbox" id="show" checked>
+                        <span class="switch"></span>
+                    </label>
+                    </div>
+            
+                    <div class="toggle-switch">
+                    <label>
+                        Show World Events 
+                        <input type="checkbox" id="news" checked>
+                        <span class="switch"></span>
+                    </label>
+                    </div>
+            
+                    <div class="toggle-switch">
+                        <label>
+                            Show Jagged Edges
+                            <input type="checkbox" id="jagged" checked>
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+            </div>
 
-        <div class="toggle-switch">
-            <label>
-                Show Jagged Edges
-                <input type="checkbox" id="jagged" checked>
-                <span class="switch"></span>
-            </label>
+            <div id="credits" class="content-section hidden">
+                <div class="credits">
+                    <b>Altimeline II</b>
+                     by Dragonic
+                </div>
+            </div>
+
+            </div>
         </div>
-    </div>
+        </div>
     </div>
 
     <!-- Map -->
