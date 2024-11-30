@@ -1233,6 +1233,7 @@ function regions(year) {
         civ["PER"].name = "Safavid Empire";
         civ["PER"].strength += 2000;
         civ["PER"].state = 5;
+        civ["PER"].x += 30;
     }
 
     if (nextYear == 1736) {
@@ -1240,10 +1241,11 @@ function regions(year) {
     }
     if (nextYear == 1762) {
         civ["PER"].name = "Zands";
+        civ["PER"].x += 20;
+        civ["PER"].size += 4;
     }
     if (nextYear == 1792) {
-        civ["PER"].name = "Qajars";
-        civ["PER"].x += 20;
+        civ["PER"].name = "Qajar";
     }
 
     // Modern Era
@@ -1252,14 +1254,18 @@ function regions(year) {
     }
     if (nextYear == 1926) {
         civ["PER"].name = "Iran";
-        civ["PER"].size += 3;
-        civ["PER"].x += 50;
+        civ["PER"].y += 10;
     }
     if (nextYear == 1947) {
         civ["PER"].name = "Iran";
         /*if (RNG("Occupation_of_Iran",year) >= possible || c.fuhrerreich) {
           c.occupied_iran = false;
         }*/
+    }
+    if (c.occupied_iran) {
+        civ["PER"].color = civ["ENG"].color;
+    } else {
+        civ["PER"].color = [];
     }
 
 /* ______________________________
@@ -1347,7 +1353,7 @@ function regions(year) {
     |                            |.
     | Alternate timelines:       |.
     |  - Carthage Wins Punic Wars|.
-    |       Seed: kk             |.
+    |       Seed: 1840Q61t       |.
     |  - Nova Roma               |.
     |  - Rome Survives           |.
     |                            |.
@@ -1445,6 +1451,9 @@ function regions(year) {
             if (civ["PER"].strong) {
                 civ["PER"].state = 4;
             }
+        } if (civ["ROM"].techecon >= 703) {
+            civ["ROM"].state = "8a";
+            civ["FRK"].strength = 0;
         } if (civ["ROM"].techecon >= 731) {
             civ["ROM"].state = 9;
         } if (civ["ROM"].techecon >= 752) {
@@ -1621,10 +1630,25 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
     
+    if (civ["ROM"].strength > 0 && civ["FRK"].state == null && civ["FRK"].strength == 0 && c.gaul_defeated == null) {
+        worldNews("Rome Conquers Gaul",
+            "Julius Caesar lead Roman legions into Gaul, initiating a major military campaign and ultimately subduing the region.",
+            "https://upload.wikimedia.org/wikipedia/commons/9/93/Siege-alesia-vercingetorix-jules-cesar.jpg",
+            false, 65, nextYear, 1, false);
+        c.gaul_defeated = true;
+    }
+
+    if (nextYear == -1177) {
+        civ["FRK"].strength = 3000;
+    }
+
     // Gallic Empire
     if (civ["ROM"].yearsDecline == 60) {
         civ["FRK"].strength = 400;
         civ["FRK"].color = [32, 172, 160];
+        civ["FRK"].state = 1;
+        civ["FRK"].y -= 20;
+        civ["FRK"].name = "Gallic Empire";
 
         civ["ENG"].strength = 400;
         civ["ENG"].color = [32, 172, 160];
@@ -1851,7 +1875,7 @@ function regions(year) {
 
     if (nextYear == oppositeYear+1) {
         civ["JAP"].adjective = "Japanese";
-        civ["JAP"].colonizationColor = [255, 200, 178];
+        civ["JAP"].color = [255, 200, 178];
     }
 
     if (nextYear == 250) {
@@ -2036,7 +2060,7 @@ function regions(year) {
 
     // Big Japan
     if (civ["JAP"].big && !civ["JAP"].loses) {
-        civ["RUSc"].color = [255, 200, 178];
+        civ["ALA"].color = [255, 200, 178];
     }
 
 /* ______________________________
@@ -2171,7 +2195,7 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["FRA"].adjective = "French";
         civ["FRA"].defaultname = "France";
-        civ["FRA"].colonizationColor = [57, 113, 228];
+        civ["FRA"].color = [57, 113, 228];
     }
 
     if (civ["ROM"].yearsDecline == 281) {
@@ -2202,7 +2226,7 @@ function regions(year) {
             civ["FRA"].y -= 15;
             civ["SPAc"].owner = "ENG";
             civ["BRA"].owner = "FRA";
-            colonizeNewWorld["SPA"] = 0;
+            //colonizeNewWorld["SPA"] = 0;
         } else {
             civ["COR"].state = 1;
             worldNews("Battle of Tours",
@@ -2354,7 +2378,11 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["GER"].adjective = "German";
         civ["GER"].defaultname = "Germany";
-        civ["GER"].colonizationColor = [];
+        civ["GER"].color = [72, 70, 67];
+
+        civ["AUS"].adjective = "Austrian";
+        civ["AUS"].defaultname = "Austria";
+        civ["AUS"].color = [208, 213, 231];
     }
 
     if (nextYear == 855) {
@@ -2441,21 +2469,21 @@ function regions(year) {
 
     // Fascist Germany
     if (nextYear == 1933) {
-        //if (c.ww2) {
-        civ["GER"].name = "German Reich";
-        civ["GER"].fascist = true;
-        //}
+        if (c.ww2) {
+            civ["GER"].name = "German Reich";
+            civ["GER"].fascist = true;
+        }
     }
         
     // Modern Era
     if (nextYear == 1990) {
-        //if (c.ww2 && !c.fuhrerreich) {
-        civ["GER"].name = "Germany";
-        civ["GER"].state = 16;
-        //}
-        civ["EU"].state = 2;
-        if (civ["EU"].strength > 0) {
-        civ["GER"].name = " ";
+        if (c.ww2 && !c.fuhrerreich) {
+            civ["GER"].name = "Germany";
+            civ["GER"].size ++;
+            civ["GER"].state = 16;
+            civ["GERe"].strength = 0;
+            civ["EU"].merge = ["FRA","GER","ITA","DUT","BEL","SPA","POR","IRE"];
+            civ["EU"].merge.push("GERe");
         }
     }
 
@@ -2476,12 +2504,12 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["DUT"].adjective = "Dutch";
         civ["DUT"].defaultname = "Netherlands";
-        civ["DUT"].colonizationColor = [226, 145, 83];
+        civ["DUT"].color = [226, 145, 83];
     }
     if (nextYear == oppositeYear+1) {
         civ["BEL"].adjective = "Belgian";
         civ["BEL"].defaultname = "Belgium";
-        civ["BEL"].colonizationColor = [196, 175, 8];
+        civ["BEL"].color = [196, 175, 8];
     }
 
     if (nextYear == 1582) {
@@ -2511,13 +2539,13 @@ function regions(year) {
     if (civ["ENG"].name == " ") {
         civ["ENG"].color = [153, 115, 93];
     } else if (civ["ENG"].name == civ["ENG"].defaultname) {
-        civ["ENG"].color = [];
+        civ["ENG"].color = [223, 147, 147];
     }
 
     if (nextYear == oppositeYear+1) {
         civ["ENG"].defaultname = "England";
         civ["ENG"].adjective = "British";
-        civ["ENG"].colonizationColor = [223, 147, 147];
+        civ["ENG"].color = [223, 147, 147];
     }
     if (nextYear == 519) {
         civ["ENG"].strength = 3000;
@@ -2620,12 +2648,11 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["DEN"].adjective = "Danish";
         civ["DEN"].defaultname = "Denmark";
-        civ["DEN"].colonizationColor = [153, 115, 93];
-    }
-    if (nextYear == oppositeYear+1) {
+        civ["DEN"].color = [153, 115, 93];
+
         civ["SWE"].adjective = "Swedish";
         civ["SWE"].defaultname = "Sweden";
-        civ["SWE"].colonizationColor = [53, 179, 242];
+        civ["SWE"].color = [53, 179, 242];
     }
 
     if (nextYear == 800) {
@@ -2699,7 +2726,7 @@ function regions(year) {
         civ["SWE"].name = "Sweden";
     }
     if (nextYear == 1524) {
-        civ["ICE"].name = "Iceland (Den.)";
+        civ["ICE"].owner = "DEN";
     }
     if (nextYear == 1590) {
         civ["SWE"].state = 3;
@@ -2707,6 +2734,7 @@ function regions(year) {
     }
     if (nextYear == 1605) {
         civ["DENc"].strength = 2250;
+        civ["DENc"].owner = "DEN";
     }
     if (nextYear == 1625) {
         civ["SWE"].state = 4;
@@ -2728,12 +2756,14 @@ function regions(year) {
     }
 
     if (nextYear == 1979) {
-        civ["DENc"].name = "Greenland";
+        civ["DENc"].owner = "none";
         civ["DENc"].x -= 30;
         civ["DENc"].y -= 75;
         civ["DENc"].size += 5;
-        civ["DENc"].color = [175, 144, 125];
     }
+
+    owner(civ,"ICE",[125, 130, 223],"Iceland","Iceland",false);
+    owner(civ,"DENc",[175, 144, 125],"Greenland","Greenland",false);
 
 /* ______________________________
  / \                             \.
@@ -2752,7 +2782,7 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["ITA"].adjective = "Italian";
         civ["ITA"].defaultname = "Italy";
-        civ["ITA"].colonizationColor = [86, 167, 79];
+        civ["ITA"].color = [86, 167, 79];
     }
 
     if (nextYear == 750) {
@@ -2799,6 +2829,8 @@ function regions(year) {
         civ["ITA"].x = 1330;
         civ["ITA"].y = 320;
         civ["ITA"].size = 7;
+        civ["ITA"].adjective = "Italian";
+        civ["ITA"].color = [86, 167, 79];
     }
     if (nextYear == 1871) {
         civ["PAP"].strength = 0;
@@ -3074,6 +3106,12 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
 
+    if (nextYear == oppositeYear+1) {
+        civ["RUS"].adjective = "Russian";
+        civ["RUS"].defaultname = "Russia";
+        civ["RUS"].color = [73, 112, 87];
+    } 
+
     if (nextYear == 860) {
         civ["RUS"].strength = 3000;
     }
@@ -3094,6 +3132,9 @@ function regions(year) {
     }
     if (nextYear == 1637) {
         civ["RUS"].state = 7;
+    }
+    if (nextYear == 1710) {
+        civ["RUS"].merge = ["FIN","LIV"];
     }
     if (nextYear == 1765) {
         civ["RUS"].state = 8;
@@ -3123,50 +3164,48 @@ function regions(year) {
     }
 
     if (nextYear == 1991) {
-        /*if (c.usa_exists) {
-        if (RNG("Cold_War_Winner",year) <= impossible) {
-          // USA loses?
-          eventLog.push("*1991: The United States is officially dissolved");
-          civ["USA"].state = "b";
-          civ["USA"].name = "U.S. Anarchy";
-          civ["USA"].x += 110;
-          civ["CAN"].strength += 500;
-          civ["RUSc"].strength += 500;
-          civ["USAo"].strength = 0;
-        } else if (RNG("Cold_War_Winner",year) <= superUnlikely) {
-          eventLog.push("*1991: The United States fractures");
-          civ["USA"].state = "a";
-          civ["USA"].name = "Disunited States of America";
-          civ["USA"].size -= 3;
-          civ["USA"].x += 30;
-          civ["CAN"].strength += 500;
-          civ["RUSc"].strength += 500;
-          civ["USAo"].strength = 0;
-        } else if (c.soviet_union) {*/
-        // Fall of the Soviet Union
-        //eventLog.push("1991: Soviet Union dissolves");
-        civ["RUS"].name = "Russia";
-        civ["RUS"].color = [0, 158, 224];
-        civ["ARM"].state = 3;
-        civ["GEO"].state = 4;
-        civ["ARM"].strength = 300;
-        civ["GEO"].strength = 400;
-        civ["KZH"].strength = 500;
-        civ["KZH"].name = "Kazakhstan";
-        civ["KZH"].state = 2;
-        civ["KZH"].x = 1605;
-        civ["KZH"].y = 275;
-        civ["KZH"].size = 10;
-        civ["LIV"].strength = 500;
-        civ["LIT"].strength = 500;
-        civ["LIT"].state = 1;
-        civ["UKR"].strength = 1000;
-        civ["UKR"].state = 1;
-        civ["POL"].strength = 500;
-        civ["POL"].state = 9;
-        //c.occupied_iran = false;
-        /*}
-        }*/
+        if (rng(95) <= impossible) {
+            // USA loses?
+            //eventLog.push("*1991: The United States is officially dissolved");
+            civ["USA"].state = "b";
+            civ["USA"].name = "U.S. Anarchy";
+            civ["USA"].x += 110;
+            civ["CAN"].strength += 500;
+            civ["ALA"].strength += 500;
+            civ["USA"].merge = [];
+        } else if (rng(95) <= superUnlikely) {
+            //eventLog.push("*1991: The United States fractures");
+            civ["USA"].state = "a";
+            civ["USA"].name = "Disunited States of America";
+            civ["USA"].size -= 3;
+            civ["USA"].x += 30;
+            civ["CAN"].strength += 500;
+            civ["ALA"].strength += 500;
+            civ["ORE"].strength = 0;
+        } else if (civ["RUS"].ideology == "communism") {
+            // Fall of the Soviet Union
+            //eventLog.push("1991: Soviet Union dissolves");
+            civ["RUS"].name = "Russia";
+            civ["RUS"].color = [0, 158, 224];
+            civ["ARM"].state = 3;
+            civ["GEO"].state = 4;
+            civ["ARM"].strength = 300;
+            civ["GEO"].strength = 400;
+            civ["KZH"].strength = 500;
+            civ["KZH"].name = "Kazakhstan";
+            civ["KZH"].state = 2;
+            civ["KZH"].x = 1605;
+            civ["KZH"].y = 275;
+            civ["KZH"].size = 10;
+            civ["LIV"].strength = 500;
+            civ["LIT"].strength = 500;
+            civ["LIT"].state = 1;
+            civ["UKR"].strength = 1000;
+            civ["UKR"].state = 1;
+            civ["POL"].strength = 500;
+            civ["POL"].state = 9;
+            c.occupied_iran = false;
+        }
     }
     if (nextYear == 1999) {
         // Drying of the Aral Sea...
@@ -3217,31 +3256,38 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
 
-    if (nextYear == 1966) {
-        /*// European Union Unites?
-        if (RNG("European_Federation",year) <= veryUnlikely) {
-          if (!c.kaiserreich) {
-            civ["EU"].strength += 1000;
-            civ["FRA"].name = "";
-            civ["ITA"].name = "";
-            civ["DUT"].name = "";
-            civ["GER"].name = "E. Germany";
-            eventLog.push("*1966: The European Federation is formed");
-          }
-        }*/
-    }
-    if (nextYear == 1995) {
-        civ["EU"].state = 3;
-        if (civ["EU"].strength > 0) {
-          civ["SPA"].name = "";
+    c.eu ++;
+    if (c.ww2 && rng(100) < unlikely && 
+        nextYear == rngRange(rng(96),1946,1980)) {
+        c.eu = 0;
+        civ["EU"].strength = 300;
+        civ["EU"].color = [20, 72, 175];
+        civ["EU"].adjective = "European";
+        civ["EU"].merge = ["FRA","GER","ITA","DUT","BEL"];
+        civ["FRA"].strength = 0;
+        civ["GER"].strength = 0;
+        civ["ITA"].strength = 0;
+        civ["DUT"].strength = 0;
+        civ["BEL"].strength = 0;
+
+        // Adjust Colonies
+        for (const key in civs[nextYear]) {
+            if (civ["EU"].merge.includes(civ[key].owner)) {
+                civ[key].owner = "EU";
+            }
         }
     }
-    if (nextYear == 2008) {
-        civ["EU"].state = 4;
-        if (civ["EU"].strength > 0) {
-            civ["POR"].name = "";
-            civ["IRE"].name = "";
-        }
+    if (c.eu == 10) {
+        civ["EU"].merge = ["FRA","GER","ITA","DUT","BEL"];
+        civ["EU"].merge.push("SPA");
+        civ["SPA"].strength = 0;
+    }
+    if (c.eu == 15) {
+        civ["EU"].merge = ["FRA","GER","ITA","DUT","BEL","SPA"];
+        civ["EU"].merge.push("POR");
+        civ["POR"].strength = 0;
+        civ["EU"].merge.push("IRE");
+        civ["IRE"].strength = 0;
     }
 
 /* ______________________________
@@ -3353,12 +3399,6 @@ function regions(year) {
         }
     }
     if (nextYear == 1932) {
-        if (rng(35) <= unlikely) {
-            civ["YEM"].strength = 0;
-        } else {
-            civ["ISL"].name = "Saudi Arabia";
-        }
-
         //if (!c.kaiserreich && !c.byzantium && rng(35) > unlikely) {
         civ["MES"].strength = 300;
         civ["MES"].name = "Iraq";
@@ -3367,6 +3407,15 @@ function regions(year) {
         civ["MES"].y += 15;
         civ["MES"].size += 2;
         //}
+        
+        if (rng(35) <= unlikely) {
+            civ["YEM"].strength = 0;
+            civ["MES"].strength = 0;
+            civ["SYR"].strength = 0;
+            c.big_arabia = true;
+        } else {
+            civ["ISL"].name = "Saudi Arabia";
+        }
     }
     if (nextYear == 1933) {
         if (civ["ISL"].name == "Najd") {
@@ -3409,24 +3458,21 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["SPA"].adjective = "Spanish";
         civ["SPA"].defaultname = "Spain";
-        civ["SPA"].colonizationColor = [255, 223, 102];
+        civ["SPA"].color = [255, 223, 102];
     }
     if (nextYear == oppositeYear+1) {
         civ["POR"].adjective = "Portuguese";
         civ["POR"].defaultname = "Portugal";
-        civ["POR"].colonizationColor = [67, 119, 231];
+        civ["POR"].color = [67, 119, 231];
     }
 
     if (civ["SPA"].iberianUnion) {
         civ["POR"].color = [255, 223, 102];
-        civ["POR"].colonizationColor = [255, 223, 102];
     } else { // fix
-        civ["POR"].color = [];
-        civ["POR"].colonizationColor = [67, 119, 231];
+        civ["POR"].color = [67, 119, 231];
     }
     if (nextYear > 1799) {
         civ["POR"].color = [0, 136, 118];
-        civ["POR"].colonizationColor = [0, 136, 118];
     }
 
     if (nextYear == 1150) {
@@ -3457,7 +3503,7 @@ function regions(year) {
         }
         if (nextYear == 929) {
             civ["SPA"].name = "Leon";
-            civ["SPA"].color = [];
+            civ["SPA"].color = [255, 223, 102];
         }
         if (nextYear == 982) {
             civ["SPA"].state = 5;
@@ -3481,7 +3527,7 @@ function regions(year) {
         if (nextYear == 1036) {
             civ["SPA"].name = "Castile";
             civ["SPA"].state = 6;
-            civ["SPA"].color = [];
+            civ["SPA"].color = [255, 223, 102];
         }
         if (nextYear == 1070) {
             civ["COR"].name = "Seville";
@@ -4387,18 +4433,11 @@ function regions(year) {
         civ["INC"].x -= 30;
     }
 
-    // Europeans
-    owner(civ,"BRA",[13, 185, 57],"Brazil","Brazil",true);
-    owner(civ,"GUY",[192, 136, 115],"Guyana","Guiana",true);
-    owner(civ,"SUR",[182, 95, 159],"Suriname","Suriname",true);
-    owner(civ,"FGU",[208, 52, 107],"Guyane","Guiana",true);
-
-
     if (c.colonizingAmerica == 1500) {
         civ["BRA"].strength = 1250;
         if (civ["BRA"].owner == null) {
             civ["BRA"].owner = colonizingPercentage(rng(30),colonizeNewWorld,"POR",200);
-            colonizeNewWorld[civ["BRA"].owner] = 0;
+            //colonizeNewWorld[civ["BRA"].owner] = 0;
         }
     }
     if (c.colonizingAmerica == 1528) {
@@ -4537,6 +4576,7 @@ function regions(year) {
         civ["URU"].strength = 3200;
     }
     if (c.latinAmerica == 1830) {
+        // Collapse of Gran Colombia
         if (rng(16) > veryUnlikely) {
             civ["EQU"].strength = 3200;
             civ["COL"].strength = 3200;
@@ -4547,14 +4587,17 @@ function regions(year) {
         civ["ARG"].name = "Argentina";
     }
     if (c.latinAmerica == 1837) {
-        civ["PEU"].state = 3;
         civ["PEU"].name = "Peru-Bolivia";
+        civ["PEU"].color = [196, 188, 203];
+        civ["PEU"].merge = ["BOL"];
         civ["BOL"].strength = 0;
     }
     if (c.latinAmerica == 1840) {
+        // Collapse of Peru-Bolivia
         if (rng(17) >= unlikely) {
             civ["PEU"].state = 1;
             civ["PEU"].name = "Peru";
+            civ["PEU"].merge = [];
             civ["BOL"].strength = 1000;
         }
     }
@@ -4562,7 +4605,7 @@ function regions(year) {
     worldNews("War of the Triple Alliance",
           `The War of the Triple Alliance has begun, with Paraguay against Argentina, Brazil, and Uruguay in one of South ${c.newWorld}'s bloodiest conflicts ever seen.`,
           "https://maps.quickworld.com/maps/qmg/qmg-soa-w70-q01.png",
-          false, 34, 1864, 4, true);
+          false, 34, 1864, 2, false);
 
     if (c.latinAmerica == 1870) {
         civ["ARG"].state = 2;
@@ -4601,6 +4644,13 @@ function regions(year) {
     if (c.latinAmerica == 1975) {
         civ["SUR"].owner = "none";
     }
+
+    // Europeans
+    owner(civ,"BRA",[13, 185, 57],"Brazil","Brazil",true);
+    owner(civ,"GUY",[192, 136, 115],"Guyana","Guiana",true);
+    owner(civ,"SUR",[182, 95, 159],"Suriname","Suriname",true);
+    owner(civ,"FGU",[208, 52, 107],"Guyane","Guiana",true);
+    owner(civ,"VEZ",[],"Venezuela","Venezuela",true);
 
 /* ______________________________
  / \                             \.
@@ -4682,7 +4732,7 @@ function regions(year) {
         c.colonizingAmerica = 1492;
         if (civ["SPAc"].owner == null) {
             civ["SPAc"].owner = colonizingPercentage(rng(60),colonizeNewWorld,"SPA",200);
-            colonizeNewWorld[civ["SPAc"].owner] = 0;
+            //colonizeNewWorld[civ["SPAc"].owner] = 0;
         }
 
         if (civ["SPAc"].owner == "ENG") {
@@ -4790,9 +4840,9 @@ function regions(year) {
     if (c.colonizingAmerica == 1821) {
         civ["MEX"].strength = 3200;
 
-        /*if (!c.usa_exists || !c.manifest_destiny) {
-          civ["MEX"].state = "a";
-        }*/
+        if (civ["LOU"].strength > 0) {
+            civ["MEX"].state = "a";
+        }
     }
     if (c.colonizingAmerica == 1822) {
         civ["CEN"].strength = 3200;
@@ -4813,12 +4863,11 @@ function regions(year) {
     if (c.colonizingAmerica == 1898) {
         //if (!c.csa_victory && c.am_colonization && !c.us_imperialism && !c.nova_roma) {
           civ["CUB"].strength = 900;
-          civ["CUB"].color = [69, 154, 234];
+          civ["CUB"].owner = "USA";
         //}
     }
     if (c.colonizingAmerica == 1902) {
-        civ["CUB"].name = "Cuba";
-        civ["CUB"].color = [];
+        civ["CUB"].owner = "none";
     }
 
     worldNews("Panama Canal Completed",
@@ -4830,6 +4879,8 @@ function regions(year) {
           "The Cuban Missile Crisis has brought the world to the brink of nuclear war, with the Soviet Union placing missiles in Cuba, just 90 miles from the U.S. coast.",
           "https://th-thumbnailer.cdn-si-edu.com/2dYxg9oELPPN0aBXvEXHaWOerFQ=/800x600/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/Cuban-Missile-Crisis-631.jpg",
           false, 35, 1962, 4, true);
+
+    owner(civ,"CUB",[],"Cuba","Cuba",false);
 
 /* ______________________________
  / \                             \.
@@ -4866,8 +4917,8 @@ function regions(year) {
         civ["CAN"].strength = 3250;
         civ["QUE"].strength = 200;
 
-        civ["CAN"].owner = colonizingPercentage(rng(82),colonizeNewWorld,"ENG",100);
-        civ["QUE"].owner = colonizingPercentage(rng(83),colonizeNewWorld,"FRA",80);
+        civ["CAN"].owner = colonizingPercentage(rng(82),colonizeNewWorld,"ENG",300);
+        civ["QUE"].owner = colonizingPercentage(rng(83),colonizeNewWorld,"FRA",280);
     }
     if (c.colonizingAmerica == 1615) {
         civ["DUTc"].strength = 52;
@@ -4921,7 +4972,7 @@ function regions(year) {
         civ["CAN"].size = 11;
     
         if (!c.pax_francia) {
-          civ["CAN"].name = "British " + c.newWorld; // fix & update
+          civ["CAN"].name = "British " + c.newWorld;
         } else {
           civ["CAN"].name = "Quebec";
         }
@@ -4929,14 +4980,14 @@ function regions(year) {
     if (c.colonizingAmerica == 1828) {
         if (!c.usa_exists || civ["USA"].strength <= 0) {
             civ["USA"].strength += 300;
-            civ["USA"].state = 2;
+            civ["USA"].state = 3;
         }
     }
     if (c.colonizingAmerica == 1828) {
         civ["CAN"].state = 6;
-        /*if (!c.manifest_destiny) {
-          civ["CAN"].state = "a";
-        }*/
+        if (civ["USA"].techecon < 5) {
+            civ["CAN"].state = 8;
+        }
     }
     if (c.colonizingAmerica == 1870) {
         civ["CAN"].owner = "none";
@@ -4952,16 +5003,9 @@ function regions(year) {
 
     // French America
     if (c.colonizingAmerica == 1800) {
-        civ["QUE"].state = 5;
         if (c.usa_exists) {
-            civ["QUE"].strength = 200;
-        } else {
-            civ["QUE"].strength = 400;
+            civ["LOU"].strength = 200;
         }
-        civ["QUE"].name = "Louisiana";
-        civ["QUE"].x = 510;
-        civ["QUE"].y = 320;
-        civ["QUE"].size = 12;
     }
     if (nextYear == 1995) {
         /*if (RNG("Quebec_Independence",year) <= possible && civ["QUE"].strength <= 0) {
@@ -4975,23 +5019,27 @@ function regions(year) {
     }
 
     // Spanish North America
-    if (c.colonizingAmerica == 1803) {
+    if (c.colonizingAmerica == 1800) {
         civ["FLO"].strength = 17;
+        civ["FLO"].hideName = true;
+    }
+    if (c.colonizingAmerica == 1803) {
+        civ["FLO"].state = 1;
     }
 
     // Russian America
     if (c.colonizingAmerica == 1792) {
-        civ["RUSc"].strength = 1250;
+        civ["ALA"].strength = 1250;
     }
     if (c.colonizingAmerica == 1811) {
-        civ["RUSc"].state = 2;
-        civ["RUSc"].size += 2;
-        civ["RUSc"].x -= 30;
+        civ["ALA"].state = 2;
+        civ["ALA"].size += 2;
+        civ["ALA"].x -= 30;
     }
     if (c.colonizingAmerica == 1825) {
-        civ["RUSc"].state = 3;
-        civ["RUSc"].y -= 25;
-        civ["RUSc"].size += 2;
+        civ["ALA"].state = 3;
+        civ["ALA"].y -= 25;
+        civ["ALA"].size += 2;
     }
 
     owner(civ,"CAN",[243, 40, 68],"Canada","Colonies",true);
@@ -5005,7 +5053,7 @@ function regions(year) {
 
     if (nextYear == oppositeYear+1) {
         civ["USA"].adjective = "US";
-        civ["USA"].colonizationColor = [20, 134, 240];
+        civ["USA"].color = [20, 134, 240];
     }
 
     c.unitedStates ++;
@@ -5060,7 +5108,7 @@ function regions(year) {
         //}
     }
     if (c.unitedStates == 1803) {
-        civ["QUE"].strength = 0;
+        civ["LOU"].strength = 0;
         civ["USA"].state = 3;
         civ["CSA"].state = 1;
         worldNews(`Louisiana Purchase`,
@@ -5086,6 +5134,10 @@ function regions(year) {
             civ["QUE"].x -= 45;
           }
         }*/
+    }
+    if (c.unitedStates == 1819) {
+        civ["ORE"].strength = 200;
+        civ["ORE"].color = [200, 200, 200];
     }
     if (c.unitedStates == 1821) {
         //if (c.manifest_destiny) {
@@ -5127,65 +5179,86 @@ function regions(year) {
         }*/
     }
     if (c.unitedStates == 1845) {
+        civ["USA"].whiteLines = true;
+        civ["USA"].merge = ["TEX"];
         worldNews(`Annexation of Texas`,
             `The Republic of Texas has been annexed by the United States, becoming the 28th state. This move has heightened tensions with Mexico.`,
             `https://cdn11.bigcommerce.com/s-2aln2k/images/stencil/1280x1280/products/240/538/1841map-2__67341.1420582707.jpg?c=2`,
             false, 56, nextYear, 1, false);
     }
     if (c.unitedStates == 1848) {
-        //if (c.manifest_destiny) {
-        if (civ["USA"].name == "United States of "+c.newWorld) {
-            civ["USA"].x = 400;
-            civ["USA"].y -= 10;
-            civ["USA"].size += 3;
-        }
-        /*if (RNG("Mexican_American_War",year) <= impossible) {
-          c.big_mexico = true;
-          civ["USA"].state = 8;
-        } else if (RNG("Mexican_American_War",year) <= superUnlikely) {
-          c.big_mexico = true;
-          civ["USA"].state = 8;
-          civ["TEX"].strength += 500;
-        } else if (RNG("Mexican_American_War",year) <= unlikely) {
-          civ["USA"].state = "c12";
-        } else if (RNG("Mexican_American_War",year) <= possible) {
-          civ["USA"].state = "c11";
+        civ["USA"].x = 400;
+        civ["USA"].y -= 10;
+        civ["USA"].size += 3;
+        civ["USA"].merge = civ["USA"].merge.filter(item => item !== "TEX");
+        civ["ORE"].strength = 0;
+        if (rng(88) <= impossible) {
+            c.big_mexico = true;
+            civ["USA"].state = 8;
+        } else if (rng(88) <= superUnlikely) {
+            c.big_mexico = true;
+            civ["USA"].state = 8;
+            civ["TEX"].strength += 500;
+        } else if (rng(88) <= unlikely) {
+            civ["USA"].state = "c12";
+        } else if (rng(88) <= possible) {
+            civ["USA"].state = "c11";
         } else {
-          civ["USA"].state = 6;
-        }*/
-        //}
-        civ["USA"].state = 6;
+            civ["USA"].state = 6;
+            worldNews(`Treaty of Guadalupe Hidalgo`,
+                `The Mexican-American War has ended, Mexico cedes vast territories to the United States.`,
+                `https://assets.editorial.aetnd.com/uploads/2009/11/gettyimages-113491874.jpg`,
+                false, 57, nextYear, 2, true);
+        }
     }
     if (c.unitedStates == 1849) {
-        /*if (RNG("Oregon_Territory",year) <= unlikely && c.usa_exists) {
-          civ["USAo"].strength = 1000;
-        }*/
+        if (rng(87) <= unlikely) {
+            civ["ORE"].state = 1;
+            civ["USA"].merge.push("ORE");
+        }
     }
     if (c.unitedStates == 1854) {
-        //if (RNG("Mexican_American_War",year) > possible && c.manifest_destiny) {
-        civ["USA"].state = 7;
-        //}
+        if (civ["USA"].state == 6 && rng(89) > superUnlikely) {
+            civ["USA"].state = 7;
+        }
     }
 
     // Civil War
     if (c.unitedStates == 1861) {
-        /*if (c.usa_exists && civ["DUTc"].strength <= 0) {
-          eventLog.push("1861: American Civil War");*/
-        civ["CSA"].strength = 5;
-        //}
+        if (c.usa_exists && civ["DUTc"].strength <= 0) {
+            civ["CSA"].strength = 5;
+            worldNews(`American Civil War`,
+                `The American Civil War has officially begun. The nation is now divided between the Union in the North and the Confederacy in the South.`,
+                `https://assets.editorial.aetnd.com/uploads/2009/10/civil-war-gettyimages-3427284.jpg`,
+                false, 58, nextYear, 2, true);
+        }
     }
     if (c.unitedStates == 1863) {
-        //if (c.usa_exists) {
         civ["CSA"].state = 2;
-        //}
+        worldNews(`Battle of Gettysburg`,
+            `The Battle of Gettysburg has ended with a significant Union victory. This may be a turning point, as Union forces have repelled the Confederate invasion.`,
+            `https://cdn.britannica.com/13/149613-159-AAE1FE89/Battle-of-Gettysburg-Currier-lithograph-Ives-July-3-1863.jpg`,
+            false, 59, nextYear, 1, false);
+        worldNews(`The Emancipation Proclamation`,
+            `President Abraham Lincoln has issued the Emancipation Proclamation, declaring that all slaves in Confederate-held territory are to be set free.`,
+            `https://www.battlefields.org/sites/default/files/styles/wys/public/thumbnails/image/Emancipation%20Proc.jpg`,
+            false, 60, nextYear, 1, false); 
     }
-    if (c.unitedStates == 1864) {
-        /*if (RNG("American_Civil_War",year) <= unlikely && c.usa_exists) {
-          eventLog.push("*1864: Confederates win civil war");
+    if (c.unitedStates == 1865) {
+        if (rng(90) <= unlikely) {
           c.csa_victory = true;
           civ["CSA"].strength += 500;
           civ["CSA"].state = 3;
-        }*/
+          worldNews(`American Civil War Ends`,
+            `The American Civil War has come to an end. The South has prevailed. The United States has fractured in two.`,
+            `https://upload.wikimedia.org/wikipedia/commons/b/bc/General_Robert_E._Lee_surrenders_at_Appomattox_Court_House_1865.jpg`,
+            true, 62, nextYear, 2, true);
+        } else {
+            worldNews(`American Civil War Ends`,
+                `The American Civil War has come to an end. The Union has prevailed. The South will slowly be reincorporated during Reconstruction.`,
+                `https://upload.wikimedia.org/wikipedia/commons/b/bc/General_Robert_E._Lee_surrenders_at_Appomattox_Court_House_1865.jpg`,
+                false, 61, nextYear, 2, true);
+        }
     }
     if (c.unitedStates == 1880) {
         /*if (RNG("CSA_Expansion",year) <= unlikely && civ["CSA"].strength > 5) {
@@ -5212,20 +5285,20 @@ function regions(year) {
     if (c.unitedStates == 1867) {
         // Alaskan Purchase
         if (rng(59) <= impossible) {
-            civ["RUSc"].name = "Liechtensteinian Alaska";
-            civ["RUSc"].x = 300;
-            civ["RUSc"].y = 163;
-            civ["RUSc"].size = 9;
-            civ["RUSc"].strength += 300;
+            civ["ALA"].name = "Liechtensteinian Alaska";
+            civ["ALA"].x = 300;
+            civ["ALA"].y = 163;
+            civ["ALA"].size = 9;
+            civ["ALA"].strength += 300;
         } else if (rng(59) <= unlikely) {
-            civ["RUSc"].strength += 300;
+            civ["ALA"].strength += 300;
         } else if (c.usa_exists) {
-            civ["RUSc"].owner = "USA";
-            civ["RUSc"].hideName = true;
+            civ["ALA"].owner = "USA";
+            civ["ALA"].hideName = true;
         }
-        civ["CAN"].state = 7;
+        civ["CAN"].state = 8;
         if (!c.usa_exists || c.pax_francia) {
-            civ["RUSc"].state = "a";
+            civ["ALA"].state = "a";
             civ["CAN"].state = "a";
         }
         /*if (!c.manifest_destiny) {
@@ -5257,8 +5330,8 @@ function regions(year) {
           c.big_usa = true;
           civ["USA"].state = "c";
           civ["CAN"].strength = 0;
-          civ["RUSc"].strength = 0;
-           civ["USAo"].strength = 0;
+          civ["ALA"].strength = 0;
+           civ["ORE"].strength = 0;
         }*/
     }
 
@@ -5272,7 +5345,7 @@ function regions(year) {
     // United States Colonies
 
     owner(civ,"USA",[],"United States","Colonies",true);
-    owner(civ,"RUSc",[0, 0, 87],"Alaska","Alaska",false);
+    owner(civ,"ALA",[0, 0, 87],"Alaska","Alaska",false);
     owner(civ,"HAW",[],"Hawai'i","Hawaii",false);
 
     if (c.unitedStates == 1824) {
@@ -5291,6 +5364,45 @@ function regions(year) {
         /*if (c.us_imperialism) {
           civ["LBR"].state = "a";
         }*/
+    }
+    if (c.unitedStates == 1932) {
+        if (rng(97) < superUnlikely) {
+            civ["USA"].ideology = "socialism";
+            civ["USA"].x -= 50;
+            worldNews("United States turns Socialist",
+                "After the depression of 1929, the United States was not able to recover economically, leading to a socialist coup.",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/United_Socialist_States_of_America_flag.svg/2560px-United_Socialist_States_of_America_flag.svg.png",
+                true, 64, nextYear, 1, false);
+        }
+    }
+    if (c.unitedStates == 1940 && civ["USA"].ideology == "socialism") {
+        civ["USA"].merge = ["CAN","ALA"];
+        civ["USA"].y -= 50;
+        civ["USA"].whiteLines = false;
+        civ["CAN"].strength = 0;
+        civ["ALA"].strength = 0;
+    }
+    if (c.unitedStates == 1947 && c.ww2) {
+        /*for (const key in civs[nextYear]) {
+            if (civ[key].owner == "FRA") {
+                civ[key].owner = "USA";
+                civ["USA"].merge.push(key);
+                civ[key].strength = 0;
+            }
+        }*/
+    }
+
+    if (civ["USA"].ideology == "democracy") {
+        civ["USA"].name = "United States of America";
+        civ["USA"].color = [20, 134, 240];
+    }
+    if (civ["USA"].ideology == "socialism") {
+        civ["USA"].name = "United Socialist States of America";
+        civ["USA"].color = [79, 62, 147];
+    }
+    if (civ["USA"].ideology == "communism") {
+        civ["USA"].name = "Communist States of America";
+        civ["USA"].color = [183, 105, 105];
     }
 
 /* ______________________________
@@ -5335,9 +5447,6 @@ function regions(year) {
     }
 
     // Australia
-    if (civ["AUZ"].owner != null) {
-        civ["AUZ"].color = civ[civ["AUZ"].owner].colonizationColor;
-    }
 
     if (nextYear == 1788) {
         civ["AUZ"].strength = 2250;
@@ -5383,7 +5492,7 @@ function regions(year) {
     }
     if (nextYear == 1900) {
         civ["AUZ"].name = "Commonwealth of Australia";
-        civ["AUZ"].x -= 180;
+        civ["AUZ"].x -= 160;
         civ["AUZ"].size += 3;
     }
     if (nextYear == 1947) {
@@ -5404,11 +5513,12 @@ function regions(year) {
         }*/
     }
     if (nextYear == 1986) {
-        civ["AUZ"].owner = null;
-        civ["AUZ"].x += 30;
+        civ["AUZ"].owner = "none";
+        civ["AUZ"].x += 120;
+
     }
 
-    owner(civ,"AUZ",[],"Australia","Australia",false);
+    owner(civ,"AUZ",[],"Australia","Australia",true);
     owner(civ,"ZEA",[],"New Zealand","New Zealand",false);
 
     owner(civ,"PORz",[15, 45, 122]," "," ",false);
@@ -5418,24 +5528,26 @@ function regions(year) {
     owner(civ,"GERc",[],"North Papau Guinea","New Guinea",true);
     owner(civ,"PNG",[],"Papau New Guinea","New Guinea",true);
 
-    switch (civ["AUZ"].owner) {
-        case "ENG":
-            civ["AUZ"].name = "New South Wales";
-            break;
-        case "FRA":
-            civ["AUZ"].name = "New South Occitania";
-            break;
-        case "SPA":
-            civ["AUZ"].name = "New South Granada";
-            break;
-        case "POR":
-            civ["AUZ"].name = "New South Sebastian";
-            break;
-        case "DUT":
-            civ["AUZ"].name = "New South Holland";
-            break;
-        default:
-            civ["AUZ"].name = "Australia";
-            break;
+    if (nextYear < 1900) {
+        switch (civ["AUZ"].owner) {
+            case "ENG":
+                civ["AUZ"].name = "New South Wales";
+                break;
+            case "FRA":
+                civ["AUZ"].name = "New South Occitania";
+                break;
+            case "SPA":
+                civ["AUZ"].name = "New South Granada";
+                break;
+            case "POR":
+                civ["AUZ"].name = "New South Sebastian";
+                break;
+            case "DUT":
+                civ["AUZ"].name = "New South Holland";
+                break;
+            default:
+                civ["AUZ"].name = "Australia";
+                break;
+        }
     }
 }
