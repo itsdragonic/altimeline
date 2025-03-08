@@ -35,6 +35,7 @@ let impossible = 0.01,
 
     WTF: 7n35545u
          04681My9
+         s897s1L9
 
 <-- Last ID used -->
     RNG: 100
