@@ -1206,6 +1206,9 @@ function regions(year) {
     if (nextYear == 628) {
         civ["PER"].state = 3;
     }
+    if (nextYear == 872) {
+        civ["PER"].name = "Saffarids";
+    }
 
     // Turks
     if (nextYear == 1045) {
@@ -2338,7 +2341,7 @@ function regions(year) {
             civ["DUT"].name = "Neth.";
             civ["DUT"].y += 5;
             civ["DUT"].x -= 8;
-            civ["DUT"].color = [];
+            civ["DUT"].color = [226, 145, 83];
             civ["SWI"].name = "Switzerland";
             civ["SWI"].color = [];
             civ["SWE"].state = 5;
@@ -2505,8 +2508,7 @@ function regions(year) {
         civ["DUT"].adjective = "Dutch";
         civ["DUT"].defaultname = "Netherlands";
         civ["DUT"].color = [226, 145, 83];
-    }
-    if (nextYear == oppositeYear+1) {
+
         civ["BEL"].adjective = "Belgian";
         civ["BEL"].defaultname = "Belgium";
         civ["BEL"].color = [196, 175, 8];
@@ -3335,16 +3337,13 @@ function regions(year) {
     }
     if (nextYear == 750) {
         civ["ISL"].name = "Abbasid Caliphate";
+        civ["ISL"].weak = true;
     }
     if (nextYear == 800) {
         civ["ISL"].state = 6;
     }
     if (nextYear == 860) {
         civ["OMA"].strength = 2600;
-    }
-
-    if (nextYear == 912) {
-        civ["ISL"].strength = 0;
     }
     if (nextYear == 1009) {
         civ["YEM"].name = "Yemen";
@@ -3360,6 +3359,7 @@ function regions(year) {
     }
         
     if (nextYear == 1575) {
+        civ["ISL"].weak = false;
         civ["ISL"].strength = 1000;
         civ["ISL"].name = "Hejaz";
         civ["ISL"].size = 8;
@@ -3460,18 +3460,12 @@ function regions(year) {
         civ["SPA"].defaultname = "Spain";
         civ["SPA"].color = [255, 223, 102];
     }
-    if (nextYear == oppositeYear+1) {
+    if (civ["SPA"].iberianUnion) {
+        civ["POR"].adjective = "Iberian";
+        civ["POR"].color = [255, 223, 102];
+    } else {
         civ["POR"].adjective = "Portuguese";
         civ["POR"].defaultname = "Portugal";
-        civ["POR"].color = [67, 119, 231];
-    }
-
-    if (civ["SPA"].iberianUnion) {
-        civ["POR"].color = [255, 223, 102];
-    } else { // fix
-        civ["POR"].color = [67, 119, 231];
-    }
-    if (nextYear > 1799) {
         civ["POR"].color = [0, 136, 118];
     }
 
@@ -3587,7 +3581,7 @@ function regions(year) {
             c.reconquista = true;
             worldNews("Completion of the Reconquista",
                         "With the fall of Granada, the Reconquista is complete, making the Iberian Peninsula fully controlled by Christian Kingdoms.",
-                        "https://www.researchgate.net/publication/303092988/figure/fig1/AS:961750782447637@1606310663808/The-Spanish-Reconquest-711-1492.gif",
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSta9A141RRen59fWk6awaBb80IPeaDm9dxuw&s",
                         false, 38, 1492, 2, true);
         }
 
@@ -3595,7 +3589,9 @@ function regions(year) {
         if (nextYear == 1580) {
             civ["SPA"].iberianUnion = true;
             if (civ["SPA"].iberianUnion) {
-                civ["BRA"].name = "Brazil (Iberian Union)";
+                if (civ["BRA"].owner == "POR") {
+                    civ["BRA"].name = "Brazil (Iberian Union)";
+                }
                 civ["POR"].strength = 0;
                 civ["SPA"].name = "Iberian Union";
             }
@@ -3603,7 +3599,7 @@ function regions(year) {
         if (nextYear == 1641) {
             civ["SPA"].iberianUnion = false;
             if (!civ["SPA"].iberianUnion) {
-                if (civ["BRA"].name != "Dutch Brazil") {
+                if (civ["BRA"].owner == "POR") {
                     civ["BRA"].name = "Portuguese Brazil";
                 }
                 civ["POR"].strength = 1000;
@@ -4391,13 +4387,9 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
 
-    // Alternate Name (Seed: 1SbEO)
-    if (rng(31) < incrediblyUnlikely) {
-        c.newWorld = "Vespuccia";
-    } else if (rng(31) < veryUnlikely) {
-        c.newWorld = "Columbia";
-    } else {
-        c.newWorld = "America";
+    // Presets
+    if (nextYear == oppositeYear + 1) {
+        civ["PEU"].defaultname = "Peru";
     }
 
     // Pre-Columbian America
@@ -4437,26 +4429,12 @@ function regions(year) {
         civ["BRA"].strength = 1250;
         if (civ["BRA"].owner == null) {
             civ["BRA"].owner = colonizingPercentage(rng(30),colonizeNewWorld,"POR",200);
-            //colonizeNewWorld[civ["BRA"].owner] = 0;
         }
     }
     if (c.colonizingAmerica == 1528) {
+        // Klein-Venedig
         civ["VEZ"].strength = 18;
     }
-    /*if (civ["VEZ"].name != "Venezuela") {
-        civ["VEZ"].color = [72, 70, 67];
-    } else {
-        civ["VEZ"].color = [];
-    }*/
-    if (c.colonizingAmerica == 1545) {
-        /*if (RNG("German_Venezuela",year) <= unlikely) {
-          civ["VEZ"].name = "Welserland";
-          civ["VEZ"].strength += 700;
-          civ["VEZ"].state = 2;
-        } else {
-          civ["VEZ"].name = "Venezuela";*/
-    }
-
     if (c.colonizingAmerica == 1533) {
         civ["BRA"].state = 2;
         civ["BRA"].size += 2;
@@ -4472,7 +4450,14 @@ function regions(year) {
         civ["INC"].y -= 10;
     }
     if (c.colonizingAmerica == 1545) {
-        civ["VEZ"].name = "Venezuela";
+        if (rng(101) <= unlikely) {
+            civ["VEZ"].name = "Welserland";
+            civ["VEZ"].color = [95, 96, 95]
+            civ["VEZ"].strength += 900;
+        } else {
+            civ["VEZ"].name = "Venezuela";
+            civ["VEZ"].strength = 0;
+        }
     }
     if (c.colonizingAmerica == 1563) {
         civ["BRA"].state = 3;
@@ -4482,13 +4467,15 @@ function regions(year) {
     if (c.colonizingAmerica == 1630) {
         civ["DUTb"].strength = 9;
     }
-    if (c.colonizingAmerica == 1637) {
+    if (c.colonizingAmerica == 1637 &&
+        civ["DUT"].strength > 0
+    ) {
         // Dutch Brazil
-        /*if (RNG("Dutch_Invasion_of_Brazil",year) <= veryUnlikely) {
-          c.dutch_brazil = true;
-          civ["DUTb"].strength = 0;
-          civ["BRA"].name = "Dutch Brazil";
-        }*/
+        if (rng(102) <= veryUnlikely) {
+            c.dutch_brazil = true;
+            civ["DUTb"].strength = 0;
+            civ["BRA"].owner = "DUT";
+        }
     }
     if (c.colonizingAmerica == 1641) {
         civ["SPAc"].state = 7;
@@ -4563,9 +4550,6 @@ function regions(year) {
         civ["BRA"].x = 790;
         civ["BRA"].y = 735;
         civ["BRA"].owner = "none";
-        if (civ["BRA"].owner == "FRA") {
-            civ["BRA"].name = "Antarctique";
-        }
     }
     if (c.latinAmerica == 1824) {
         //if (c.am_colonization) {
@@ -4584,19 +4568,25 @@ function regions(year) {
             civ["GCO"].strength = 0;
         }
         
-        civ["ARG"].name = "Argentina";
+        if (civ["SPAc"].owner == "SPA") {
+            civ["ARG"].name = "Argentina";
+        }
     }
     if (c.latinAmerica == 1837) {
-        civ["PEU"].name = "Peru-Bolivia";
+        if (civ["SPAc"].owner == "SPA") {
+            civ["PEU"].name = "Peru-Bolivia";
+        } else {
+            civ["PEU"].name = "Incan Empire";
+        }
         civ["PEU"].color = [196, 188, 203];
         civ["PEU"].merge = ["BOL"];
         civ["BOL"].strength = 0;
     }
     if (c.latinAmerica == 1840) {
         // Collapse of Peru-Bolivia
-        if (rng(17) >= unlikely) {
+        if (!(rng(17) <= unlikely)) {
             civ["PEU"].state = 1;
-            civ["PEU"].name = "Peru";
+            civ["PEU"].name = civ["PEU"].defaultname;
             civ["PEU"].merge = [];
             civ["BOL"].strength = 1000;
         }
@@ -4610,10 +4600,10 @@ function regions(year) {
     if (c.latinAmerica == 1870) {
         civ["ARG"].state = 2;
         civ["CHL"].state = 2;
-        /*if (RNG("War_of_the_Triple_Alliance",year) <= veryUnlikely) {
-          civ["PAR"].state = 3;
-          civ["URU"].strength = 0;
-        }*/
+        if (rng(103) <= veryUnlikely) {
+            civ["PAR"].state = 3;
+            civ["URU"].strength = 0;
+        }
     }
     if (c.latinAmerica == 1880) {
         if (civ["PAR"].state != 3) {
@@ -4634,8 +4624,8 @@ function regions(year) {
     }
     if (c.latinAmerica == 1943) {
         if (civ["PEU"].name != "Peru-Bolivia" && civ["GCO"].strength <= 0) {
-          civ["EQU"].state = 2;
-          civ["PEU"].state = 2;
+            civ["EQU"].state = 2;
+            civ["PEU"].state = 2;
         }
     }
     if (c.latinAmerica == 1966) {
@@ -4645,8 +4635,38 @@ function regions(year) {
         civ["SUR"].owner = "none";
     }
 
-    // Europeans
-    owner(civ,"BRA",[13, 185, 57],"Brazil","Brazil",true);
+    // Names
+    altHist(nextYear,"alternate_american_names");
+
+    switch (civ["BRA"].owner) {
+        case "FRA":
+            civ["BRA"].defaultname = "Antarctica";
+            civ["BRA"].defaultname2 = "Antarctique";
+            civ["BRA"].defaultcolor = [13, 159, 185];
+            break;
+        case "ENG":
+            civ["BRA"].defaultname = "Australia";
+            civ["BRA"].defaultname2 = civ["BRA"].defaultname;
+            civ["BRA"].defaultcolor = [217, 71, 115];
+            break;
+        case "SPA":
+            civ["BRA"].defaultname = "Castilla";
+            civ["BRA"].defaultname2 = civ["BRA"].defaultname;
+            civ["BRA"].defaultcolor = [213, 186, 35];
+            break;
+        case "DUT":
+            civ["BRA"].defaultname = "Holland";
+            civ["BRA"].defaultname2 = civ["BRA"].defaultname;
+            civ["BRA"].defaultcolor = [218, 131, 60];
+            break;
+        case "POR":
+        case null:
+            civ["BRA"].defaultname = "Brazil";
+            civ["BRA"].defaultname2 = civ["BRA"].defaultname;
+            civ["BRA"].defaultcolor = [13, 185, 57];
+    }
+
+    owner(civ,"BRA",civ["BRA"].defaultcolor,civ["BRA"].defaultname,civ["BRA"].defaultname2,true);
     owner(civ,"GUY",[192, 136, 115],"Guyana","Guiana",true);
     owner(civ,"SUR",[182, 95, 159],"Suriname","Suriname",true);
     owner(civ,"FGU",[208, 52, 107],"Guyane","Guiana",true);
@@ -4732,50 +4752,11 @@ function regions(year) {
         c.colonizingAmerica = 1492;
         if (civ["SPAc"].owner == null) {
             civ["SPAc"].owner = colonizingPercentage(rng(60),colonizeNewWorld,"SPA",200);
+            //civ["SPAc"].owner = "ENG";
             //colonizeNewWorld[civ["SPAc"].owner] = 0;
         }
-
-        if (civ["SPAc"].owner == "ENG") {
-            civ["MEX"].name = "Mesico";
-            civ["MEXa"].name = "Mesican Empire";
-            civ["EQU"].name = "Equatoria";
-            civ["BOL"].name = "Victoria";
-            civ["PEU"].name = "Inca";
-            civ["URU"].name = "Richmond";
-            civ["COL"].name = "Columbia";
-            civ["GCO"].name = "Grand Columbia";
-            if (rng(25) < unlikely) {
-                civ["ARG"].name = "Silverland";
-            } else {
-                civ["ARG"].name = "New Yorkshire";
-            }
-            if (rng(27) < unlikely) {
-                civ["EQU"].name = "Quito";
-            } else {
-                civ["EQU"].name = "Equitoria";
-            }
-            if (rng(28) < veryUnlikely) {
-                civ["CHL"].name = "Landend";
-            } else {
-                civ["CHL"].name = "Winchester";
-            }
-            civ["CHL"].x -= 30;
-            if (rng(29) < possible) {
-                civ["PAR"].name = "St. George";
-            } else {
-                civ["PAR"].name = "Guarania";
-            }
-
-            worldNews(`${civ["ENG"].name} Discovers New World`,
-                        `Christopher Columbus set sail from ${civ["ENG"].name} with three ships, seeking a westward route to Asia. However, he accidently discovered unknown land.`,
-                        "https://assets.editorial.aetnd.com/uploads/2019/10/columbus-ships-gettyimages-1056336226.jpg",
-                        true, 47, nextYear, 2, true);
-        } else {
-            worldNews(`${civ["SPA"].name} Discovers New World`,
-                        `Christopher Columbus set sail from ${civ["SPA"].name} with three ships, seeking a westward route to Asia. However, he accidently discovered an unknown landmass.`,
-                        "https://assets.editorial.aetnd.com/uploads/2019/10/columbus-ships-gettyimages-1056336226.jpg",
-                        false, 36, nextYear, 2, true);
-        }
+        
+        altHist(nextYear, "alternate_latin_american_country_names");
     }
     
     if (c.colonizingAmerica == 1493) {
@@ -5003,8 +4984,9 @@ function regions(year) {
 
     // French America
     if (c.colonizingAmerica == 1800) {
-        if (c.usa_exists) {
+        if (c.usa_exists && civ["FRA"].strength > 0) {
             civ["LOU"].strength = 200;
+            civ["LOU"].owner = "FRA";
         }
     }
     if (nextYear == 1995) {
@@ -5044,6 +5026,7 @@ function regions(year) {
 
     owner(civ,"CAN",[243, 40, 68],"Canada","Colonies",true);
     owner(civ,"QUE",[],"Quebec","Colonies",true);
+    owner(civ,"LOU",[],"Louisiana","Louisiana",false);
     owner(civ,"DUTc",[],"Amsterdam","Colonies",true);
     owner(civ,"SWEc",[],"Delaware","Colonies",true);
     newLand(civ,"DUTc");
@@ -5066,7 +5049,7 @@ function regions(year) {
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Boston_Tea_Party_w.jpg/1200px-Boston_Tea_Party_w.jpg",
                 false, 50, nextYear, 1, false);
     }
-    if (c.unitedStates == 1775) {
+    if (c.unitedStates == 1776) {
         worldNews("The American Revolution",
                     "The first shots of the American Revolution have been fired, marking the beginning of the conflict between the American colonies and Britain.",
                     "https://homeofheroes.com/wp-content/uploads/2020/02/American-Revolution.jpg",
@@ -5102,7 +5085,7 @@ function regions(year) {
         civ["USA"].state = 2;
         civ["USA"].x = 550;
         worldNews(`Treaty of Paris`,
-                `The Treaty of Paris has been signed, officially ending the American Revolutionary War and recognizing the independence of the United States.`,
+                `The Treaty of Paris has been signed, thus officially ending the American Revolutionary War and recognizing the independence of the United States.`,
                 `https://lh5.googleusercontent.com/proxy/PihA7cPTFsTtBhUgNqVVg7vP_f5TdL7lkCs0OmoYCrDGUxVRTjYE8OiMzun8pP6O5c9jNp1-o8YfrAMXEOE6Zw9NVB5eJH0zL8XAA0YQqM7ZQvdbRNEW6zWBjcQYMEEd20vFM4SWmW3DvcF56D_-685f`,
                 false, 53, nextYear, 1, true);
         //}
@@ -5393,15 +5376,15 @@ function regions(year) {
     }
 
     if (civ["USA"].ideology == "democracy") {
-        civ["USA"].name = "United States of America";
+        civ["USA"].name = "United States of " + c.newWorld;
         civ["USA"].color = [20, 134, 240];
     }
     if (civ["USA"].ideology == "socialism") {
-        civ["USA"].name = "United Socialist States of America";
+        civ["USA"].name = "United Socialist States of " + c.newWorld;
         civ["USA"].color = [79, 62, 147];
     }
     if (civ["USA"].ideology == "communism") {
-        civ["USA"].name = "Communist States of America";
+        civ["USA"].name = "Communist States of " + c.newWorld;
         civ["USA"].color = [183, 105, 105];
     }
 

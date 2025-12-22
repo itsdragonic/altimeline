@@ -154,7 +154,7 @@ function rearrange(nations) {
     
     // Exceptions
     frontItem(nations, "ISL");
-    if (timeline > 1800) {
+    if (timeline > 1800 || civ["ISL"].weak) {
         endItem(nations, "ISL");
         endItem(nations, "OTT");
     }
