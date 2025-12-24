@@ -67,9 +67,24 @@ firstYear[oppositeYear] = {
         techecon: 0,
     },
     "conditions": {
-        constantinopleSurvives: true,
-        usa_exists: true,
-        pax_francia: false,
+        superpowers: [],
+
+        // 1400s
+        constantinopleSurvives: true, // true
+        colonizingAmerica: undefined,
+
+        // 1700s
+        usa_exists: true, // true
+        pax_francia: false, // false
+        napoleonic_wars: true, // true
+
+        // 1800s
+        louisiana_purchase: false, // true
+
+        // 1900s
+        occupied_iran: false,
+        cold_war: false, // true
+        orwell1984: false, // false
     },
 }
 
@@ -285,25 +300,23 @@ var colonizeOldWorld = {
 };
 civs = firstYear;
 
+const specialSeeds = [0, "0", null, '', '1984'];
+
 function rng(val) {
-    if (allValues[val] != null) { // for testing
-        return allValues[val];
-    } else if (seed == "0" || seed == "" || seed == null) {
-        return 1;
-    } else if (seed == "test" || seed == "insanity") {
-        return 0;
-    }
-    // Easter eggs
-    else if (seed == "1984") {
-        if (val == 99 || val == 97) {
+    if (allValues[val] != null) return allValues[val];
+
+    if (!seed) return 1;
+    if (seed == 0) return 1;
+    if (seed == 'test') return 0;
+    if (seed == '1984') {    
+        if ([15, 97, 99, 105, 106].includes(val)) {
             return 0;
-        } else {
-            return 1;
         }
-    } else {
-        let rng = new Math.seedrandom(seedNumber + val);
-        return rng();
+        return 1;
     }
+
+    Math.seedrandom(seedNumber + val);
+    return Math.random();
 }
 
 function rngRange(val, lowerBound, upperBound) {
@@ -332,36 +345,38 @@ function rngInfluence(val, normalVal, conditionals) {
 }
 
 function colonizingPercentage(RNG, array, bias, biasAmount, canBeFree) {
-    // Create an array to hold the cumulative weights
+    RNG = Math.min(RNG, 0.999999999999);
+
     let cumulativeWeights = [];
     let totalWeight = 0;
     let colonizers = array;
+
     if (!canBeFree) {
         colonizers["none"] = 0;
     }
 
-    if (seed == "0" || seed == "" || seed == null || rng(98) < possible) {
+    if (specialSeeds.includes(seed) || rng(98) < possible) {
         return bias;
     }
 
-    // Calculate the cumulative weights
     for (var key in colonizers) {
         totalWeight += colonizers[key];
         if (colonizers[key] == bias) {
             totalWeight += biasAmount;
         }
-        cumulativeWeights.push({ key: key, weight: totalWeight });
+        cumulativeWeights.push({ key, weight: totalWeight });
     }
 
-    // Generate a random number between 0 and the total weight
     var random = RNG * totalWeight;
 
-    // Find the key that corresponds to the random number
     for (var i = 0; i < cumulativeWeights.length; i++) {
         if (random < cumulativeWeights[i].weight) {
             return cumulativeWeights[i].key;
         }
     }
+
+    // Absolute safety fallback
+    return cumulativeWeights[cumulativeWeights.length - 1].key;
 }
 
 function owner(civ, id, colors, name, name2, nameFirst) {
@@ -389,6 +404,17 @@ function newLand(civ, nation) {
             civ[nation].name = `New ${civ[civ[nation].owner].name}`;
         }
     }
+}
+
+function annex(civ, country, annexed) {
+    civ[country].merge = [...civ[country].merge];
+
+    annexed.forEach((value) => {
+        if (!civ[country].merge.includes(value)) {
+            civ[country].merge.push(value);
+        }
+        civ[value].strength = 0;
+    });
 }
 
 // Alliances
@@ -827,6 +853,10 @@ function worldEvents(year) {
         }
     }
     if (nextYear == 1917) {
+        if (c.louisiana_purchase && civ["USA"].strength > 0) {
+            Allies.push("USA");
+        }
+
         // Russian Revolution
         //if (RNG("Russian_Revolution",year) > unlikely) {
         civ["RUS"].name = "Red Army";
@@ -835,8 +865,7 @@ function worldEvents(year) {
         civ["RUS"].size += 3;
         civ["RUS"].color = [124, 13, 24];
         civ["SIB"].strength = 27;
-        civ["FIN"].strength = 2250;;
-
+        civ["FIN"].strength = 2250;
         /*  c.soviet_union = true;
         } else {
           c.soviet_union = false;
@@ -920,6 +949,12 @@ function worldEvents(year) {
             c.ww1Winner = Allies;
             c.ww1Loser = Axis;
             c.ww2 = true;
+
+            if (Allies.includes("USA")) {
+                c.superpowers.push("USA");
+            }
+            c.superpowers.push("RUS");
+
             /* if (RNG("German_Venezuela",year) <= unlikely) {
               civ["VEZ"].name = "Welserland ";
             }
@@ -1129,13 +1164,9 @@ function worldEvents(year) {
             civ["VIE"].owner = "none";
 
             c.occupied_iran = false;
+            c.cold_war = true;
 
-            // big hungary
-            if (rng(91) <= unlikely) {
-                civ["HUN"].state = 2;
-                civ["HUN"].strong = true;
-                civ["CZE"].name = "Czechia";
-            }
+            altHist(nextYear,"post_ww2_europe_borders");
         }
 
         // Adjust colonies

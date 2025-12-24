@@ -34,14 +34,15 @@ let impossible = 0.01,
     No Greece:  
     Colonization: 1T7iJ4x3
                   22i10amM
+    Soviets win: 97
 
     WTF: 7n35545u
          04681My9
          s897s1L9
 
 <-- Last ID used -->
-    RNG: 103
-    News: 65
+    RNG: 106
+    News: 69
 
 <-- Region Theory -->
   Beginning: Regular year-based increments
@@ -56,7 +57,7 @@ let impossible = 0.01,
   A full run through a timeline would be called a 'campaign'
   Play as a certain region
    - Decisions are panels with buttons for different options
-   - Battles would be decided with dice
+   - Battles would be decided with some sort of strategy game
 
 */
 
@@ -215,8 +216,39 @@ function drawOutline(ctx2, img, x, y) {
 // Calculate & Update
 function calculateEvents() {
 
-    civs = firstYear;
+    civs = structuredClone(firstYear);
     news = {};
+
+    // TODO
+    Allies = ["ENG", "FRA", "RUS", "SER"];
+    Axis = ["GER", "AUS", "BUL", "OTT"];
+
+    colonizeNewWorld = {
+        "ENG": 40,
+        "SPA": 80,
+        "FRA": 30,
+        "POR": 60,
+        "DUT": 10,
+        "SWE": 5,
+        "CHI": 0,
+        "JAP": 0,
+        "USA": 0,
+        "none": 0,
+    };
+    colonizeOldWorld = {
+        "ENG": 80,
+        "SPA": 30,
+        "FRA": 50,
+        "POR": 30,
+        "DUT": 30,
+        "SWE": 3,
+        "AUS": 3,
+        "DEN": 3,
+        "CHI": 0,
+        "JAP": 0,
+        "USA": 0,
+        "none": 10,
+    };
 
     for (let year = oppositeYear; year <= presentYear; year++) {
         let nextYear = year + 1;
@@ -639,14 +671,14 @@ timelineInput.value = altimeline;
 if (timelineInput.value == 0) {
     timelineInput.value = 1;
 }
-if (seed == 0) {
-    seed = "";
-} else {
-    calcSeed(seed);
-}
+
+calcSeed(seed);
+
 timelineValue.textContent = timelineInput.value;
 timeline = parseInt(timelineInput.value);
-seedInput.value = seed;
+if (seed != 0) {
+    seedInput.value = seed;
+}
 updateCivs();
 
 // Fallback if map doesn't load

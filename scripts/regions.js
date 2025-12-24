@@ -206,8 +206,9 @@ function regions(year) {
     
     if (civ["CHI"].name == "Chinese Warring Kingdoms") {
         civ["CHI"].x = 1820;
+        civ["CHI"].merge = [];
     } else {
-        civ["CHI"].x = 1930;
+        civ["CHI"].x = 1920;
     }
     if (civ["CHI"].ideology == "communism") {
         civ["CHI"].color = [217, 18, 18];
@@ -1265,7 +1266,7 @@ function regions(year) {
           c.occupied_iran = false;
         }*/
     }
-    if (c.occupied_iran) {
+    if (c.occupied_iran && civ["ENG"].name != "Oceania") {
         civ["PER"].color = civ["ENG"].color;
     } else {
         civ["PER"].color = [];
@@ -2286,7 +2287,6 @@ function regions(year) {
 
     // Napoleonic Wars
     if (nextYear == 1796) {
-        c.napoleonic_wars = true;
         if (c.pax_francia) {
           c.napoleonic_wars = false;
         }
@@ -2356,6 +2356,16 @@ function regions(year) {
           civ["FRA"].name = "French Commune";
           civ["FRAx"].name = "French Republic";
         }*/
+    }
+
+    // [France]
+    switch (civ["FRA"].ideology) {
+        case "communism":
+            civ["FRA"].color = [213, 68, 68];
+            civ["FRA"].name = "French Commune";
+            break;
+        default:
+            civ["FRA"].color = [];
     }
 
 /* ______________________________
@@ -2481,14 +2491,35 @@ function regions(year) {
     // Modern Era
     if (nextYear == 1990) {
         if (c.ww2 && !c.fuhrerreich) {
+            worldNews(`Germany Reunified`,
+                        `East and West Germany reunite after decades of division, restoring unity and perhaps signaling the end of the Cold War in Europe.`,
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw1XqM-X_SxmU5TSIDC2Cy7t7nHtlFOvj5jw&s",
+                        false, 69, nextYear, 2, true);
+
+            civ["GER"].ideology = "democracy";
             civ["GER"].name = "Germany";
             civ["GER"].size ++;
-            civ["GER"].state = 16;
+            if (civ["GERe"].state == 2) {
+                civ["GER"].state = 'c';
+            } else {
+                civ["GER"].state = 16;
+            }
             civ["GERe"].strength = 0;
+
             civ["EU"].merge = ["FRA","GER","ITA","DUT","BEL","SPA","POR","IRE"];
             civ["EU"].merge.push("GERe");
         }
     }
+
+    switch (civ["GER"].ideology) {
+        case "communism":
+            civ["GER"].color = [152, 33, 33];
+            break;
+        default:
+            civ["GER"].color = [];
+    }
+
+    // [Germany]
 
 /* ______________________________
  / \                             \.
@@ -2726,7 +2757,7 @@ function regions(year) {
         civ["DEN"].strength = 2000;
         civ["SWE"].state = 2;
         civ["SWE"].name = "Sweden";
-    }
+    } 
     if (nextYear == 1524) {
         civ["ICE"].owner = "DEN";
     }
@@ -2924,12 +2955,12 @@ function regions(year) {
             eventLog.push("1995: Breakup of Yugoslavia");*/
         civ["SER"].state = 6;
         civ["SER"].name = "Serbia";
-        civ["SER"].x += 12;
+        civ["SER"].x += 5;
         civ["BUL"].name = "Bulgaria";
         //}
     }
     if (nextYear == 2008) {
-        if (civ["SER"].name == "Serbia") {
+        if (civ["SER"].name == "Serbia" && !civ["HUN"].strong) {
             civ["SER"].state = 7;
         }
     }
@@ -3087,7 +3118,7 @@ function regions(year) {
         civ["ABY"].state = 5;
         if (rng(81) <= unlikely) {
             civ["CZE"].strength += 100;
-        } else if (rng(81) <= Default) {
+        } else if (!civ["HUN"].strong) {
             civ["CZE"].state = 5;
             civ["CZE"].name = "Czechia Slovakia";
             civ["CZE"].x -= 15;
@@ -3112,6 +3143,7 @@ function regions(year) {
         civ["RUS"].adjective = "Russian";
         civ["RUS"].defaultname = "Russia";
         civ["RUS"].color = [73, 112, 87];
+        civ["RUS"].merge = [];
     } 
 
     if (nextYear == 860) {
@@ -3165,10 +3197,19 @@ function regions(year) {
         //}
     }
 
-    if (nextYear == 1991) {
+    if (nextYear == 1991 &&
+        c.cold_war &&
+        c.superpowers.includes("USA") &&
+        c.superpowers.includes("RUS") &&
+        !c.orwell1984
+    ) {
         if (rng(95) <= impossible) {
             // USA loses?
-            //eventLog.push("*1991: The United States is officially dissolved");
+            worldNews(`United States Dissolves`,
+                        `The federal government officially disbands as states declare independence, marking the collapse of the Union.`,
+                        "https://st3.depositphotos.com/1106005/13144/i/450/depositphotos_131445752-stock-photo-divided-we-fall-message.jpg",
+                        true, 68, nextYear, 3, true);
+
             civ["USA"].state = "b";
             civ["USA"].name = "U.S. Anarchy";
             civ["USA"].x += 110;
@@ -3176,7 +3217,11 @@ function regions(year) {
             civ["ALA"].strength += 500;
             civ["USA"].merge = [];
         } else if (rng(95) <= superUnlikely) {
-            //eventLog.push("*1991: The United States fractures");
+            worldNews(`United States Fractures`,
+                        `Political fractures and state defiance have weaken federal authority to its breaking point as regional alliances emerge, signaling the end of American unity.`,
+                        "https://i.redd.it/sq9sjgekg95z.png",
+                        true, 67, nextYear, 2, true);
+
             civ["USA"].state = "a";
             civ["USA"].name = "Disunited States of America";
             civ["USA"].size -= 3;
@@ -3186,7 +3231,11 @@ function regions(year) {
             civ["ORE"].strength = 0;
         } else if (civ["RUS"].ideology == "communism") {
             // Fall of the Soviet Union
-            //eventLog.push("1991: Soviet Union dissolves");
+            worldNews(`Soviet Union Dissolves`,
+                        `Following economic decline, nationalist movements, and failed reforms, the Soviet Union is formally dissolved, finally ending the Cold War.`,
+                        "https://upload.wikimedia.org/wikipedia/en/3/31/Lowering_the_Soviet_Flag.png",
+                        false, 66, nextYear, 2, true);
+                        
             civ["RUS"].name = "Russia";
             civ["RUS"].color = [0, 158, 224];
             civ["ARM"].state = 3;
@@ -3943,22 +3992,22 @@ function regions(year) {
     if (nextYear == 1977) {
         // Invasion of Western Sahara
         if (civ["MOR"].state == 4) {
-          civ["MOR"].state = 3;
+            civ["MOR"].state = 3;
         }
     }
     if (nextYear == 1975) {
-        /*if (RNG("Morocco_Expansion",year) <= superUnlikely) {
-          civ["MOR"].state = "b";
-          civ["MOR"].name = "Greater Morocco";
-          civ["SPAx"].name = "";
-        } else if (RNG("Morocco_Expansion",year) <= possible) {
-          civ["MOR"].state = "a";
-          civ["SPAx"].name = "";
-        } else if (RNG("Morocco_Expansion",year) <= likely) {
-          civ["MOR"].strength += 1;
-        } else {*/
-        //civ["MOR"].state = 4;
-        //}
+        if (rng(106) <= superUnlikely) {
+            civ["MOR"].state = "b";
+            civ["MOR"].name = "Greater Morocco";
+            civ["SPAx"].strength = 0;
+        } else if (rng(106) <= possible) {
+            civ["MOR"].state = "a";
+            civ["SPAx"].name = "";
+        } else if (rng(106) <= likely) {
+            civ["MOR"].strength += 1;
+        } else {
+            civ["MOR"].state = 4;
+        }
     }
 /* ______________________________
  / \                             \.
@@ -4661,6 +4710,7 @@ function regions(year) {
             break;
         case "POR":
         case null:
+        default:
             civ["BRA"].defaultname = "Brazil";
             civ["BRA"].defaultname2 = civ["BRA"].defaultname;
             civ["BRA"].defaultcolor = [13, 185, 57];
@@ -5037,6 +5087,7 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["USA"].adjective = "US";
         civ["USA"].color = [20, 134, 240];
+        civ["USA"].merge = [];
     }
 
     c.unitedStates ++;
@@ -5090,10 +5141,14 @@ function regions(year) {
                 false, 53, nextYear, 1, true);
         //}
     }
-    if (c.unitedStates == 1803) {
+    if (c.unitedStates == 1803 &&
+        civ["USA"].strength > 0
+    ) {
         civ["LOU"].strength = 0;
         civ["USA"].state = 3;
         civ["CSA"].state = 1;
+        c.louisiana_purchase = true;
+
         worldNews(`Louisiana Purchase`,
                 `The United States has completed the Louisiana Purchase, acquiring a vast territory from France and doubling the size of the nation.`,
                 `https://scphistory.org/wp-content/grand-media/image/exclude_La_Purchase_Map.jpeg`,
@@ -5375,6 +5430,11 @@ function regions(year) {
         }*/
     }
 
+
+    // Conditionals
+    if (civ["USA"].state == 'a' || civ["USA"].state == 'b') {
+        civ["USA"].color = [];
+    }
     if (civ["USA"].ideology == "democracy") {
         civ["USA"].name = "United States of " + c.newWorld;
         civ["USA"].color = [20, 134, 240];
@@ -5387,6 +5447,8 @@ function regions(year) {
         civ["USA"].name = "Communist States of " + c.newWorld;
         civ["USA"].color = [183, 105, 105];
     }
+
+    // [North America]
 
 /* ______________________________
  / \                             \.

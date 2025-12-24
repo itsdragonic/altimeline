@@ -1,4 +1,3 @@
-
 // Re-arrange Nations (lower = higher priority)
 function rearrange(nations) {
     let civ = civs[timeline];
@@ -64,6 +63,9 @@ function rearrange(nations) {
     frontItem(nations, "LBR");
     if (civ["ITAx"].weak) {
         endItem(nations, "ITAx");
+    }
+    if (civ["ALG"].name == "Algeria ") {
+        frontItem(nations, "ALG");
     }
 
     // Asia
@@ -150,6 +152,7 @@ function rearrange(nations) {
 
     frontItem(nations, "COR");
     frontItem(nations, "GER");
+    frontItem(nations, "GERe");
     frontItem(nations, "EU");
     
     // Exceptions

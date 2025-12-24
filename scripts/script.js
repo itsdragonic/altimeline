@@ -20,6 +20,8 @@ function clearCanvas() {
 }
 
 function drawMap(ctx, canvas, thickLines) {
+    //console.log(counter);
+
     let img = new Image;
     if (physicalMap) {
         img.src = "images/map.png";
