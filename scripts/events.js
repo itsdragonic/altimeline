@@ -10,8 +10,10 @@ let impossible = 0.01,
     incrediblyUnlikely = 0.025,
     superUnlikely = 0.05,
     veryUnlikely = 0.10,
+    rare = 0.15,
     unlikely = 0.20,
     uncommon = 0.35,
+    atypical = 0.45,
     possible = 0.50,
     likely = 0.75,
     veryLikely = 0.90,
@@ -34,15 +36,21 @@ let impossible = 0.01,
     No Greece:  
     Colonization: 1T7iJ4x3
                   22i10amM
-    Soviets win: 97
+    Soviets win: 97 7INtv313
+    Glitched: l2QyLLl4
+    Texas: 50Je7757
+    Pax Fracia: 06011919
+    Austrian's dream: 836x4I53
+    Southern victory: k
+    European Federation: e
 
     WTF: 7n35545u
          04681My9
          s897s1L9
 
 <-- Last ID used -->
-    RNG: 106
-    News: 69
+    RNG: 126
+    News: 94
 
 <-- Region Theory -->
   Beginning: Regular year-based increments
@@ -50,6 +58,7 @@ let impossible = 0.01,
   - Use counters as they build on each other
   - As world becomes more interconnected, just use conditionals
     that will be fleshed out in the World Events
+  - Avengers theory: regions can mostly be local but past the 1700s they influence each other
 
 <-- Player Interactive Ideas -->
   Ultimate goal: to make fiddling with rng values as fun and realistic as possible.
@@ -470,6 +479,11 @@ seedInput.addEventListener("input", function (event) {
         calcSeed(event.target.value);
         fallback();
     }, typingDelay);
+
+    setTimeout(() => {
+        updateCivs();
+    }, 3000);
+
 });
 
 // Timeline
@@ -596,7 +610,7 @@ function createNewsCanvas(news) {
                 canvas.style.top = rngRange(item.id, 30, 80) + '%';
 
                 // Special case for 0
-                if (seed == 0 || seed == "") {
+                if (specialSeeds.includes(seed)) {
                     if (Math.random() < 0.5) {
                         canvas.style.left = '12%';
                     } else {

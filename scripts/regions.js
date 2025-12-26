@@ -581,21 +581,29 @@ function regions(year) {
         civ["RAJ"].y -= 15;
         civ["RAJ"].size += 5;
         civ["PAK"].strength = 300;
+
+        worldNews(`India Gains Independence`,
+                    `Under Mahatma Gandhi’s leadership, India has achieved independence through mass civil disobedience, ending British colonial rule.`,
+                    "https://assets.architecturaldigest.in/photos/60084556eebcfd50ede878ff/16:9/w_2560%2Cc_limit/Gandhi-and-Sarojini-Naidu-featured-1366x768.jpg",
+                    false, 94, nextYear, 1, true);
+
         //}
     }
     if (nextYear == 1948) {
-        /*if (c.fuhrerreich) {
-          civ["PAK"].state = "a";
-          civ["PAK"].name = "Bengal";
-          civ["PAK"].x = 1840;
-          civ["PAK"].y = 440;
-          civ["PAK"].size -= 3;
-        }*/
+        if (c.fuhrerreich) {
+            civ["PAK"].state = "a";
+            civ["PAK"].name = "Bengal";
+            civ["PAK"].x = 1840;
+            civ["PAK"].y = 440;
+            civ["PAK"].size -= 3;
+        }
+
+        civ["SRI"].strength = 500;
     }
     if (nextYear == 1971) {
-        //if (!c.fuhrerreich) {
-        civ["PAK"].state = 2;
-        //}
+        if (!c.fuhrerreich) {
+            civ["PAK"].state = 2;
+        }
     }
 
 /* ______________________________
@@ -614,6 +622,8 @@ function regions(year) {
 
     if (nextYear == -1504) {
         civ["BUR"].strength = 4400;
+
+        civ["VIE"].defaultcolor = [];
     }
     if (nextYear == -1348) {
         civ["VIE"].strength = 1450;
@@ -780,16 +790,17 @@ function regions(year) {
     if (nextYear == 1975) {
         // Vietnam War Over
         civ["VIE"].name = "Vietnam";
+        civ["VIE"].defaultname = "Vietnam";
         civ["VIE"].ideology = "communism";
         if (rng(80) <= uncommon) {
-            civ["VIE"].color = [240, 211, 97];
+            civ["VIE"].defaultcolor = [240, 211, 97];
             civ["VIE"].ideology = "democracy";
         }
     }
     if (nextYear == 1989) {
         civ["BUR"].name = "Myanmar";
     }
-    owner(civ,"VIE",[],civ["VIE"].defaultname,"Indochina",true);
+    owner(civ,"VIE",civ["VIE"].defaultcolor,civ["VIE"].defaultname,"Indochina",true);
 
 /* ______________________________
  / \                             \.
@@ -954,6 +965,8 @@ function regions(year) {
         civ["GEO"].state = 3;
     }
 
+    // [Caucasia]
+
 /* ______________________________
  / \                             \.
 |   |                            |.
@@ -1051,6 +1064,15 @@ function regions(year) {
         civ["ISR"].state = 7;
         //}
         c.islamicExtremism = true;
+    }
+
+    if (nextYear == 2023 &&
+        civ["ISR"].state == 7
+    ) {
+        worldNews(`Israel-Hamas War`,
+                    `Intense fighting has erupted between Israel and Hamas in Gaza, prompting airstrikes, civilian displacement, and international efforts to halt escalation.`,
+                    "https://upload.wikimedia.org/wikipedia/commons/f/fa/Damage_in_Gaza_Strip_during_the_October_2023_-_01_%28cropped%29.jpg",
+                    false, 74, nextYear, 1, true);
     }
 
 /* ______________________________
@@ -1262,9 +1284,9 @@ function regions(year) {
     }
     if (nextYear == 1947) {
         civ["PER"].name = "Iran";
-        /*if (RNG("Occupation_of_Iran",year) >= possible || c.fuhrerreich) {
-          c.occupied_iran = false;
-        }*/
+        if (rng(113) >= possible || c.fuhrerreich) {
+            c.occupied_iran = false;
+        }
     }
     if (c.occupied_iran && civ["ENG"].name != "Oceania") {
         civ["PER"].color = civ["ENG"].color;
@@ -2028,7 +2050,7 @@ function regions(year) {
         civ["JAPc"].state = 2;
         if (civ["RUS"].manchuria) {
             civ["JAPc"].color = [87, 126, 101];
-            if (civ["RUS"].ideology = "communism") {
+            if (civ["RUS"].ideology == "communism") {
                 civ["JAPc"].color = [124, 13, 24];
             }
         }
@@ -2050,11 +2072,11 @@ function regions(year) {
             civ["JAP"].name = "Japan";
             civ["JAP"].state = 8;
             worldNews("Hiroshima & Nagasaki Bombed",
-                        `an ${c.newWorld}n B-29 bomber dropped the world's first deployed atomic bombs over Japan. Casualties are estimated to be in the hundreds of thousands.`,
+                        `An ${c.newWorld}n B-29 bomber dropped the world's first deployed atomic bombs over Japan. Casualties are estimated to be in the hundreds of thousands.`,
                         "https://assets.nationbuilder.com/ican/pages/321/meta_images/original/header-hiroshimadamage.jpg?1579887815",
                         false, 31, nextYear, 2, true);
             worldNews("Japan Surrenders",
-                        "After the atomic bombings over Japan, the government has unconditionally surrendered to the United States",
+                        "After the atomic bombings over Japan, the government has unconditionally surrendered to the United States.",
                         "https://cdn.aarp.net/content/dam/aarp/politics/events-and-history/2020/08/1140-vj-day-times-square-flag.imgcache.rev3b2f37bf6356a65ebe23b52c068e42cc.jpg",
                         false, 32, nextYear, 2, true);
             civ["KOR"].strength = 500;
@@ -2173,12 +2195,12 @@ function regions(year) {
         civ["MON"].y = 280;
         civ["MON"].size += 2;
     }
-    if (nextYear == 1920) {
-        /*if (RNG("Mongolian_Expansion",year) <= unlikely) {
-          civ["MON"].state = "a";
-        } else if (RNG("Mongolian_Expansion",year) <= Default) {
-          civ["MON"].strength += 10;
-        }*/
+    if (nextYear == 1920 &&
+        civ["MON"].state == 13
+    ) {
+        if (rng(114) <= unlikely) {
+            civ["MON"].state = "a";
+        }
     }
 
 /* ______________________________
@@ -2364,8 +2386,6 @@ function regions(year) {
             civ["FRA"].color = [213, 68, 68];
             civ["FRA"].name = "French Commune";
             break;
-        default:
-            civ["FRA"].color = [];
     }
 
 /* ______________________________
@@ -2476,6 +2496,7 @@ function regions(year) {
           } else if (rng(33) <= likely) {
             civ["AUS"].state = "a";
             civ["AUS"].name = "United States of Austria";
+            civ["HUN"].strength = 0;
           }
         }
     }
@@ -2489,26 +2510,37 @@ function regions(year) {
     }
         
     // Modern Era
-    if (nextYear == 1990) {
-        if (c.ww2 && !c.fuhrerreich) {
-            worldNews(`Germany Reunified`,
-                        `East and West Germany reunite after decades of division, restoring unity and perhaps signaling the end of the Cold War in Europe.`,
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw1XqM-X_SxmU5TSIDC2Cy7t7nHtlFOvj5jw&s",
-                        false, 69, nextYear, 2, true);
+    if (nextYear == 1989 &&
+        civ["GERe"].strength > 0 &&
+        c.cold_war
+    ) {
+        worldNews(`Berlin Wall Falls`,
+                    `The Berlin Wall has been opened as East German authorities lift restrictions, signaling the approaching end of the Cold War.`,
+                    "https://www.magnumphotos.com/wp-content/uploads/2019/09/cortex/par85047.jpg",
+                    false, 90, nextYear, 1, true);
+    }
+    if (nextYear == 1990 &&
+        c.ww2 && !c.fuhrerreich && !c.orwell1984 &&
+        civ["GERe"].strength > 0
+    ) {
+        worldNews(`Germany Reunified`,
+                    `East and West Germany reunite after decades of division, restoring unity and perhaps signaling the end of the Cold War in Europe.`,
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSw1XqM-X_SxmU5TSIDC2Cy7t7nHtlFOvj5jw&s",
+                    false, 69, nextYear, 2, true);
 
-            civ["GER"].ideology = "democracy";
-            civ["GER"].name = "Germany";
-            civ["GER"].size ++;
-            if (civ["GERe"].state == 2) {
-                civ["GER"].state = 'c';
-            } else {
-                civ["GER"].state = 16;
-            }
-            civ["GERe"].strength = 0;
-
-            civ["EU"].merge = ["FRA","GER","ITA","DUT","BEL","SPA","POR","IRE"];
-            civ["EU"].merge.push("GERe");
+        civ["GER"].ideology = "democracy";
+        civ["GER"].name = "Germany";
+        civ["GER"].size ++;
+        if (civ["GERe"].state == 2) {
+            civ["GER"].state = 'c';
+        } else {
+            civ["GER"].state = 16;
         }
+        civ["GERe"].strength = 0;
+
+        civ["EU"].merge = ["FRA","GER","ITA","DUT","BEL","SPA","POR","IRE"];
+        civ["EU"].merge.push("GERe");
+    
     }
 
     switch (civ["GER"].ideology) {
@@ -2579,6 +2611,7 @@ function regions(year) {
         civ["ENG"].defaultname = "England";
         civ["ENG"].adjective = "British";
         civ["ENG"].color = [223, 147, 147];
+        civ["ENG"].merge = [];
     }
     if (nextYear == 519) {
         civ["ENG"].strength = 3000;
@@ -2654,14 +2687,10 @@ function regions(year) {
 
     // Communist UK
     if (nextYear == 1926) {
-        /*// Post WW1 - UK Revolution?
-        if (c.kaiserreich) {
-          if (RNG("British_Revolution",year) <= unlikely) {
+        // Post WW1 - UK Revolution
+        if (rng(107) <= unlikely && c.kaiserreich) {
             civ["ENG"].name = "Union of Britain";
-          } else if (RNG("British_Revolution",year) <= Default) {
-            civ["ENG"].strength += 100;
-          }
-        }*/
+        }
     }
 
 /* ______________________________
@@ -2949,15 +2978,18 @@ function regions(year) {
         //}
     }
     if (nextYear == 1995) {
-        /*if (RNG("Breakup_of_Yugoslavia",year) <= unlikely) {
+        if (rng(108) <= unlikely) {
             civ["SER"].strength += 100;
-        } else if (RNG("Breakup_of_Yugoslavia",year) <= Default) {
-            eventLog.push("1995: Breakup of Yugoslavia");*/
-        civ["SER"].state = 6;
-        civ["SER"].name = "Serbia";
-        civ["SER"].x += 5;
-        civ["BUL"].name = "Bulgaria";
-        //}
+        } else {
+            worldNews(`Yugoslavia Breaks Apart`,
+                        `Ethnic tensions, nationalist movements, and political collapse have lead to the breakup of Yugoslavia.`,
+                        "https://upload.wikimedia.org/wikipedia/commons/a/a4/Map_of_war_in_Yugoslavia%2C_1993.png",
+                        false, 70, nextYear, 2, false);
+            civ["SER"].state = 6;
+            civ["SER"].name = "Serbia";
+            civ["SER"].x += 5;
+            civ["BUL"].name = "Bulgaria";
+        }
     }
     if (nextYear == 2008) {
         if (civ["SER"].name == "Serbia" && !civ["HUN"].strong) {
@@ -3183,18 +3215,37 @@ function regions(year) {
     }
     if (nextYear == 1920) {
         civ["SIB"].state = 3;
-        civ["SIB"].x = 1800;
-        civ["SIB"].y = 260;
+        civ["SIB"].x = 1810;
+        civ["SIB"].y = 240;
         civ["SIB"].size = 4;
         civ["SIB"].name = "Tannu Tuva";
+
+        // Russian Revolution
+        if (rng(109) <= unlikely) {
+            worldNews(`Monarchy Restored Russia`,
+                        `Monarchist forces have prevailed in the Russian Civil War, restoring the imperial throne and halting the spread of revolutionary socialism.`,
+                        "https://preview.redd.it/could-and-what-if-the-white-guard-won-the-russian-civil-war-v0-s4nlum2t61oa1.jpg?width=640&crop=smart&auto=webp&s=b1cad38b6ed23e31e56bae32e612ff47005e4f33",
+                        true, 72, nextYear, 2, true);
+
+            civ["RUS"].ideology = "monarchism";
+            civ["RUS"].color = [73, 112, 87];
+            civ["RUS"].name = "Russian Empire";
+        } else {
+            worldNews(`Bolsheviks Win Revolution`,
+                        `The Bolsheviks have prevailed in the Russian Civil War, overthrowing the old order and establishing a socialist state under Soviet rule.`,
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdNTsyFiqhOrt8b6tnK2bat4rCDsWgggSBJg&s",
+                        false, 71, nextYear, 2, true);
+
+            civ["RUS"].name = "Red Army";
+            civ["RUS"].size += 4;
+            civ["RUS"].y += 10;
+            civ["RUS"].ideology = "communism";
+        }
     }
     if (nextYear == 1922) {
-        //if (RNG("Russian_Revolution",year) > unlikely) {
-        civ["RUS"].name = "Soviet Union";
-        civ["RUS"].size += 4;
-        civ["RUS"].y += 10;
-        civ["RUS"].ideology = "communism";
-        //}
+        if (civ["RUS"].ideology == "communism") {
+            civ["RUS"].name = "Soviet Union";
+        }
     }
 
     if (nextYear == 1991 &&
@@ -3266,31 +3317,41 @@ function regions(year) {
     }
     if (nextYear == 2014) {
         civ["UKR"].state = 2;
-        /*if (RNG("Scotland_Independence",year) <= uncommon) {
-        civ["SCO"].state = 2;
-        civ["SCO"].strength = 100;
-        c.scotland = true;
-        }*/
+        if (rng(110) <= uncommon) {
+            worldNews(`Scotland Gains Independence`,
+                        `Scotland has formally separated from the United Kingdom after a successful referendum.`,
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRt3vZiQQLY1-TmEnlYpyp5zd-72yQmFm3UJw&s",
+                        true, 77, nextYear, 1, true);
+
+            civ["SCO"].state = 2;
+            civ["SCO"].strength = 100;
+        }
     }
-    if (nextYear == 2022) {
+    if (nextYear == 2022 &&
+        civ["UKR"].strength > 0
+    ) {
         civ["UKR"].state = 3;
+        worldNews(`Ukraine War Begins`,
+                    `Russia has launched a full-scale invasion of Ukraine, triggering widespread fighting, sanctions, and global concern over European security.`,
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Anti-terrorist_operation_in_eastern_Ukraine_%28War_Ukraine%29_%2827843153986%29.jpg/250px-Anti-terrorist_operation_in_eastern_Ukraine_%28War_Ukraine%29_%2827843153986%29.jpg",
+                    false, 73, nextYear, 1, true);
     }
     if (nextYear == 2023) {
-        /*if (!c.kaiserreich && !c.fuhrerreich) {
-        // Ukraine War
-        eventLog.push("2022: Ukraine War")
-        if (RNG("Ukraine_War",year) <= superUnlikely) {
-            civ["UKR"].strength = 0;
-        } else if (RNG("Ukraine_War",year) <= veryUnlikely) {
-            civ["UKR"].state = 4;
-            civ["UKR"].name = "";
-        } else if (RNG("Ukraine_War",year) <= unlikely) {
-            civ["UKR"].state = 1;
-        } else if (RNG("Ukraine_War",year) <= uncommon) {
-            civ["UKR"].state = 2;
-        } else if (RNG("Ukraine_War",year) <= Default) {
-            civ["UKR"].state = 3;
-        }*/
+        if (!c.kaiserreich && !c.fuhrerreich) {
+            // Ukraine War
+            if (rng(111) <= superUnlikely) {
+                civ["UKR"].strength = 0;
+            } else if (rng(111) <= veryUnlikely) {
+                civ["UKR"].state = 4;
+                civ["UKR"].name = "";
+            } else if (rng(111) <= unlikely) {
+                civ["UKR"].state = 1;
+            } else if (rng(111) <= uncommon) {
+                civ["UKR"].state = 2;
+            } else if (rng(111) <= Default) {
+                civ["UKR"].state = 3;
+            }
+        }
     }
 
 /* ______________________________
@@ -3488,6 +3549,17 @@ function regions(year) {
 
     if (nextYear == 1990) {
         civ["YEM"].united = true;
+    }
+
+    if (rng(124) < uncommon && nextYear == rngRange(rng(123), 1945, 2017)) {
+        civ["KUR"].strength = 1000;
+        worldNews(`Kurdistan Declares Independence`,
+                    `Kurdish leaders have proclaimed independence following a successful referendum, potentially hightening tensions in the Middle East.`,
+                    "https://static01.nyt.com/images/2017/09/22/world/22Kurds1/22Kurds1-superJumbo.jpg",
+                    true, 82, nextYear, 2, false);
+    }
+    if (rng(126) < veryUnlikely && rngRange(rng(125), 1970, 2025)) {
+        civ["KUR"].state = 2;
     }
 
 /* ______________________________
@@ -3763,11 +3835,11 @@ function regions(year) {
         civ["TIB"].y += 15;
     }
     if (nextYear == 1950) {
-        /*if (RNG("Tibet",year) <= possible || RNG("Chinese_Communist_Revolution",year) <= possible) {
-          civ["TIB"].strength ++;
-        } else {*/
-        civ["TIB"].strength = 0;
-        //}
+        if (rng(112) <= possible || civ["CHI"].ideology != "communism") {
+            civ["TIB"].strength ++;
+        } else {
+            civ["TIB"].strength = 0;
+        }
     }
 
 /* ______________________________
@@ -4136,7 +4208,9 @@ function regions(year) {
     owner(civ,"GERx",[],"Tanzania","Africa",true);
     owner(civ,"SPAx",[],"Western Sahara","Sahara",true);
     owner(civ,"ITAx",[],"Eritrea","Africa",true);
-    owner(civ,"ENGx",[],"Kenya","Colonies",true);
+    if (civ["EAF"].strength <= 0) {
+        owner(civ,"ENGx",[],"Kenya","Colonies",true);
+    }
     owner(civ,"ENGn",[],"Nigeria","Colonies",true);
     owner(civ,"ABY",[],"Ethiopia","East Africa",true);
 
@@ -4229,9 +4303,9 @@ function regions(year) {
     if (c.colonizingAfrica == 1912) {
         civ["MOR"].strength = 0;
         civ["ITAx"].state = 2;
-        /*if (RNG("Italian_Africa",year) <= unlikely) {
-          civ["ITAx"].state = "a";
-        }*/
+        if (rng(115) <= unlikely) {
+            civ["ITAx"].state = "a";
+        }
     }
     if (c.colonizingAfrica == 1936) {
         civ["ABY"].owner = "ITA";
@@ -4341,13 +4415,16 @@ function regions(year) {
     }
     if (c.colonizingAfrica == 1967) {
         // East African Federation formed
-        /*if (RNG("East_African_Federation",year) <= veryUnlikely) {
-          if (!c.kaiserreich) {
-            civ["EAF"].strength += 1000;
-            civ["ENGx"].name = "";
-            eventLog.push("*1967: The East African Federation is formed");
-          }
-        }*/
+        if (rng(117) <= unlikely) {
+            if (!c.kaiserreich) {
+                civ["EAF"].strength += 1000;
+                civ["ENGx"].name = "";
+                worldNews(`East African Federation Formed`,
+                        `Kenya, Uganda, and Tanzania have united under a single federal government, forming the East African Federation.`,
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLBol1xwztmhVuzt4FOjBd1NuRjk4RlbaMzg&s",
+                        true, 75, nextYear, 2, true);
+            }
+        }
     }
     if (c.colonizingAfrica == 1975) {
         if (civ["PORa"].state == "b") {
@@ -4362,9 +4439,9 @@ function regions(year) {
         civ["ENGs"].state = 5;
     }
     if (c.colonizingAfrica == 1991) {
-        /*if (RNG("Somaliland",year) <= possible) {
-          c.somaliland = true;
-        }*/
+        if (rng(116) <= possible) {
+            c.somaliland = true;
+        }
       }
     if (c.colonizingAfrica == 1993) {
         civ["ABY"].state = 5;
@@ -5040,14 +5117,21 @@ function regions(year) {
         }
     }
     if (nextYear == 1995) {
-        /*if (RNG("Quebec_Independence",year) <= possible && civ["QUE"].strength <= 0) {
-          eventLog.push("*1995: Quebec gains independence");
-          civ["QUE"].strength = 500;
-          civ["QUE"].state = "a";
-          civ["QUE"].name = "Quebec";
-          civ["QUE"].x = 770;
-          civ["QUE"].y = 250;
-        }*/
+        if (rng(118) <= atypical
+            && civ["QUE"].strength <= 0
+        ) {
+            worldNews(`Quebec Gains Independence`,
+                        `Quebec has formally separated from Canada following a successful independence referendum.`,
+                        "https://www.ctvnews.ca/resizer/v2/7JQCVTTBHZEWTPCHK36S2YBEEA.jpg?smart=true&auth=6490e7ec4088f2358bd25eeceaaa2cd438bbc653ffdbb6166d96edbc8ea3b958&width=2000&height=1125",
+                        true, 76, nextYear, 2, true);
+
+            civ["QUE"].strength = 500;
+            civ["QUE"].state = "a";
+            civ["QUE"].name = "Quebec";
+            civ["QUE"].owner = "none";
+            civ["QUE"].x = 770;
+            civ["QUE"].y = 250;
+        }
     }
 
     // Spanish North America
@@ -5076,7 +5160,7 @@ function regions(year) {
 
     owner(civ,"CAN",[243, 40, 68],"Canada","Colonies",true);
     owner(civ,"QUE",[],"Quebec","Colonies",true);
-    owner(civ,"LOU",[],"Louisiana","Louisiana",false);
+    if (!c.burr_plot) owner(civ,"LOU",[],"Louisiana","Louisiana",false);
     owner(civ,"DUTc",[],"Amsterdam","Colonies",true);
     owner(civ,"SWEc",[],"Delaware","Colonies",true);
     newLand(civ,"DUTc");
@@ -5163,24 +5247,30 @@ function regions(year) {
         }
     }
     if (c.unitedStates == 1805) {
-        /*if (c.usa_exists) {
-          if (RNG("Burr_Plot",year) <= superUnlikely) {
-            c.burr_plot = true;
-            c.manifest_destiny = false;
-            civ["QUE"].strength = 112;
-            civ["QUE"].name = "Kingdom of Burr";
-            civ["QUE"].x -= 45;
-          }
-        }*/
+        if (c.usa_exists) {
+            if (rng(119) <= incrediblyUnlikely) {
+                worldNews(`Kingdom of Burr Formed`,
+                        `Aaron Burr has successfully established an independent monarchy in the western territories, breaking from the United States.`,
+                        "https://www.albanyinstitute.org/tl_files/pages/collections/Exhibition%20Banners/Aaron_Burr_portrait-og.jpg",
+                        true, 78, nextYear, 2, true);
+
+                c.burr_plot = true;
+                c.manifest_destiny = false;
+                civ["LOU"].strength = 112;
+                civ["LOU"].name = "Kingdom of Burr";
+                civ["LOU"].owner = "none";
+                civ["LOU"].color = [170, 65, 65];
+            }
+        }
     }
     if (c.unitedStates == 1819) {
         civ["ORE"].strength = 200;
         civ["ORE"].color = [200, 200, 200];
     }
     if (c.unitedStates == 1821) {
-        //if (c.manifest_destiny) {
-        civ["USA"].state = 4;
-        //}
+        if (c.manifest_destiny) {
+            civ["USA"].state = 4;
+        }
     }
     if (c.unitedStates == 1835) {
         //if (c.am_colonization) {
@@ -5195,190 +5285,182 @@ function regions(year) {
             `The Republic of Texas has declared its independence from Mexico, leading to a conflict that will shape the future of the region.`,
             `https://www.texasobserver.org/wp-content/uploads/2022/05/texas.webp`,
             false, 55, nextYear, 1, true);
-        /*if (!c.usa_exists || !c.manifest_destiny || c.pax_francia) {
-          civ["TEX"].state = "a";
-        }*/
+        if (!c.usa_exists || !c.manifest_destiny || c.pax_francia) {
+            civ["TEX"].state = "a";
+        }
     }
     if (c.unitedStates == 1837) {
-        //if (c.manifest_destiny) {
-        civ["USA"].state = 5;
-        //}
-        if (civ["QUE"].name == "Kingdom of Burr") {
-            civ["QUE"].name = "Republic of Burr";
+        if (c.manifest_destiny) {
+            civ["USA"].state = 5;
+        }
+        if (civ["LOU"].name == "Kingdom of Burr") {
+            civ["LOU"].name = "Republic of Burr";
         }
     }
-    if (c.unitedStates == 1839) {
-        /*if (RNG("Texas_Independence",year) <= superUnlikely) {
-          civ["TEX"].state = 3;
-          civ["TEX"].strength = 399;
-          if (!c.usa_exists) {
-            civ["TEX"].state = "a";
-          }
-        }*/
-    }
-    if (c.unitedStates == 1845) {
-        civ["USA"].whiteLines = true;
-        civ["USA"].merge = ["TEX"];
-        worldNews(`Annexation of Texas`,
-            `The Republic of Texas has been annexed by the United States, becoming the 28th state. This move has heightened tensions with Mexico.`,
-            `https://cdn11.bigcommerce.com/s-2aln2k/images/stencil/1280x1280/products/240/538/1841map-2__67341.1420582707.jpg?c=2`,
-            false, 56, nextYear, 1, false);
-    }
-    if (c.unitedStates == 1848) {
-        civ["USA"].x = 400;
-        civ["USA"].y -= 10;
-        civ["USA"].size += 3;
-        civ["USA"].merge = civ["USA"].merge.filter(item => item !== "TEX");
-        civ["ORE"].strength = 0;
-        if (rng(88) <= impossible) {
-            c.big_mexico = true;
+    if (c.manifest_destiny) {
+        if (c.unitedStates == 1839) {
+            if (rng(120) <= superUnlikely) {
+                civ["TEX"].state = 3;
+                civ["TEX"].strength = 399;
+            }
+            if (!c.usa_exists) {
+                civ["TEX"].state = "a";
+            }
+        }
+        if (c.unitedStates == 1845) {
+            civ["USA"].whiteLines = true;
+            civ["USA"].merge = ["TEX"];
+            worldNews(`Annexation of Texas`,
+                `The Republic of Texas has been annexed by the United States, becoming the 28th state. This move has heightened tensions with Mexico.`,
+                `https://cdn11.bigcommerce.com/s-2aln2k/images/stencil/1280x1280/products/240/538/1841map-2__67341.1420582707.jpg?c=2`,
+                false, 56, nextYear, 1, false);
+        }
+        if (c.unitedStates == 1848) {
+            civ["USA"].x = 400;
+            civ["USA"].y -= 10;
+            civ["USA"].size += 3;
+            civ["USA"].merge = civ["USA"].merge.filter(item => item !== "TEX");
+            civ["ORE"].strength = 0;
+            if (rng(88) <= impossible) {
+                c.big_mexico = true;
+                civ["USA"].state = 8;
+            } else if (rng(88) <= superUnlikely) {
+                c.big_mexico = true;
+                civ["USA"].state = 8;
+                civ["TEX"].strength += 500;
+            } else if (rng(88) <= unlikely) {
+                civ["USA"].state = "c12";
+            } else if (rng(88) <= possible) {
+                civ["USA"].state = "c11";
+            } else {
+                civ["USA"].state = 6;
+                worldNews(`Treaty of Guadalupe Hidalgo`,
+                    `The Mexican-American War has ended, Mexico cedes vast territories to the United States.`,
+                    `https://assets.editorial.aetnd.com/uploads/2009/11/gettyimages-113491874.jpg`,
+                    false, 57, nextYear, 2, true);
+            }
+        }
+        if (c.unitedStates == 1849) {
+            if (rng(87) <= unlikely) {
+                civ["ORE"].state = 1;
+                civ["USA"].merge.push("ORE");
+            }
+        }
+        if (c.unitedStates == 1854) {
+            if (civ["USA"].state == 6 && rng(89) > superUnlikely) {
+                civ["USA"].state = 7;
+            }
+        }
+
+        // Civil War
+        if (c.unitedStates == 1861) {
+            if (c.usa_exists && civ["DUTc"].strength <= 0) {
+                civ["CSA"].strength = 5;
+                worldNews(`American Civil War`,
+                    `The American Civil War has officially begun. The nation is now divided between the Union in the North and the Confederacy in the South.`,
+                    `https://assets.editorial.aetnd.com/uploads/2009/10/civil-war-gettyimages-3427284.jpg`,
+                    false, 58, nextYear, 2, true);
+            }
+        }
+        if (c.unitedStates == 1863) {
+            civ["CSA"].state = 2;
+            worldNews(`Battle of Gettysburg`,
+                `The Battle of Gettysburg has ended with a significant Union victory. This may be a turning point, as Union forces have repelled the Confederate invasion.`,
+                `https://cdn.britannica.com/13/149613-159-AAE1FE89/Battle-of-Gettysburg-Currier-lithograph-Ives-July-3-1863.jpg`,
+                false, 59, nextYear, 1, false);
+            worldNews(`The Emancipation Proclamation`,
+                `President Abraham Lincoln has issued the Emancipation Proclamation, declaring that all slaves in Confederate-held territory are to be set free.`,
+                `https://www.battlefields.org/sites/default/files/styles/wys/public/thumbnails/image/Emancipation%20Proc.jpg`,
+                false, 60, nextYear, 1, false); 
+        }
+        if (c.unitedStates == 1865) {
+            if (rng(90) <= unlikely) {
+                c.csa_victory = true;
+                civ["CSA"].strength += 500;
+                civ["CSA"].state = 3;
+                worldNews(`American Civil War Ends`,
+                    `The American Civil War has come to an end. The South has prevailed. The United States has fractured in two.`,
+                    `https://upload.wikimedia.org/wikipedia/commons/b/bc/General_Robert_E._Lee_surrenders_at_Appomattox_Court_House_1865.jpg`,
+                    true, 62, nextYear, 2, true);
+            } else {
+                worldNews(`American Civil War Ends`,
+                    `The American Civil War has come to an end. The Union has prevailed. The South will slowly be reincorporated during Reconstruction.`,
+                    `https://upload.wikimedia.org/wikipedia/commons/b/bc/General_Robert_E._Lee_surrenders_at_Appomattox_Court_House_1865.jpg`,
+                    false, 61, nextYear, 2, true);
+            }
+        }
+
+        if (c.csa_victory) altHist(nextYear, "csa_victory_timeline");
+        
+
+        // Mexican-American War
+
+        if (c.unitedStates == 1867) {
+            // Alaskan Purchase
+            if (rng(59) <= impossible) {
+                civ["ALA"].name = "Liechtensteinian Alaska";
+                civ["ALA"].x = 300;
+                civ["ALA"].y = 163;
+                civ["ALA"].size = 9;
+                civ["ALA"].strength += 300;
+            } else if (rng(59) <= unlikely) {
+                civ["ALA"].strength += 300;
+            } else if (c.usa_exists) {
+                civ["ALA"].owner = "USA";
+                civ["ALA"].hideName = true;
+            }
+            civ["CAN"].state = 8;
+            if (!c.usa_exists || c.pax_francia) {
+                civ["ALA"].state = "a";
+                civ["CAN"].state = "a";
+            }
+            if (!c.manifest_destiny) {
+                civ["CAN"].state = "a";
+            }
+        
+            
+        }
+        if (c.unitedStates == 1870) {
+            //if (RNG("Mexican_American_War",year) > possible && c.manifest_destiny) {
             civ["USA"].state = 8;
-        } else if (rng(88) <= superUnlikely) {
-            c.big_mexico = true;
-            civ["USA"].state = 8;
-            civ["TEX"].strength += 500;
-        } else if (rng(88) <= unlikely) {
-            civ["USA"].state = "c12";
-        } else if (rng(88) <= possible) {
-            civ["USA"].state = "c11";
-        } else {
-            civ["USA"].state = 6;
-            worldNews(`Treaty of Guadalupe Hidalgo`,
-                `The Mexican-American War has ended, Mexico cedes vast territories to the United States.`,
-                `https://assets.editorial.aetnd.com/uploads/2009/11/gettyimages-113491874.jpg`,
-                false, 57, nextYear, 2, true);
+            //}
         }
-    }
-    if (c.unitedStates == 1849) {
-        if (rng(87) <= unlikely) {
-            civ["ORE"].state = 1;
-            civ["USA"].merge.push("ORE");
+        if (c.unitedStates == 1898) {
+            // Spanish-American War
+            if (civ["PHI"].owner == "SPA") {
+            civ["PHI"].owner = "USA";
+            civ["HAW"].owner = "USA";
+            civ["HAW"].hideName = true;
+            }
+            civ["SPAc"].owner = "USA";
+            civ["SPAc"].hideName = true;
         }
-    }
-    if (c.unitedStates == 1854) {
-        if (civ["USA"].state == 6 && rng(89) > superUnlikely) {
-            civ["USA"].state = 7;
+        if (c.unitedStates == 1964) {
+            worldNews(`Civil Rights Movement`,
+                        `Mass protests and landmark legislation have expanded civil rights protections in the United States, dismantling segregation and outlawing discrimination.`,
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScxZ-Yry0h0QywjZ6aN_5v1m3X6EQnbcc4fg&s",
+                        false, 93, nextYear, 1, false);
         }
-    }
+        if (c.unitedStates == 1968) {
+            if (rng(122) <= veryUnlikely && c.usa_exists && c.manifest_destiny) {
+                //eventLog.push("*1968: The United States annexes Canada");
+                c.big_usa = true;
+                civ["USA"].state = "c";
+                civ["CAN"].strength = 0;
+                civ["ALA"].strength = 0;
+                civ["ORE"].strength = 0;
+            }
+        }
 
-    // Civil War
-    if (c.unitedStates == 1861) {
-        if (c.usa_exists && civ["DUTc"].strength <= 0) {
-            civ["CSA"].strength = 5;
-            worldNews(`American Civil War`,
-                `The American Civil War has officially begun. The nation is now divided between the Union in the North and the Confederacy in the South.`,
-                `https://assets.editorial.aetnd.com/uploads/2009/10/civil-war-gettyimages-3427284.jpg`,
-                false, 58, nextYear, 2, true);
+        if (c.unitedStates == 2001 && c.manifest_destiny &&
+             c.islamicExtremism) {
+            worldNews("September 11 Attacks",
+                "Terrorists hijacked four planes, crashing them into the World Trade Center in New York City and the Pentagon in Washington, D.C.",
+                "https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/7060821/GettyImages-1161124.jpg",
+                false, 49, nextYear, 1, true);
         }
     }
-    if (c.unitedStates == 1863) {
-        civ["CSA"].state = 2;
-        worldNews(`Battle of Gettysburg`,
-            `The Battle of Gettysburg has ended with a significant Union victory. This may be a turning point, as Union forces have repelled the Confederate invasion.`,
-            `https://cdn.britannica.com/13/149613-159-AAE1FE89/Battle-of-Gettysburg-Currier-lithograph-Ives-July-3-1863.jpg`,
-            false, 59, nextYear, 1, false);
-        worldNews(`The Emancipation Proclamation`,
-            `President Abraham Lincoln has issued the Emancipation Proclamation, declaring that all slaves in Confederate-held territory are to be set free.`,
-            `https://www.battlefields.org/sites/default/files/styles/wys/public/thumbnails/image/Emancipation%20Proc.jpg`,
-            false, 60, nextYear, 1, false); 
-    }
-    if (c.unitedStates == 1865) {
-        if (rng(90) <= unlikely) {
-          c.csa_victory = true;
-          civ["CSA"].strength += 500;
-          civ["CSA"].state = 3;
-          worldNews(`American Civil War Ends`,
-            `The American Civil War has come to an end. The South has prevailed. The United States has fractured in two.`,
-            `https://upload.wikimedia.org/wikipedia/commons/b/bc/General_Robert_E._Lee_surrenders_at_Appomattox_Court_House_1865.jpg`,
-            true, 62, nextYear, 2, true);
-        } else {
-            worldNews(`American Civil War Ends`,
-                `The American Civil War has come to an end. The Union has prevailed. The South will slowly be reincorporated during Reconstruction.`,
-                `https://upload.wikimedia.org/wikipedia/commons/b/bc/General_Robert_E._Lee_surrenders_at_Appomattox_Court_House_1865.jpg`,
-                false, 61, nextYear, 2, true);
-        }
-    }
-    if (c.unitedStates == 1880) {
-        /*if (RNG("CSA_Expansion",year) <= unlikely && civ["CSA"].strength > 5) {
-          c.csa_cen = true;
-          civ["CEN"].state = 1;
-          civ["CEN"].name = "";
-        }*/
-    }
-    if (c.unitedStates == 1906) {
-        /*if (RNG("CSA_Expansion",year) <= superUnlikely && c.usa_exists) {
-          eventLog.push("*1906: The Confederate States of America forms The Confederacy of the Golden Circle");
-          civ["CSA"].state = 6;
-          civ["CSA"].name = "Confederacy of the Golden Circle";
-          civ["CSA"].y += 40;
-          civ["CSA"].size += 2;
-          civ["MEX"].name = "Mexico (CSA)";
-          civ["MEX"].size -= 4;
-          civ["MEX"].y += 20;
-        }*/
-    }
-
-    // Mexican-American War
-
-    if (c.unitedStates == 1867) {
-        // Alaskan Purchase
-        if (rng(59) <= impossible) {
-            civ["ALA"].name = "Liechtensteinian Alaska";
-            civ["ALA"].x = 300;
-            civ["ALA"].y = 163;
-            civ["ALA"].size = 9;
-            civ["ALA"].strength += 300;
-        } else if (rng(59) <= unlikely) {
-            civ["ALA"].strength += 300;
-        } else if (c.usa_exists) {
-            civ["ALA"].owner = "USA";
-            civ["ALA"].hideName = true;
-        }
-        civ["CAN"].state = 8;
-        if (!c.usa_exists || c.pax_francia) {
-            civ["ALA"].state = "a";
-            civ["CAN"].state = "a";
-        }
-        /*if (!c.manifest_destiny) {
-          civ["CAN"].state = "a";
-        }*/
-    
-        /*if (RNG("CSA_Expansion",year) <= likely) {
-          civ["CSA"].state = 4;
-        }*/
-    }
-    if (c.unitedStates == 1870) {
-        //if (RNG("Mexican_American_War",year) > possible && c.manifest_destiny) {
-        civ["USA"].state = 8;
-        //}
-    }
-    if (c.unitedStates == 1898) {
-        // Spanish-American War
-        if (civ["PHI"].owner == "SPA") {
-          civ["PHI"].owner = "USA";
-          civ["HAW"].owner = "USA";
-          civ["HAW"].hideName = true;
-        }
-        civ["SPAc"].owner = "USA";
-        civ["SPAc"].hideName = true;
-    }
-    if (c.unitedStates == 1968) {
-        /*if (RNG("American_Expansion",year) <= veryUnlikely && c.usa_exists) {
-          eventLog.push("*1968: The United States annexes Canada");
-          c.big_usa = true;
-          civ["USA"].state = "c";
-          civ["CAN"].strength = 0;
-          civ["ALA"].strength = 0;
-           civ["ORE"].strength = 0;
-        }*/
-    }
-
-    if (c.unitedStates == 2001 && c.islamicExtremism) {
-        worldNews("September 11 Attacks",
-            "Terrorists hijacked four planes, crashing them into the World Trade Center in New York City and the Pentagon in Washington, D.C.",
-            "https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/7060821/GettyImages-1161124.jpg",
-            false, 49, nextYear, 1, true);
-    }
+    // [United States]
 
     // United States Colonies
 

@@ -80,11 +80,16 @@ firstYear[oppositeYear] = {
 
         // 1800s
         louisiana_purchase: false, // true
+        manifest_destiny: true, // true
+        csa_victory: false, // false
 
         // 1900s
         occupied_iran: false,
         cold_war: false, // true
         orwell1984: false, // false
+        islamic_extremism: false, // true
+
+        // 2000s
     },
 }
 
@@ -300,7 +305,7 @@ var colonizeOldWorld = {
 };
 civs = firstYear;
 
-const specialSeeds = [0, "0", null, '', '1984'];
+const specialSeeds = [0, "0", null, '', '1984', 'southern_victory'];
 
 function rng(val) {
     if (allValues[val] != null) return allValues[val];
@@ -309,7 +314,13 @@ function rng(val) {
     if (seed == 0) return 1;
     if (seed == 'test') return 0;
     if (seed == '1984') {    
-        if ([15, 97, 99, 105, 106].includes(val)) {
+        if ([15, 97, 99, 105, 106, 124].includes(val)) {
+            return 0;
+        }
+        return 1;
+    }
+    if (seed == 'southern_victory') {    
+        if ([90, 121].includes(val)) {
             return 0;
         }
         return 1;
@@ -320,7 +331,7 @@ function rng(val) {
 }
 
 function rngRange(val, lowerBound, upperBound) {
-    if (seed == "0" || seed == "") {
+    if (specialSeeds.includes(seed)) {
         return Math.ceil((upperBound + lowerBound) / 2);
     } else {
         return Math.ceil(rng(val + 1) * (upperBound - lowerBound + 1)) + lowerBound;
@@ -631,7 +642,7 @@ addCountry("AUZ", "Australia", 1, 2120, 850, 15);
 addCountry("FRAx", "French Africa", 1, 1250, 365, 5);
 addCountry("FRAs", "French Sudan", 1);
 addCountry("DOM", "Dom. Rep.", 1, 745, 505, 4);
-addCountry("ORE", "Oregon", 1, 450, 270, 9);
+addCountry("ORE", "", 1, 450, 270, 9);
 addCountry("FRAi", "Indochina", 1, 1985, 500, 5); //fix
 addCountry("MEXa", "Mexican Empire ( Fr. )", 1, 520, 490, 6);
 addCountry("PNG", "Papau New Guinea", 1, 2340, 725, 10);
@@ -654,10 +665,13 @@ addCountry("GERe", "East Germany", 1, 1340, 225, 5)
 addCountry("ANT", "Antarctica", 1, 1155, 1260, 20);
 addCountry("JAPn", "DPR Japan", 1, 2130, 325, 6);
 addCountry("PAK", "Pakistan", 1, 1670, 430, 10);
+addCountry("SRI", "Sri Lanka", 1, 1850, 590, 4);
 addCountry("nuclear", "Nuclear Armageddon", 1);
 addCountry("AFR", "African Nation States", 1, 1000, 600, 10);
 addCountry("EU", "European Federation", 1, 1110, 270, 7);
 addCountry("EAF", "East African Federation", 2, 1520, 675, 7);
+addCountry("KUR", "Kurdistan", 1, 1530, 362, 5);
+
 
 // News
 var news = {
@@ -853,7 +867,8 @@ function worldEvents(year) {
         }
     }
     if (nextYear == 1917) {
-        if (c.louisiana_purchase && civ["USA"].strength > 0) {
+        if (c.louisiana_purchase && c.manifest_destiny &&
+            civ["USA"].strength > 0 && !c.csa_victory) {
             Allies.push("USA");
         }
 
@@ -1033,9 +1048,19 @@ function worldEvents(year) {
             civ["CZE"].state = null;
             civ["POL"].state = null;
             civ["GER"].state = 11;
+
+            worldNews(`Germany Invades Poland`,
+                        `German forces have crossed into Poland, plunging Europe into potentially further conflict.`,
+                        "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Defenders_of_Warsaw_%281939%29.jpg/250px-Defenders_of_Warsaw_%281939%29.jpg",
+                        false, 84, nextYear, 1, true);
         }
         if (nextYear == 1940) {
             civ["GER"].state = 13;
+
+            worldNews(`Fall of France`,
+                        `German armies have defeated France in a swift campaign, forcing surrender and leaving much of Western Europe under Axis control.`,
+                        "https://upload.wikimedia.org/wikipedia/commons/2/2f/Bundesarchiv_Bild_146-1994-036-09A%2C_Paris%2C_Parade_auf_der_Champs_Elys%C3%A9e.jpg",
+                        false, 85, nextYear, 1, true);
         }
     }
 
@@ -1083,6 +1108,12 @@ function worldEvents(year) {
         civ["ITA"].state = 10;
         civ["GRE"].color = [102, 168, 96];
         civ["BUL"].state = 9;
+
+        worldNews(`Pearl Harbor Attacked`,
+                    `Japanese aircraft have launched a surprise attack on Pearl Harbor, destroying ships and drawing the United States into the war.`,
+                    "https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2016/12/pearl-harbor-attack-photos-116-1.jpg?fit=920%2C537&ssl=1",
+                    false, 86, nextYear, 1, true);
+
         //}
 
         civ["ABY"].state = 6;
@@ -1091,6 +1122,13 @@ function worldEvents(year) {
         civ["ITAx"].owner = "FRA";
         civ["ITAx"].hideName = true;
     }
+    if (nextYear == 1942) {
+        worldNews(`Stalingrad Encirclement`,
+                    `Soviet forces have surrounded German troops at Stalingrad, marking a major turning point on the Eastern Front.`,
+                    "https://res.cloudinary.com/aenetworks/image/upload/c_fill,w_1200,h_630,g_auto/dpr_auto/f_auto/q_auto:eco/v1/soviet-stalingrad-gettyimages-3289320",
+                    false, 87, nextYear, 1, true);
+    }
+
     if (nextYear == 1943) {
         civ["ITA"].color = [88, 86, 83];
         civ["ITA"].y -= 20;
@@ -1109,6 +1147,11 @@ function worldEvents(year) {
         civ["GER"].state = 11;
       }
     }*/ civ["GER"].state = 11;
+        worldNews(`D-Day Landings`,
+                    `Allied forces have landed in Normandy, opening a Western Front and beginning the liberation of Nazi-occupied Europe.`,
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQunpLcEMwi7BNfSZsYd2AvC16t-kfx5BbVCg&s",
+                    false, 88, nextYear, 1, true);
+
 
         civ["ALB"].strength = 300;
         civ["GRE"].color = [];
@@ -1148,6 +1191,11 @@ function worldEvents(year) {
         } else {
 
             // Normal WWII Outcome
+            worldNews(`Germany Surrenders`,
+                        `Nazi Germany has formally surrendered to Allied forces, bringing the war in Europe to an end after years of devastation.`,
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSboddKhKN9QFhHnZwHsaB4dkcemiVRbSEj9Q&s",
+                        false, 89, nextYear, 1, true);
+
             civ["GER"].name = "West Germany";
             civ["GER"].size = 5;
             civ["GERe"].strength = 200;
@@ -1225,6 +1273,13 @@ function worldEvents(year) {
     if (nextYear == 1947) {
         civ["ROA"].state = 5;
         civ["HUN"].small = true;
+
+        if (c.cold_war) {
+            worldNews(`Iron Curtain Falls`,
+                        `Europe has been divided into rival spheres as Soviet-backed governments consolidate control in the East, hardening Cold War tensions.`,
+                        "https://alchetron.com/cdn/iron-curtain-5610ac48-e82d-4b46-b22d-a0e5cd96f37-resize-750.jpeg",
+                        false, 91, 1947, 2, true);
+        }
     }
     if (nextYear == 1954) {
         /*if (c.fuhrerreich && RNG("Lake_Congo_Project",year) <= superUnlikely) {
@@ -1238,6 +1293,43 @@ function worldEvents(year) {
     // Modern Era
     if (nextYear == 1961) {
         // Cuban Missile Crisis
+    }
+
+    if (nextYear == 1969) {
+        if (c.cold_war && !c.orwell1984) {
+            if (!c.superpowers.includes("USA")) {
+                c.firstMoonAdj = "Russian";
+                if (civ["RUS"].ideology == "communism") {
+                    c.firstMoon = "USSR";
+                    c.firstMoonImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_r81JnJHIIhFDpLPNwrnjfl9Rc3o8QBELsQ&s";
+                } else {
+                    c.firstMoon = "Russia";
+                    c.firstMoonImg = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOBraD97ILpWf4Art5iFMd_o0QsWpJISO2qsXW8M-T2CEp4Aw&s";
+                }
+                
+            } else if (c.manifest_destiny) {
+                civ["USA"].moon = true;
+                c.firstMoon = `US${c.newWorld.charAt(0)}`;
+                c.firstMoonAdj = `${c.newWorld}n`;
+                c.firstMoonImg = "https://upload.wikimedia.org/wikipedia/commons/d/dd/Buzz_salutes_the_U.S._Flag.jpg";
+            } else {
+                c.firstMoon = "British";
+                c.firstMoonAdj = "English";
+                c.firstMoonImg = "https://www.shutterstock.com/shutterstock/videos/1084916227/thumb/9.jpg?ip=x480";
+            }
+
+            worldNews(`${c.firstMoon} on Moon`,
+                    `${c.firstMoonAdj} astronauts have successfully landed on the Moon, marking humanity’s first steps on another world.`,
+                    c.firstMoonImg,
+                    civ["USA"].moon ? false : true, 79, nextYear, 3, true);
+        }
+    }
+
+    if (nextYear == 1995) {
+        worldNews(`Internet Goes Global`,
+                    `The internet has rapidly expanded into daily life, transforming communication, commerce, and access to information worldwide.`,
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_MDWZhaFJiv3EAsI5joQqARJqGHkRXbOz2Q&s",
+                    false, 92, nextYear, 1, false);
     }
 
     if (nextYear == 2019 && civ["CHI"].strength > 0 && rng(94) > possible) {

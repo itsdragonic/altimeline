@@ -29,6 +29,7 @@ function rearrange(nations) {
 
     if (c.big_mexico) {
         frontItem(nations,"MEX");
+        frontItem(nations, "TEX");
     }
 
     // South America
@@ -67,6 +68,9 @@ function rearrange(nations) {
     if (civ["ALG"].name == "Algeria ") {
         frontItem(nations, "ALG");
     }
+    if (c.somaliland) {
+        frontItem(nations, "ITAx");
+    }
 
     // Asia
     if (civ["ISR"].name != "") {
@@ -88,6 +92,7 @@ function rearrange(nations) {
     frontItem(nations, "RAJ");
     frontItem(nations, "JAPn");
     frontItem(nations, "PAK");
+    frontItem(nations, "SRI");
     frontItem(nations, "KZH");
     frontItem(nations, "DRK");
     frontItem(nations, "JAPc");
@@ -138,6 +143,9 @@ function rearrange(nations) {
     frontItem(nations, "FRK");
     frontItem(nations, "ENG");
     frontItem(nations, "AQU");
+    if (timeline >= 1900) {
+        frontItem(nations, "SCO");
+    }
 
     frontItem(nations, "ICE");
     frontItem(nations, "SWI");

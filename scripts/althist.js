@@ -163,7 +163,7 @@ function altHist(year,id) {
                 annex(civ,"RUS",["SER", "ALB"]);
             }
             if (nextYear == 1972 && c.orwell1984) {
-                annex(civ,"USA",["ICE", "DENc", "IRE"]);
+                annex(civ,"ENG",["ICE", "DENc", "IRE"]);
                 annex(civ,"CHI",["MON", "KOR"]);
                 annex(civ,"RUS",["ITA", "GRE", "OTT"]);
             }
@@ -171,6 +171,11 @@ function altHist(year,id) {
                 civ["nuclear"].strength = 0;
                 civ["USA"].whiteLines = false;
                 annex(civ,"RUS",["FIN", "DEN", "SWE"]);
+
+                worldNews(`War with Eurasia`,
+                        `Oceania is at war with Eurasia: Oceania has always been at war with Eurasia...`,
+                        "https://flags.paxhistoria.co/eurasia-1972-present.png",
+                        true, 81, nextYear, 8, true);
             }
             if (nextYear == 1976 && c.orwell1984) {
                 annex(civ,"RUS",["FRA", "BEL", "DUT"]);
@@ -184,11 +189,22 @@ function altHist(year,id) {
                 civ["FRAx"].y += 150;
             }
             if (nextYear == 1984 && c.orwell1984) {
+                worldNews(`Big Brother is Watching You`,
+                        `Big Brother is Watching You... War is peace. Freedom is slavery. Ignorance is strength. Big Brother is Watching You. B̶̰͈̓i̶̧̡̩̞͈̜͇͚̯̜̬̬̾̋́̉̾̈͂̈́̽̃̏̊̒̚͝g̴̨̜͔̱̰͎̯͕͔̬͖̫̲̜͖̍͗͆́̄̒̈́̏͗̚͘͝ ̴̡̨̹͇͎͚̏B̸̢̨̰̮̺̱̟̟̲̭̟̦̑̌̓̀́͋̚͠r̵̭̥͚̲̥̲̠̙͕̱̀͜o̵͙͋̊̀̿́̓ͅt̴͚͚̉͘ḣ̴̩̳̠̮̭̖͈͇̈́͛̆̚ȩ̵̢̣̘̭̰̹̟͔͖͉͉̗̗̈͊̀̄̎̆̚̕͘r̶̙̲̫̹̱͖̹̘͚͖͓̳̬̍̂͗͜͝ ̷̲̗͙͔̦̬͕̲̌ĭ̴̼͉͚̟̹̮͙͍̯̎̄̊̀̌̂̐̄̀̚s̷̢̯̲͉̔̈̓̆̐̒͆̏̏̓̅͘͠͠ ̴͍̗̫̯̳̘̠̱͌̍̀̉̿̌́̓̇ͅW̷̨͚̲̒̊̓̿̆̉̽̓͋̕͜͠͝͠ạ̷̡̘̫̣̟͍͎̘̠̘̿̀̾̀̂̋̒̍̓͘̕̚͠ͅt̶͕̜͉͈͇̠̖̉͌̽͒͋̅̓̒́͋͆̀͆ͅc̷̰̈́̑h̴̻͇̳̭̀̕͠i̵̢̜̳̦̹̝̼̬͆̅́̓̑̉͋n̶̨̨̩̫͔̫͙̹̤͎͓̙͒͜ǧ̵̡̧̫̥̖̯͉̱͔̹̬͙́̊͜͠ͅ ̷̜͙͙̺̫͈́̌̀͗̈́̽͂͑͜Y̵̠̮͙̙̦̫̍͋ǫ̷̬̭͙͍̫̫̤̭̳̱͂͊͌̉͠ȗ̴̗̀̊̔̀̇̐͐̕͠.̵̢̢̲̜̩̱̝̞̱͙̏͠...`,
+                        "https://i.ebayimg.com/images/g/KPIAAOSwwLhiaE3j/s-l1200.jpg",
+                        true, 80, nextYear, 100, true);
+                worldNews(`War with Eastasia`,
+                        `Oceania is at war with Eastasia: Oceania has always been at war with Eastasia...`,
+                        "https://www.bigmessowires.com/wp-content/uploads/2023/03/eastasia3.jpg",
+                        true, 83, nextYear, 8, true);
+
                 annex(civ,"CHI",["JAP"]);
                 civ["RUS"].whiteLines = false;
                 civ["RUS"].x -= 200;
                 civ["MOR"].state = 4;
                 civ["MOR"].name = "Morocco";
+                civ["LIB"].state = 1;
+                civ["EGY"].state = 4;
             }
             break;
         case "post_ww2_europe_borders":
@@ -209,7 +225,7 @@ function altHist(year,id) {
                 civ["POL"].state = 'a';
             }
             // soviets take all of germany
-            if (rng(105) <= incrediblyUnlikely) {
+            if (rng(105) <= incrediblyUnlikely || !c.superpowers.includes("USA")) {
                 civ["GER"].state = 'c';
                 civ["GER"].ideology = "communism";
                 civ["GER"].color = [152, 33, 33];
@@ -217,5 +233,33 @@ function altHist(year,id) {
                 civ["GERe"].strength = 0;
                 civ["POL"].state = 'a';
             }
+            break;
+        
+        case "csa_victory_timeline":
+            if (c.unitedStates == 1880) {
+                if (rng(121) <= unlikely && civ["CSA"].strength > 5) {
+                    civ["CEN"].state = 1;
+                    civ["CEN"].name = "";
+                    civ["CEN"].color = [195, 92, 92];
+                }
+            }
+            
+            if (c.unitedStates == 1867) {
+                if (rng(121) <= likely) {
+                    civ["CSA"].state = 4;
+                }
+            }
+            if (c.unitedStates == 1906) {
+                if (rng(121) <= superUnlikely && c.usa_exists) {
+                    civ["CSA"].state = 6;
+                    civ["CSA"].name = "Confederacy of the Golden Circle";
+                    civ["CSA"].y += 40;
+                    civ["CSA"].size += 2;
+                    civ["MEX"].name = "Mexico (CSA)";
+                    civ["MEX"].size -= 4;
+                    civ["MEX"].y += 20;
+                }
+            }
+            break;
     }
 }

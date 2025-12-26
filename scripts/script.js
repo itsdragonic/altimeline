@@ -378,3 +378,7 @@ document.getElementById('jagged').addEventListener('change', function() {
         canvas.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
     }
 });
+
+setTimeout(() => {
+    updateCivs();
+}, 3000);
