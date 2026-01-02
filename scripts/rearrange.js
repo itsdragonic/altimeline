@@ -27,6 +27,10 @@ function rearrange(nations) {
     frontItem(nations, "LOU");
     frontItem(nations, "ALA");
 
+    if (civ["QUE"].name == "Quebec") {
+        frontItem(nations, "QUE");
+    }
+
     if (c.big_mexico) {
         frontItem(nations,"MEX");
         frontItem(nations, "TEX");
@@ -90,6 +94,8 @@ function rearrange(nations) {
         endItem(nations, "QIN");
     }
     frontItem(nations, "RAJ");
+    frontItem(nations, "CHI");
+    frontItem(nations, "NEP");
     frontItem(nations, "JAPn");
     frontItem(nations, "PAK");
     frontItem(nations, "SRI");
@@ -136,6 +142,7 @@ function rearrange(nations) {
     if (timeline > 1800) {
         endItem(nations, "HRE");
     }
+    
     frontItem(nations, "VEN");
     frontItem(nations, "GEN");
     frontItem(nations, "BRI");
@@ -143,7 +150,7 @@ function rearrange(nations) {
     frontItem(nations, "FRK");
     frontItem(nations, "ENG");
     frontItem(nations, "AQU");
-    if (timeline >= 1900) {
+    if (civ["ENG"].state >= 11) {
         frontItem(nations, "SCO");
     }
 
@@ -161,6 +168,14 @@ function rearrange(nations) {
     frontItem(nations, "COR");
     frontItem(nations, "GER");
     frontItem(nations, "GERe");
+
+    if (civ["HRE"].state == 6) {
+        frontItem(nations, "HRE");
+    }
+    if (civ["IRE"].strong) {
+        frontItem(nations, "IRE");
+    }
+
     frontItem(nations, "EU");
     
     // Exceptions
@@ -173,6 +188,9 @@ function rearrange(nations) {
         frontItem(nations, "ISL");
         frontItem(nations, "ISR");
     }
+    if (civ["OTT"].strong) {
+        frontItem(nations, "OTT");
+    }
     if (c.occupied_iran) {
         endItem(nations, "PER");
     }
@@ -181,6 +199,9 @@ function rearrange(nations) {
     if (civ["AUS"].strong) {
         frontItem(nations, "POL");
         frontItem(nations, "AUS");
+    }
+    if (civ["FRA"].strong || c.pax_francia) {
+        frontItem(nations, "FRA");
     }
 
     if (civ["RAJ"].name == "India") {
@@ -199,6 +220,7 @@ function rearrange(nations) {
     if (civ["OTT"].name == "Turkey") {
         frontItem(nations, "OTT");
     }
+    frontItem(nations, "KUR");
 
     /*if (civ["ABY"].name == "Italian East Africa") {
       endItem(nations, "ABY");

@@ -73,6 +73,7 @@ function drawMap(ctx, canvas, thickLines) {
             const civ = civs[timeline][nation];
     
             ctx.font = (civ.size * 3 * canvas.width / buffer.width) + 'px carolingia';
+            //ctx.font = (civ.size * 3 * canvas.width / buffer.width) + 'px Georgia';
     
             const scaledX = civ.x * 0.96 * canvas.width / buffer.width;
             const scaledY = civ.y * canvas.height / buffer.height;

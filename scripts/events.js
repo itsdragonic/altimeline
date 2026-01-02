@@ -6,7 +6,7 @@ var waittime = 2000;
 var worldTech = 100;
 
 // RNG Events
-let impossible = 0.01,
+const impossible = 0.01,
     incrediblyUnlikely = 0.025,
     superUnlikely = 0.05,
     veryUnlikely = 0.10,
@@ -15,8 +15,10 @@ let impossible = 0.01,
     uncommon = 0.35,
     atypical = 0.45,
     possible = 0.50,
+    typical = 0.55,
     likely = 0.75,
-    veryLikely = 0.90,
+    veryLikely = 0.85,
+    incrediblyLikely = 0.95,
     Default = 1.0;
 
 /* 
@@ -32,25 +34,32 @@ let impossible = 0.01,
 
 <-- Cool Seeds -->
     Nova Roma: 7wFQT1Jt
-    Carthage:   
+    Carthage: 888852Ze
     No Greece:  
     Colonization: 1T7iJ4x3
                   22i10amM
     Soviets win: 97 7INtv313
     Glitched: l2QyLLl4
+    Congo Lake: {128=0}
     Texas: 50Je7757
     Pax Fracia: 06011919
     Austrian's dream: 836x4I53
     Southern victory: k
-    European Federation: e
+    European Federation: e  {151=0}
+    Al-Andalus, Austria: sdf    w756mc3s
+    dafuq: {default=true,
+    Straight-forward kaiserreich: 8932574B  7933H819
+    Mexico wins: 762D8860
+    Carthage: civ["ALA"].owner = "none";
+    nuclear: 6025p10X
 
     WTF: 7n35545u
          04681My9
          s897s1L9
 
 <-- Last ID used -->
-    RNG: 126
-    News: 94
+    RNG: 154
+    News: 115
 
 <-- Region Theory -->
   Beginning: Regular year-based increments
@@ -225,37 +234,45 @@ function drawOutline(ctx2, img, x, y) {
 // Calculate & Update
 function calculateEvents() {
 
+    civs = null;
     civs = structuredClone(firstYear);
+    news = null;
     news = {};
 
     // TODO
     Allies = ["ENG", "FRA", "RUS", "SER"];
     Axis = ["GER", "AUS", "BUL", "OTT"];
 
+    colonizeNewWorld = null;
     colonizeNewWorld = {
-        "ENG": 40,
         "SPA": 80,
         "FRA": 30,
         "POR": 60,
         "DUT": 10,
         "SWE": 5,
+        "DEN": 3,
         "CHI": 0,
         "JAP": 0,
         "USA": 0,
-        "none": 0,
+        "ENG": 40,
+        "none": 10,
     };
+    colonizeOldWorld = null;
     colonizeOldWorld = {
-        "ENG": 80,
         "SPA": 30,
         "FRA": 50,
         "POR": 30,
         "DUT": 30,
+        "BEL": 3,
+        "GER": 10,
+        "ITA": 0,
         "SWE": 3,
         "AUS": 3,
         "DEN": 3,
         "CHI": 0,
         "JAP": 0,
         "USA": 0,
+        "ENG": 80,
         "none": 10,
     };
 
