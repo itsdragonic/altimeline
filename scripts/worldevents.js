@@ -126,7 +126,6 @@ function worldEvents(year) {
 
         civ["HUN"].strength = 3000;
         civ["HUN"].strong = true;
-        civ["HUN"].state = 2;
         civ["AUS"].size -= 3;
         civ["AUS"].x -= 10;
 
@@ -229,6 +228,7 @@ function worldEvents(year) {
                     civ["HRE"].state = 6;
                 }
             }
+            civ["BUL"].state = 9;
         }
         if (nextYear == 1917) {
             if (civ["CSA"].strength > 0) {
@@ -374,6 +374,7 @@ function worldEvents(year) {
                 }
 
                 civ["ITA"].state = 8;
+                civ["BUL"].state = 10;
 
                 civ["POL"].strength = 500;
                 civ["POL"].state = 8;
@@ -485,6 +486,8 @@ function worldEvents(year) {
             c.pax_francia = false;
             civ["DUT"].name = "Neth.";
             civ["DUT"].color = [226, 145, 83];
+            Allies.push("DUT");
+            Allies.push("BEL");
 
             worldNews(`Fall of France`,
                         `German armies have defeated France in a swift campaign, forcing surrender and leaving much of Western Europe under Axis control.`,
@@ -500,6 +503,8 @@ function worldEvents(year) {
             civ["ITA"].state = 10;
             civ["GRE"].color = [102, 168, 96];
             civ["BUL"].state = 9;
+            Allies.push("DEN");
+            Allies.push("NOR");
         }
         if (nextYear == 1942) {
             worldNews(`Stalingrad Encirclement`,
@@ -568,6 +573,8 @@ function worldEvents(year) {
                 civ["UKR"].strength = 100;
                 civ["LIV"].strength = 100;
                 civ["LIT"].strength = 100;
+                civ["SER"].name = "Serbia";
+                
                 c.ww1Winner = Axis;
                 c.ww1Loser = Allies;
             } else {
@@ -691,7 +698,7 @@ function worldEvents(year) {
     }
     
     if (nextYear == 1947) {
-        if (!c.kaiserreich) {
+        if (!c.kaiserreich && !c.fuhrerreich) {
             civ["ROA"].state = 5;
             civ["HUN"].small = true;
         }
@@ -722,9 +729,9 @@ function worldEvents(year) {
     if (c.cold_war) {
         if (nextYear == 1962) {            
             worldNews("Cuban Missile Crisis",
-                "The Cuban Missile Crisis has brought the world to the brink of nuclear war, with the Soviet Union placing missiles in Cuba, just 90 miles from the U.S. coast.",
-                "https://th-thumbnailer.cdn-si-edu.com/2dYxg9oELPPN0aBXvEXHaWOerFQ=/800x600/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/Cuban-Missile-Crisis-631.jpg",
-                false, 35, nextYear, 2, true);
+                    "The Cuban Missile Crisis has brought the world to the brink of nuclear war, with the Soviet Union placing missiles in Cuba, just 90 miles from the U.S. coast.",
+                    "https://th-thumbnailer.cdn-si-edu.com/2dYxg9oELPPN0aBXvEXHaWOerFQ=/800x600/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/Cuban-Missile-Crisis-631.jpg",
+                    false, 35, nextYear, 2, true);
 
             if (rng(128, nextYear) <= incrediblyUnlikely) {
                 altHist(nextYear, "major_nuclear_war");

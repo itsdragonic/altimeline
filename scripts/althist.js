@@ -115,21 +115,19 @@ function altHist(year,id) {
                 annex(civ,"USA",["AUZ", "ENGs", "MEX", "PNG", "ZEA"]);
                 civ["USA"].whiteLines = true;
             }
-
+            
             if (nextYear == 1956 && c.orwell1984) {
                 annex(civ,"CHI",["BUR", "VIE", "THA", "CAM"]);
 
                 civ["QIN"].strength = 0;
                 civ["CHI"].state = 'a';
-            }
-
-            if (nextYear == 1956 && c.orwell1984) {
+                
                 civ["JAP"].ideology = "communism";
                 civ["JAP"].name = "DPR Japan";
                 civ["JAP"].color = [173, 88, 88];
                 civ["JAP"].x += 20;
             }
-
+            
             if (nextYear == 1957 && c.orwell1984) {
                 civ["RAJ"].state = 'a';
                 civ["RAJ"].name = "Indian States";
@@ -144,7 +142,8 @@ function altHist(year,id) {
             }
 
             if (nextYear == 1960 && c.orwell1984) {
-                annex(civ,"USA",["VEZ", "DUTi", "PORi"]);
+                annex(civ,"USA",["VEZ", "PORi"]);
+                civ["DUTi"].owner = "USA";
 
                 civ["PORa"].strength = 0;
                 civ["KON"].strength = 0;
@@ -168,7 +167,8 @@ function altHist(year,id) {
             }
             if (nextYear == 1972 && c.orwell1984) {
                 annex(civ,"ENG",["ICE", "DENc", "IRE"]);
-                annex(civ,"CHI",["MON", "KOR"]);
+                civ["MON"].strength = 0;
+                annex(civ,"CHI",["KOR"]);
                 annex(civ,"RUS",["ITA", "GRE", "OTT"]);
             }
             if (nextYear == 1974 && c.orwell1984) {
@@ -261,6 +261,11 @@ function altHist(year,id) {
                 if (rng(121, nextYear) <= superUnlikely &&
                     c.usa_exists && civ["TEX"].strength <= 0
                 ) {
+                    worldNews("Confederacy of the Golden Circle",
+                                "The Knights of the Golden Circle, a secret society founded by George W. L. Bickley, have formed the Confederacy of the Golden Circle.",
+                                "https://preview.redd.it/akb6mszha3v51.jpg?width=640&crop=smart&auto=webp&s=0b2f4a99df1db559d69cf6bd70cb6296b82604b7",
+                                false, 116, nextYear, 2, true);
+
                     civ["CSA"].state = 6;
                     civ["CSA"].name = "Confederacy of the Golden Circle";
                     civ["CSA"].y += 40;

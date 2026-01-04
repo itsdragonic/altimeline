@@ -34,13 +34,14 @@ const impossible = 0.01,
 
 <-- Cool Seeds -->
     Nova Roma: 7wFQT1Jt
-    Carthage: 888852Ze
+    Carthage: 888852Ze  civ["ALA"].owner = "none";
     No Greece:  
     Colonization: 1T7iJ4x3
                   22i10amM
     Soviets win: 97 7INtv313
     Glitched: l2QyLLl4
     Congo Lake: {128=0}
+    Fuhrerreich: {151=0,146=0}
     Texas: 50Je7757
     Pax Fracia: 06011919
     Austrian's dream: 836x4I53
@@ -50,7 +51,6 @@ const impossible = 0.01,
     dafuq: {default=true,
     Straight-forward kaiserreich: 8932574B  7933H819
     Mexico wins: 762D8860
-    Carthage: civ["ALA"].owner = "none";
     nuclear: 6025p10X
 
     WTF: 7n35545u
@@ -59,7 +59,7 @@ const impossible = 0.01,
 
 <-- Last ID used -->
     RNG: 154
-    News: 115
+    News: 116
 
 <-- Region Theory -->
   Beginning: Regular year-based increments
@@ -241,7 +241,7 @@ function calculateEvents() {
 
     // TODO
     Allies = ["ENG", "FRA", "RUS", "SER"];
-    Axis = ["GER", "AUS", "BUL", "OTT"];
+    Axis = ["GER", "AUS", "OTT"];
 
     colonizeNewWorld = null;
     colonizeNewWorld = {
@@ -627,7 +627,7 @@ function createNewsCanvas(news) {
                 canvas.style.top = rngRange(item.id, 30, 80) + '%';
 
                 // Special case for 0
-                if (specialSeeds.includes(seed)) {
+                if (rng(item.id) == 1) {
                     if (Math.random() < 0.5) {
                         canvas.style.left = '12%';
                     } else {

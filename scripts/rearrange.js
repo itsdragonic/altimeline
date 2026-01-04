@@ -160,6 +160,8 @@ function rearrange(nations) {
     frontItem(nations, "BEL");
     frontItem(nations, "LIT");
     frontItem(nations, "ALB");
+    frontItem(nations, "ROA");
+    frontItem(nations, "BUL");
 
     frontItem(nations, "FLO");
     frontItem(nations, "VEZ");

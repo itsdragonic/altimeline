@@ -2560,6 +2560,7 @@ function regions(year) {
     }
     if (nextYear == 1686) {
         civ["AUS"].state = 5;
+        civ["HUN"].state = 2;
     }
     if (nextYear == 1714) {
         civ["AUS"].state = 6;
@@ -2940,7 +2941,7 @@ function regions(year) {
         civ["NOR"].state = 3;
     }
 
-    if (nextYear == 1979) {
+    if (nextYear == 1979 && civ["DENc"].owner == "DEN") {
         civ["DENc"].autonomous = true;
         civ["DENc"].x -= 30;
         civ["DENc"].y -= 75;
@@ -3257,6 +3258,7 @@ function regions(year) {
         //c.ottoman_romania = false;
         civ["SER"].strength = 1000;
         civ["SER"].state = 3;
+        civ["SER"].x += 8;
     
         //if (!c.byzantium) {
         civ["BUL"].strength = 1000;
@@ -3268,10 +3270,10 @@ function regions(year) {
     }
     if (nextYear == 1912) {
         civ["SER"].state = 4;
-        civ["BUL"].state = 7; // fix
+        civ["BUL"].state = 7;
         civ["GRE"].state = 9;
     }
-    if (nextYear == 1913) {
+    if (nextYear == 1912) {
         if (!c.byzantium) {
             civ["ALB"].strength = 696;
         }
@@ -4536,14 +4538,11 @@ function regions(year) {
         civ["MAD"].state = 3;
         civ["MAD"].x -= 15;
         civ["MAD"].y += 25;
-        
-        civ["FRAx"].state = 3;
-        civ["FRAx"].owner = "none";
-        civ["FRAx"].x += 50;
 
         if (c.af_decolonization_level >= 2 && c.usa_exists) {
             civ["FRAx"].state = 3;
             civ["FRAx"].name = "Tunisia";
+            civ["FRAx"].owner = "none";
             civ["FRAx"].x += 50;
         } else if (civ["FRAs"].strength > 0) {
             civ["FRAs"].strength = 200;

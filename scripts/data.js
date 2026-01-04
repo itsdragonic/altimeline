@@ -7,6 +7,7 @@ firstYear[oppositeYear] = {
         name: "background civs",
         state: 1,
         strength: 9999,
+        merge: [],
     },
     "EGY": {
         // civ info
@@ -19,6 +20,7 @@ firstYear[oppositeYear] = {
         x: 1330,
         y: 430,
         size: 8,
+        merge: [],
     },
     "ISR": {
         name: "Canaan",
@@ -29,6 +31,7 @@ firstYear[oppositeYear] = {
         x: 1470,
         y: 390,
         size: 4,
+        merge: [],
     },
     "NSE": {
         name: "Neo-Sumerian Empire",
@@ -39,6 +42,7 @@ firstYear[oppositeYear] = {
         x: 1477,
         y: 367,
         size: 5,
+        merge: [],
     },
     "IRV": {
         name: "Indus Valley",
@@ -49,6 +53,7 @@ firstYear[oppositeYear] = {
         x: 1682,
         y: 443,
         size: 5,
+        merge: [],
     },
     "CHI": {
         name: "Xia Dynasty",
@@ -59,12 +64,14 @@ firstYear[oppositeYear] = {
         x: 1930,
         y: 380,
         size: 10,
+        merge: [],
     },
     "lakes": {
         name: "Lakes",
         state: 1,
         strength: 9999,
         techecon: 0,
+        merge: [],
     },
     "conditions": {
         superpowers: [],
@@ -295,15 +302,13 @@ var colonizeNewWorld = {};
 var colonizeOldWorld = {};
 civs = firstYear;
 
-const specialSeeds = [0, "0", null, '', '1984', 'southern_victory'];
-
 function rng(val, year) {
     // override1
     if (allValues[val] != null) return allValues[val];
 
     // override2
     if (
-        !specialSeeds.includes(seed) &&
+        seed &&
         seed.includes("{")
     ) {
         const match = seed.match(/\{([^}]+)\}/);
@@ -340,10 +345,22 @@ function rng(val, year) {
         }
         return 1;
     }
-    if (seed == 'southern_victory') {    
+    if (seed.toLowerCase() == 'southern victory' || seed.toLowerCase() == 'southern_victory') {    
         if ([90, 121].includes(val)) {
             return 0;
         }
+        return 1;
+    }
+    if (seed.toLowerCase() == 'kaiserreich') {
+        if (val == 62) return 0;
+        return 1;
+    }
+    if (seed.toLowerCase() == 'fuhrerreich' || seed.toLowerCase() == 'tno') {
+        if (val == 92) return 0;
+        return 1;
+    }
+    if (seed.toLowerCase() == 'fallout') {
+        if (val == 128) return 0;
         return 1;
     }
 
@@ -476,21 +493,41 @@ var Allies = ["ENG", "FRA", "RUS", "SER"];
 
 var Axis = ["GER", "AUS", "BUL", "OTT"];
 
+function formatName(name) {
+    const lower = name.toLowerCase();
+
+    if (
+        lower.endsWith(" empire") ||
+        lower.endsWith(" states") ||
+        lower.endsWith(" kingdom")
+    ) {
+        return name.startsWith("The ") ? name : "The " + name;
+    }
+
+    return name;
+}
+
 function formatSide(civ, ids) {
     if (ids.length === 0) return "";
-    if (ids.length === 1) return civ[ids[0]].name;
+    if (ids.length === 1) return formatName(civ[ids[0]].name);
 
     if (ids.length === 2) {
-        return `${civ[ids[0]].name} and ${civ[ids[1]].name}`;
+        return (
+            formatName(civ[ids[0]].name) +
+            " and " +
+            formatName(civ[ids[1]].name)
+        );
     }
 
     let result = "";
 
     for (let i = 0; i < ids.length; i++) {
+        const name = formatName(civ[ids[i]].name);
+
         if (i === ids.length - 1) {
-            result += "and " + civ[ids[i]].name;
+            result += "and " + name;
         } else {
-            result += civ[ids[i]].name + ", ";
+            result += name + ", ";
         }
     }
 
