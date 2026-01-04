@@ -4,17 +4,17 @@ function worldEvents(year) {
     c = civ["conditions"];
 
     // Backgground civs
-    if (worldTech >= 700) {
+    if (c.worldTech >= 700) {
         civ["BG"].state = 'b';
-    } else if (worldTech >= 600) {
+    } else if (c.worldTech >= 600) {
         civ["BG"].state = 'a';
-    } else if (worldTech >= 500) {
+    } else if (c.worldTech >= 500) {
         civ["BG"].state = 5;
-    } else if (worldTech >= 400) {
+    } else if (c.worldTech >= 400) {
         civ["BG"].state = 4;
-    } else if (worldTech >= 300) {
+    } else if (c.worldTech >= 300) {
         civ["BG"].state = 3;
-    } else if (worldTech >= 200) {
+    } else if (c.worldTech >= 200) {
         civ["BG"].state = 2;
     } else {
         civ["BG"].state = 1;
@@ -54,22 +54,22 @@ function worldEvents(year) {
         \_/______________________________*/
 
     if (nextYear == rngRange(rng(18, nextYear), -1701, -1681)) {
-        worldTech = 200;
+        c.worldTech = 200;
     }
     if (nextYear == -1178) {
-        worldTech = 300;
+        c.worldTech = 300;
     }
     if (nextYear == -52) {
-        worldTech = 400;
+        c.worldTech = 400;
     }
     if (nextYear == 1450) {
-        worldTech = 500;
+        c.worldTech = 500;
     }
     if (nextYear == 1900) {
-        worldTech = 600;
+        c.worldTech = 600;
     }
     if (nextYear == 2000) {
-        worldTech = 700;
+        c.worldTech = 700;
     }
 
     // Bronze Age

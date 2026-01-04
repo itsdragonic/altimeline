@@ -1,9 +1,11 @@
 var seed = 0;
 var timeline = 1;
 var seedNumber = 0;
-var waittime = 2000;
 
-var worldTech = 100;
+var previousTime = 1;
+var isLoading = false;
+var goingBackwards = null;
+var waittime = 2000;
 
 // RNG Events
 const impossible = 0.01,
@@ -316,6 +318,8 @@ let nations = [];
 let images = [];
 
 async function updateCivs() {
+    isLoading = true;
+
     loading.style.display = 'inline';
     ctx2.clearRect(0, 0, buffer.width, buffer.height);
 
@@ -353,8 +357,10 @@ async function updateCivs() {
     try {
         await Promise.all(images);
     } catch (error) {
-        //console.error('Failed to load images', error);
+        console.error('Failed to load images', error);
         loading.style.display = 'none';
+        isLoading = false;
+        goingBackwards = null;
         clearInterval(redrawInterval);
         return;
     }
@@ -408,8 +414,13 @@ async function updateCivs() {
     const waittime = timeline > 1600 ? 1500 : 500;
     setTimeout(() => {
         loading.style.display = 'none';
+        isLoading = false;
+        goingBackwards = null;
+        loadBaseMaps();
+        drawToGlobe();
     }, waittime);
 }
+loadBaseMaps();
 updateCivs();
 
 String.prototype.hashCode = function () {
@@ -526,6 +537,9 @@ timelineInput.addEventListener('input', () => {
     nations = [];
     images = [];
 
+    goingBackwards = (Number(timelineInput.value) < previousTime) ? true : false;
+    previousTime = Number(timelineInput.value);
+
     updateCivs();
     redraw();
 });
@@ -611,6 +625,7 @@ function createNewsCanvas(news) {
 
             function finalizeCanvas() {
                 newsContainer.appendChild(canvas);
+                canvas.style.clipPath = 'var(--jagged-edges)';
                 canvas.style.display = 'none';
                 canvas.id = item.id;
                 if (!item.major) {
@@ -694,11 +709,20 @@ function makeDraggable(element) {
 }
 
 // Shared seeds
-var url = window.location.href;
+const params = new URLSearchParams(window.location.search);
 
-seed = grabData(url, '?seed=', '?year=');
-let altimeline = parseInt(grabData(url, '?year=', '?seed='));
-timelineInput.value = altimeline;
+const urlSeed = params.get("seed");
+const urlYear = params.get("year");
+
+if (urlSeed !== null) {
+    seed = urlSeed;
+    seedInput.value = seed;
+}
+
+if (urlYear !== null && !isNaN(urlYear)) {
+    timeline = parseInt(urlYear);
+    timelineInput.value = timeline;
+}
 if (timelineInput.value == 0) {
     timelineInput.value = 1;
 }
@@ -711,6 +735,7 @@ if (seed != 0) {
     seedInput.value = seed;
 }
 updateCivs();
+fallback();
 
 // Fallback if map doesn't load
 function fallback() {

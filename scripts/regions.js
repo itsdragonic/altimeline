@@ -1061,7 +1061,7 @@ function regions(year) {
     worldNews("Jesus Christ is Born",
                 "In the small town of Bethlehem, a holy child from Mary and Joseph is born in a humble manger.",
                 "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_NG569JegPVJsNULvmeEg7cBnSBC-rL_7TyvMrdyB1-LTMJbzZkdieBJds0JdE28Dfu855BTIbPlmq7H7w1hM9H_zep0FMIyuboElL3i6-5SuuJO-7C3nBCHN_xRGFggDlaAqnAEXXGhK/s1600/23+Jesus.jpg",
-                false, 5, rngRange(rng(4, nextYear),-6,-4), 4, true);
+                false, 5, rngRange(rng(4, nextYear),-6,-4), 5, true);
     if (nextYear == -1) {
         if (civ["ROM"].strong) {
           civ["ISR"].strength = 0;
@@ -2944,7 +2944,7 @@ function regions(year) {
     if (nextYear == 1979 && civ["DENc"].owner == "DEN") {
         civ["DENc"].autonomous = true;
         civ["DENc"].x -= 30;
-        civ["DENc"].y -= 75;
+        civ["DENc"].y -= 60;
         civ["DENc"].size += 5;
     }
 

@@ -76,6 +76,7 @@ firstYear[oppositeYear] = {
     "conditions": {
         superpowers: [],
         taken_names: [], // for colonies
+        worldTech: 100,
 
         // 1400s
         constantinopleSurvives: true, // false
@@ -779,7 +780,7 @@ addCountry("SYR", "Syria", 1, 1440, 375, 6);
 addCountry("UKR", "Ukraine", "a", 1445, 260, 6);
 addCountry("FIN", "Finland", 1, 1380, 160, 7);
 addCountry("GERe", "East Germany", 1, 1340, 225, 5)
-addCountry("ANT", "Antarctica", 1, 1155, 1260, 20);
+addCountry("ANT", "Antarctica", 1, 1155, 1255, 20);
 addCountry("JAPn", "DPR Japan", 1, 2130, 325, 6);
 addCountry("PAK", "Pakistan", 1, 1670, 430, 8);
 addCountry("SRI", "Sri Lanka", 1, 1850, 590, 4);

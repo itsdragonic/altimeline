@@ -101,8 +101,9 @@ function altHist(year,id) {
                 civ["USA"].ideology = "orwellian";
                 civ["USA"].name = "INGSOC";
                 civ["USA"].size += 30;
+                civ["USA"].y += 100;
                 civ["RUS"].name = "Union of Eurasian Socialist Republics";
-                civ["CHI"].name = "P.R. Eastasia";
+                civ["CHI"].name = "Ppl. Rep. of Eastasia";
                 civ["CHI"].ideology = "orwellian";
                 civ["CHI"].color = [255, 219, 37];
             }

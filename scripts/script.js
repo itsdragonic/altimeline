@@ -6,49 +6,53 @@ var ctx2 = buffer.getContext('2d');
 buffer.width = 2560;
 buffer.height = 1297;
 
-trackTransforms(ctx);
+const baseImages = {
+    map: null,
+    ocean: null,
+    world: null,
+    loaded: false,
+};
 
-function clearCanvas() {
-    var p1 = ctx.transformedPoint(0,0);
-    var p2 = ctx.transformedPoint(canvas.width,canvas.height);
-    ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
+function loadBaseMaps() {
+    if (baseImages.loaded) return Promise.resolve();
 
-    ctx.save();
-    ctx.setTransform(1,0,0,1,0,0);
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.restore();
+    return Promise.all([
+        loadImage("images/map.png"),
+        loadImage("images/ocean.png"),
+        loadImage("images/world.png")
+    ]).then(([map, ocean, world]) => {
+        baseImages.map = map;
+        baseImages.ocean = ocean;
+        baseImages.world = world;
+        baseImages.loaded = true;
+    });
 }
 
 function drawMap(ctx, canvas, thickLines) {
     //console.log(counter);
 
-    let img = new Image;
-    if (physicalMap) {
-        img.src = "images/map.png";
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    if (physicalMap && baseImages.map) {
+        ctx.fillStyle = '#5f9eca';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(baseImages.map, 0, 0, canvas.width, canvas.height);
     }
 
     // Draw Map
     ctx.drawImage(buffer, 0, 0, canvas.width, canvas.height);
 
-    let img2 = new Image;
     if (physicalMap) {
-        img2.src = "images/map.png";
-        ctx.globalAlpha = 0.25;
-        ctx.drawImage(img2, 0, 0, canvas.width, canvas.height);
-        ctx.globalAlpha = 1;
-
-        let img3 = new Image;
-        img3.src = "images/ocean.png";
-        ctx.drawImage(img3, 0, 0, canvas.width, canvas.height);
+        if (baseImages.map) {
+            ctx.globalAlpha = 0.25;
+            ctx.drawImage(baseImages.map, 0, 0, canvas.width, canvas.height);
+            ctx.globalAlpha = 1;
+        }
+        if (baseImages.ocean) {
+            ctx.drawImage(baseImages.ocean, 0, 0, canvas.width, canvas.height);
+        }
     } else {
-        let img4 = new Image;
-        img4.src = "images/world.png";
-        ctx.drawImage(img4, 0, 0, canvas.width, canvas.height);
-
-        /*let img5 = new Image;
-        img5.src = "data:image/png;base64,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";
-        ctx2.drawImage(img5, 1618, 349);*/
+        if (baseImages.world) {
+            ctx.drawImage(baseImages.world, 0, 0, canvas.width, canvas.height);
+        }
     }
   
     // Draw Text
@@ -72,8 +76,8 @@ function drawMap(ctx, canvas, thickLines) {
             const nation = nations[i];
             const civ = civs[timeline][nation];
     
-            ctx.font = (civ.size * 3 * canvas.width / buffer.width) + 'px carolingia';
-            //ctx.font = (civ.size * 3 * canvas.width / buffer.width) + 'px Georgia';
+            //ctx.font = (civ.size * 3 * canvas.width / buffer.width) + 'px carolingia';
+            ctx.font = (civ.size * 3 * canvas.width / buffer.width) + 'px Georgia';
     
             const scaledX = civ.x * 0.96 * canvas.width / buffer.width;
             const scaledY = civ.y * canvas.height / buffer.height;
@@ -89,171 +93,11 @@ function drawMap(ctx, canvas, thickLines) {
 function redraw() {
     clearCanvas();
     drawMap(ctx, canvas, false);   
-}  
+}
 
 var zoomAmount = 1;
-var intervalId;
 var lastX, lastY, dragStart, dragged;
 var scaleFactor = 1.1;
-
-function loadScreen() {
-    clearInterval(intervalId);
-    zoomAmount = 1;
-
-    // Reset the canvas context transformation
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-    redraw();
-
-    intervalId = setInterval(() => {
-        redraw();
-    }, 500);
-
-    lastX = canvas.width / 2;
-    lastY = canvas.height / 2;
-
-    dragStart = null;
-    dragged = false;
-
-    canvas.addEventListener('mousemove', handleMouseMove, false);
-    canvas.addEventListener('mousedown', handleMouseDown, false);
-    canvas.addEventListener('mouseup', handleMouseUp, false);
-    canvas.addEventListener('DOMMouseScroll', handleScroll, false);
-    canvas.addEventListener('mousewheel', handleScroll, false);
-}
-
-function handleMouseMove(evt) {
-    lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-    lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-    dragged = true;
-    if (dragStart) {
-        var pt = ctx.transformedPoint(lastX, lastY);
-        ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
-        redraw();
-    }
-}
-
-function handleMouseDown(evt) {
-    document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
-    lastX = evt.offsetX || (evt.pageX - canvas.offsetLeft);
-    lastY = evt.offsetY || (evt.pageY - canvas.offsetTop);
-    dragStart = ctx.transformedPoint(lastX, lastY);
-    dragged = false;
-    canvas.style.cursor = 'move';
-}
-
-function handleMouseUp(evt) {
-    dragStart = null;
-    if (!dragged) zoom(evt.shiftKey ? -1 : 1);
-    canvas.style.cursor = 'pointer';
-}
-
-function zoom(clicks) {
-    var pt = ctx.transformedPoint(lastX, lastY);
-    ctx.translate(pt.x, pt.y);
-    var factor = Math.pow(scaleFactor, clicks);
-    ctx.scale(factor, factor);
-    zoomAmount *= factor;
-    ctx.imageSmoothingEnabled = zoomAmount <= 0.5;
-    ctx.translate(-pt.x, -pt.y);
-    redraw();
-}
-
-function handleScroll(evt) {
-    var delta = evt.wheelDelta ? evt.wheelDelta / 40 : evt.detail ? -evt.detail : 0;
-    if (zoomAmount < 0.3) {
-        delta = Math.abs(delta);
-    } else if (zoomAmount > 2000) {
-        delta = -Math.abs(delta);
-    }
-
-    if (delta) zoom(delta);
-
-    return evt.preventDefault() && false;
-}
-
-function refresh() {
-    canvas.removeEventListener('mousemove', handleMouseMove);
-    canvas.removeEventListener('mousedown', handleMouseDown);
-    canvas.removeEventListener('mouseup', handleMouseUp);
-    canvas.removeEventListener('DOMMouseScroll', handleScroll);
-    canvas.removeEventListener('mousewheel', handleScroll);
-
-    loadScreen();
-    trackTransforms(ctx);
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    refresh();
-});
-
-window.addEventListener('resize', function () {
-    refresh();    
-});
-
-// Adds ctx.getTransform() - returns an SVGMatrix
-// Adds ctx.transformedPoint(x,y) - returns an SVGPoint
-function trackTransforms(ctx) {
-    var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
-    var xform = svg.createSVGMatrix();
-    ctx.getTransform = function() { return xform; };
-
-    var savedTransforms = [];
-    var save = ctx.save;
-    ctx.save = function() {
-        savedTransforms.push(xform.translate(0,0));
-        return save.call(ctx);
-    };
-  
-    var restore = ctx.restore;
-    ctx.restore = function() {
-        xform = savedTransforms.pop();
-        return restore.call(ctx);
-    };
-
-    var scale = ctx.scale;
-    ctx.scale = function(sx,sy) {
-        xform = xform.scaleNonUniform(sx,sy);
-        return scale.call(ctx,sx,sy);
-    };
-  
-    var rotate = ctx.rotate;
-    ctx.rotate = function(radians) {
-        xform = xform.rotate(radians*180/Math.PI);
-        return rotate.call(ctx,radians);
-    };
-  
-    var translate = ctx.translate;
-    ctx.translate = function(dx,dy) {
-        xform = xform.translate(dx,dy);
-        return translate.call(ctx,dx,dy);
-    };
-  
-    var transform = ctx.transform;
-    ctx.transform = function(a,b,c,d,e,f) {
-        var m2 = svg.createSVGMatrix();
-        m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
-        xform = xform.multiply(m2);
-        return transform.call(ctx,a,b,c,d,e,f);
-    };
-  
-    var setTransform = ctx.setTransform;
-    ctx.setTransform = function(a,b,c,d,e,f) {
-        xform.a = a;
-        xform.b = b;
-        xform.c = c;
-        xform.d = d;
-        xform.e = e;
-        xform.f = f;
-        return setTransform.call(ctx,a,b,c,d,e,f);
-    };
-  
-    var pt = svg.createSVGPoint();
-    ctx.transformedPoint = function(x,y) {
-        pt.x=x; pt.y=y;
-        return pt.matrixTransform(xform.inverse());
-    }
-}
 
 function generateRandomString() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
