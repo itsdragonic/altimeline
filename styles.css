@@ -14,7 +14,7 @@ body {
 /* Map */
 
 #box {
-    filter: drop-shadow(0px 10px 5px rgba(0,0,0,0.25))
+    filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, 0.25))
 }
 
 #testcolors {
@@ -35,10 +35,21 @@ canvas {
 #buffer {
     display: none;
 }
+
 #loading {
     display: none;
     place-items: center;
     margin: 1px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 10px;
+    border-radius: 100%;
+    text-align: center;
+    z-index: 200;
 }
 
 @font-face {
@@ -50,9 +61,11 @@ canvas {
     0% {
         text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.5), 1px -1px 2px rgba(0, 0, 0, 0.5), -1px 1px 2px rgba(0, 0, 0, 0.5), 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
+
     50% {
         text-shadow: -1px -1px 2px rgba(0, 0, 0, 1), 1px -1px 2px rgba(0, 0, 0, 1), -1px 1px 2px rgba(0, 0, 0, 1), 1px 1px 2px rgba(0, 0, 0, 1);
     }
+
     100% {
         text-shadow: -1px -1px 2px rgba(0, 0, 0, 0.5), 1px -1px 2px rgba(0, 0, 0, 0.5), -1px 1px 2px rgba(0, 0, 0, 0.5), 1px 1px 2px rgba(0, 0, 0, 0.5);
     }
@@ -76,14 +89,8 @@ input[type="range"] {
     margin: 0 auto;
 }
 
-#timeline {
-    color: white;
-    position: relative;
-    z-index: 2;
-    font-size: 25px;
-}
+#timeline,
 #timelineValue {
-    color: white;
     position: relative;
     z-index: 2;
     font-size: 25px;
@@ -96,20 +103,25 @@ input[type=range] {
     appearance: none;
     margin: 0px 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0); /* Transparent background */
+    background: rgba(0, 0, 0, 0);
+    /* Transparent background */
 }
+
 input[type=range]:focus {
     outline: none;
 }
+
 input[type=range]::-webkit-slider-runnable-track {
     width: 100%;
     height: 11px;
     cursor: pointer;
     box-shadow: 1px 1px 1px #000000;
-    background: rgba(116, 169, 216, 0.5); /* Adjusted color with transparency */
+    background: rgba(116, 169, 216, 0.5);
+    /* Adjusted color with transparency */
     border-radius: 1px;
     border: 0px solid #010101;
 }
+
 input[type=range]::-webkit-slider-thumb {
     box-shadow: 1px 1px 1px #000031;
     border: 1px solid #00001E;
@@ -121,9 +133,11 @@ input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     margin-top: -8px;
 }
+
 input[type=range]:focus::-webkit-slider-runnable-track {
     background: #74A9D8;
 }
+
 input[type=range]::-moz-range-track {
     width: 100%;
     height: 11px;
@@ -133,6 +147,7 @@ input[type=range]::-moz-range-track {
     border-radius: 1px;
     border: 0px solid #010101;
 }
+
 input[type=range]::-moz-range-thumb {
     box-shadow: 1px 1px 1px #000031;
     border: 1px solid #00001E;
@@ -142,6 +157,7 @@ input[type=range]::-moz-range-thumb {
     background: #FFFFFF;
     cursor: pointer;
 }
+
 input[type=range]::-ms-track {
     width: 100%;
     height: 11px;
@@ -150,18 +166,21 @@ input[type=range]::-ms-track {
     border-color: transparent;
     color: transparent;
 }
+
 input[type=range]::-ms-fill-lower {
     background: #74A9D8;
     border: 0px solid #010101;
     border-radius: 2px;
     box-shadow: 1px 1px 1px #000000;
 }
+
 input[type=range]::-ms-fill-upper {
     background: #74A9D8;
     border: 0px solid #010101;
     border-radius: 2px;
     box-shadow: 1px 1px 1px #000000;
 }
+
 input[type=range]::-ms-thumb {
     margin-top: 1px;
     box-shadow: 1px 1px 1px #000031;
@@ -172,9 +191,11 @@ input[type=range]::-ms-thumb {
     background: #FFFFFF;
     cursor: pointer;
 }
+
 input[type=range]:focus::-ms-fill-lower {
     background: #74A9D8;
 }
+
 input[type=range]:focus::-ms-fill-upper {
     background: #74A9D8;
 }
@@ -275,6 +296,7 @@ input[type=range]:focus::-ms-fill-upper {
     transition: transform 0.1s ease;
     z-index: 1000;
 }
+
 .button:hover {
     transform: scale(1.2);
 }
@@ -286,6 +308,7 @@ input[type=range]:focus::-ms-fill-upper {
     height: 40px;
     position: sticky;
 }
+
 #downloadButton {
     background: url('images/download.png') no-repeat center center;
     background-size: contain;
@@ -295,44 +318,61 @@ input[type=range]:focus::-ms-fill-upper {
     right: 20px;
 }
 
+#mapButton {
+    background: url('images/mapIcon.png') no-repeat center center;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+    top: 20px;
+    right: 20px;
+}
+#globeButton {
+    background: url('images/globe.png') no-repeat center center;
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    right: 20px;
+}
 
 /* Settings */
 
 .hidden {
-  display: none;
+    display: none;
 }
 
 #popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #f0e6d6;
-  border-radius: 5px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 700px;
-  height: 500px;
-  max-height: 500px;
-  font-family: 'Lato', sans-serif;
-  z-index: 9999;
-  animation: slideIn 0.6s ease;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f0e6d6;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 700px;
+    height: 500px;
+    max-height: 500px;
+    font-family: 'Lato', sans-serif;
+    z-index: 9999;
+    animation: slideIn 0.6s ease;
 }
 
 @keyframes slideIn {
-  0% {
-    transform: translate(-50%, -20%);
-    opacity: 0;
-  }
-  100% {
-    transform: translate(-50%, -50%);
-    opacity: 1;
-  }
+    0% {
+        transform: translate(-50%, -20%);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
 }
 
 .settings-window {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -346,24 +386,24 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .header h1 {
-  color: #fff;
-  font-size: 2em;
-  font-family: 'carolingia';
+    color: #fff;
+    font-size: 2em;
+    font-family: 'carolingia';
 }
 
 .close-button {
-  cursor: pointer;
-  color: #FFF;
-  font-size: 1.5em;
-  border: none;
-  background: none;
+    cursor: pointer;
+    color: #FFF;
+    font-size: 1.5em;
+    border: none;
+    background: none;
 }
 
 .settings-body {
-  display: flex;
-  /* Make it a flex container */
-  flex-grow: 1;
-  /* Allow it to fill remaining space */
+    display: flex;
+    /* Make it a flex container */
+    flex-grow: 1;
+    /* Allow it to fill remaining space */
 }
 
 .sidebar {
@@ -378,96 +418,100 @@ input[type=range]:focus::-ms-fill-upper {
 
 /* Hide the default scrollbar */
 .sidebar::-webkit-scrollbar {
-  width: 10px; 
+    width: 10px;
 }
 
 /* Track */
 .sidebar::-webkit-scrollbar-track {
-  background: #222222;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
+    background: #222222;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Handle */
 .sidebar::-webkit-scrollbar-thumb {
-  background: #2e2e2e;
-  border: 1px solid rgba(0, 0, 0, 0.37);
-  border-radius: 5px;
+    background: #2e2e2e;
+    border: 1px solid rgba(0, 0, 0, 0.37);
+    border-radius: 5px;
 }
+
 /* Handle */
 .sidebar::-webkit-scrollbar-thumb:hover {
-  background: #8b8b8b; 
-  border: 1px solid rgba(0, 0, 0, 0.37);
+    background: #8b8b8b;
+    border: 1px solid rgba(0, 0, 0, 0.37);
 }
 
 .sidebar ul {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 .sidebar ul li a {
-  text-decoration: none;
-  color: black;
-  display: block;
-  padding: 6px 7px;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  user-select: none;
+    text-decoration: none;
+    color: black;
+    display: block;
+    padding: 6px 7px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    user-select: none;
 }
 
 .sidebar ul li a.active {
-  background-color: #8b4513;
-  color: #fff;
+    background-color: #8b4513;
+    color: #fff;
 }
 
 .content {
-  height: 100%;
-  padding: 12px 15px;
-  /* Adjust padding */
-  overflow-y: auto;
-  max-height: 395px;
-  flex-grow: 1;
-  color: black;
+    height: 100%;
+    padding: 12px 15px;
+    /* Adjust padding */
+    overflow-y: auto;
+    max-height: 395px;
+    flex-grow: 1;
+    color: black;
 }
 
 /* Hide the default scrollbar */
 .content::-webkit-scrollbar {
-  width: 10px; 
+    width: 10px;
 }
 
 /* Track */
 .content::-webkit-scrollbar-track {
-  background: #222222;
-  box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
+    background: #222222;
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
 /* Handle */
 .content::-webkit-scrollbar-thumb {
-  background: #2e2e2e;
-  border: 1px solid rgba(0, 0, 0, 0.37);
-  border-radius: 5px;
+    background: #2e2e2e;
+    border: 1px solid rgba(0, 0, 0, 0.37);
+    border-radius: 5px;
 }
+
 /* Handle */
 .content::-webkit-scrollbar-thumb:hover {
-  background: #8b8b8b; 
-  border: 1px solid rgba(0, 0, 0, 0.37);
+    background: #8b8b8b;
+    border: 1px solid rgba(0, 0, 0, 0.37);
 }
 
 .content-section {
-  display: block;
+    display: block;
 }
 
 .content-section.hidden {
-  display: none;
+    display: none;
 }
 
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.200); /* Semi-transparent black */
-  z-index: 999; /* Ensure it's above other content */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.200);
+    /* Semi-transparent black */
+    z-index: 999;
+    /* Ensure it's above other content */
 }
 
 /* Folders */

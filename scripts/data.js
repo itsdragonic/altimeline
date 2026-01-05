@@ -2,6 +2,9 @@ const presentYear = 2026;
 const oppositeYear = -presentYear;
 var firstYear = {};
 
+const page = document.body.dataset.page;
+var isGlobe = (page == 'globe') ? true : false;
+
 firstYear[oppositeYear] = {
     "BG": {
         name: "background civs",

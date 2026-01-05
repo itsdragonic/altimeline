@@ -11,7 +11,6 @@ function clearCanvas() {
     ctx.restore();
 }
 
-
 var intervalId;
 
 function loadScreen() {
@@ -173,3 +172,5 @@ function trackTransforms(ctx) {
         return pt.matrixTransform(xform.inverse());
     }
 }
+
+canvas.style.clipPath = 'var(--jagged-edges)';

@@ -1,4 +1,4 @@
-let scene, camera, renderer, globe;
+let scene, camera, renderer, globe, starField;
 let isDragging = false;
 let previousMouse = { x: 0, y: 0 };
 let rotation = { x: 0, y: 0 };
@@ -189,6 +189,38 @@ function drawToGlobe() {
     }
 }
 
+function createStarField() {
+    const starGroup = new THREE.Group();
+    const starCount = 150;
+    const orbitRadius = 50; // Distance from Earth center
+
+    for (let i = 0; i < starCount; i++) {
+        // Random position on sphere around Earth
+        const phi = Math.random() * Math.PI * 2;
+        const theta = Math.random() * Math.PI;
+        
+        const x = orbitRadius * Math.sin(theta) * Math.cos(phi);
+        const y = orbitRadius * Math.sin(theta) * Math.sin(phi);
+        const z = orbitRadius * Math.cos(theta);
+
+        // Random star size
+        const size = 0.01 + Math.random() * 0.1;
+        
+        const starGeometry = new THREE.SphereGeometry(size, 8, 8);
+        const starMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.6 + Math.random() * 0.4
+        });
+        
+        const star = new THREE.Mesh(starGeometry, starMaterial);
+        star.position.set(x, y, z);
+        starGroup.add(star);
+    }
+
+    return starGroup;
+}
+
 function init() {
     scene = new THREE.Scene();
     
@@ -236,7 +268,30 @@ function init() {
                 
                 globe = new THREE.Mesh(geometry, material);
                 scene.add(globe);
-                //globe.rotation.z = THREE.MathUtils.degToRad(23.44);
+
+                // Create moon
+                const moonTexture = new THREE.TextureLoader().load('images/moon.jpg', () => {
+                    // Geometry for the Moon
+                    const moonGeometry = new THREE.SphereGeometry(0.27, 32, 32); // ~27% size of Earth
+                    const moonMaterial = new THREE.MeshLambertMaterial({
+                        map: moonTexture,
+                        side: THREE.FrontSide
+                    });
+
+                    const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+
+                    // Position Moon relative to Earth
+                    moon.position.set(2, 0, 0); // 2 units away on X axis
+                    scene.add(moon);
+
+                    // Optional: store moon in scene for rotation animation
+                    globe.moon = moon;
+                });
+
+
+                // Create and add star field
+                starField = createStarField();
+                scene.add(starField);
 
                 document.getElementById('loading').style.display = 'none';
                 animate();
@@ -296,13 +351,34 @@ function animate() {
         rotation.y += (targetRotation.y - rotation.y) * 0.1;
         globe.rotation.x = rotation.x;
         globe.rotation.y = rotation.y;
+        
+        // Stars
+        if (starField) {
+            starField.rotation.x = rotation.x;
+            starField.rotation.y = rotation.y;
+        }
+
+        // Zoom
         zoom += (targetZoom - zoom) * 0.1;
         camera.position.z = zoom;
         if (!isDragging) {
-            let amount = isLoading ? 0.7 : 0.0001;
+            let amount = isLoading ? 0.1 : 0.0001;
             let time = goingBackwards ? -1 : 1;
             targetRotation.y += amount * time;
         }
+    }
+    if (globe.moon) {
+        const radius = 20; // distance from Earth
+        const tilt = -23.44 * (Math.PI / 180); // orbit tilt in radians
+        const phaseOffset = 3 * Math.PI / 2; // tweak this to set starting position
+
+        const time = -globe.rotation.y + phaseOffset;
+
+        // Tilted orbit plane
+        globe.moon.position.x = radius * Math.cos(time);
+        globe.moon.position.z = radius * Math.sin(time) * Math.cos(tilt);
+        globe.moon.position.y = radius * Math.sin(time) * Math.sin(tilt);
+        globe.moon.lookAt(globe.position);
     }
     renderer.render(scene, camera);
 }

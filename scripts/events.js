@@ -48,7 +48,7 @@ const impossible = 0.01,
     Pax Fracia: 06011919
     Austrian's dream: 836x4I53
     Southern victory: k
-    European Federation: e  {151=0}
+    European Federation: e  {151=0} 2oK6455F
     Al-Andalus, Austria: sdf    w756mc3s
     dafuq: {default=true,
     Straight-forward kaiserreich: 8932574B  7933H819
@@ -417,7 +417,7 @@ async function updateCivs() {
         isLoading = false;
         goingBackwards = null;
         loadBaseMaps();
-        drawToGlobe();
+        if (isGlobe) drawToGlobe();
     }, waittime);
 }
 loadBaseMaps();
@@ -510,6 +510,7 @@ seedInput.addEventListener("input", function (event) {
 
     setTimeout(() => {
         updateCivs();
+        fallback();
     }, 3000);
 
 });
@@ -527,7 +528,16 @@ var rangeDiv = document.querySelector(".range");
 rangeDiv.appendChild(input);
 
 timelineInput.addEventListener('input', () => {
+    let year = Number(timelineInput.value);
+
+    // Skip year 0
+    if (year === 0) year = 1;
+
+    timelineValue.textContent = year;
+});
+timelineInput.addEventListener('change', () => {
     timelineValue.textContent = timelineInput.value;
+    
     // Skip year 0
     if (timelineValue.textContent == 0) {
         timelineValue.textContent = 1;
@@ -709,31 +719,22 @@ function makeDraggable(element) {
 }
 
 // Shared seeds
-const params = new URLSearchParams(window.location.search);
+var url = window.location.href;
 
-const urlSeed = params.get("seed");
-const urlYear = params.get("year");
-
-if (urlSeed !== null) {
-    seed = urlSeed;
-    seedInput.value = seed;
-}
-
-if (urlYear !== null && !isNaN(urlYear)) {
-    timeline = parseInt(urlYear);
-    timelineInput.value = timeline;
-}
+seed = grabData(url, '?seed=', '?year=');
+let altimeline = parseInt(grabData(url, '?year=', '?seed='));
+timelineInput.value = altimeline;
 if (timelineInput.value == 0) {
     timelineInput.value = 1;
 }
 
-calcSeed(seed);
-
 timelineValue.textContent = timelineInput.value;
 timeline = parseInt(timelineInput.value);
-if (seed != 0) {
+if (seed != "") {
     seedInput.value = seed;
+    calcSeed(seed);
 }
+
 updateCivs();
 fallback();
 

@@ -554,7 +554,8 @@ function worldEvents(year) {
                 civ["ITAx"].state = "a";
                 civ["SIB"].state = "a";
                 civ["SIB"].strength = 100;
-                civ["RUS"].name = "Russian Anarchy States";
+                //civ["RUS"].name = "Russian Anarchy States";
+                civ["RUS"].hideName = true;
                 civ["RUS"].color = [88, 86, 83];
                 civ["RUS"].ideology = "anarchy";
                 civ["KZH"].strength = 100;
