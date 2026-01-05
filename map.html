@@ -1,89 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!--
+  //////////////////////////////////////////////////////////////
+
+  Altimeline II
+      by Dragonic - 2024
+
+      Resources:
+          History of the World: https://www.youtube.com/watch?v=-6Wu0Q7x5D0
+          Image Coordinates: https://www.programminghead.com/Projects/find-coordinates-of-image-online.html
+          
+          Base64 Encoder: https://www.base64-image.de/
+          Base64 Decoder: https://base64.guru/converter/decode/image
+
+  //////////////////////////////////////////////////////////////
+-->
+
 <head>
     <meta charset="UTF-8">
+    <title>Altimeline II</title>
+    <link rel="shortcut icon" type="image/png" href="images/altimeline.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Altimeline</title>
     <link rel="stylesheet" href="styles.css">
 
     <style>
         body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: black;
-            color: white;
+            background: #ebe7d8;
+            color: black;
         }
-        #globe {
-            position: fixed;
-            inset: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 0;
-            pointer-events: auto;
-        }
-        #info {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            z-index: 100;
-        }
-        #info h2 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-        #error {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ff6b6b;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            display: none;
-            z-index: 200;
+        canvas {
+            background: white;
         }
 
-        /* Maps */
-        #main {
-            display: none;
-        }
-        #buffer {
-            display: none;
-        }
-        #timeline,
-        #timelineValue {
-            text-shadow:
-                -1px -1px 0 black,
-                1px -1px 0 black,
-                -1px  1px 0 black,
-                1px  1px 0 black
-        }
     </style>
 </head>
-<body data-page="globe">
-    <!-- Map -->
-    <div id="box">
-        <canvas id='main' width='1000' height='563'><canvas>
-        <canvas id='buffer'></canvas>
-    </div>
 
-    <div id="globe"></div>
-    <div id="info">
-        <h2>Altimeline</h2>
-    </div>
-    <div id="error">
-        <h2>⚠️ Error Loading Map</h2>
-        <p id="errorMsg"></p>
-    </div>
-
-
+<body data-page="map">
     <!-- HUD Elements -->
     <div id="seed">
         <input type="text" id="seedInput" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
@@ -100,12 +55,12 @@
 
     <!-- World News -->
     <div id="newsContainer"></div>
-        
-    <!-- To map button -->
-    <a href="map.html" title="Switch to Map View">
-        <button class="button" id="mapButton"></button>
-    </a>
 
+    <!-- To globe button -->
+    <a href="index.html" title="Switch to Globe View">
+        <button class="button" id="globeButton"></button>
+    </a>
+        
     <!-- Download Button -->
     <button class="button" id="downloadButton" title="Download Image"></button>
 
@@ -138,7 +93,7 @@
                 <div class="toggle-switch">
                     <label>
                         Physical Map 
-                        <input type="checkbox" id="phy" checked>
+                        <input type="checkbox" id="phy">
                         <span class="switch"></span>
                     </label>
                     </div>
@@ -180,7 +135,13 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Map -->
+    <div id="box">
+        <canvas id='main' width='1000' height='563'><canvas>
+        <canvas id='buffer'></canvas>
+    </div>
+
+    <!-- Scripts -->
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script defer src="scripts/image.js"></script>
     <script defer src="scripts/rearrange.js"></script>
@@ -190,6 +151,6 @@
     <script defer src="scripts/regions.js"></script>
     <script defer src="scripts/script.js"></script>
     <script defer src="scripts/events.js"></script>
-    <script defer src="scripts/gui/globe.js"></script>
+    <script defer src="scripts/gui/map.js"></script>
 </body>
 </html>

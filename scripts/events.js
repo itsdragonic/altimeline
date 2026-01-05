@@ -1,9 +1,11 @@
 var seed = 0;
 var timeline = 1;
 var seedNumber = 0;
-var waittime = 2000;
 
-var worldTech = 100;
+var previousTime = 1;
+var isLoading = false;
+var goingBackwards = null;
+var waittime = 2000;
 
 // RNG Events
 const impossible = 0.01,
@@ -46,7 +48,7 @@ const impossible = 0.01,
     Pax Fracia: 06011919
     Austrian's dream: 836x4I53
     Southern victory: k
-    European Federation: e  {151=0}
+    European Federation: e  {151=0} 2oK6455F
     Al-Andalus, Austria: sdf    w756mc3s
     dafuq: {default=true,
     Straight-forward kaiserreich: 8932574B  7933H819
@@ -316,6 +318,8 @@ let nations = [];
 let images = [];
 
 async function updateCivs() {
+    isLoading = true;
+
     loading.style.display = 'inline';
     ctx2.clearRect(0, 0, buffer.width, buffer.height);
 
@@ -353,8 +357,10 @@ async function updateCivs() {
     try {
         await Promise.all(images);
     } catch (error) {
-        //console.error('Failed to load images', error);
+        console.error('Failed to load images', error);
         loading.style.display = 'none';
+        isLoading = false;
+        goingBackwards = null;
         clearInterval(redrawInterval);
         return;
     }
@@ -408,8 +414,13 @@ async function updateCivs() {
     const waittime = timeline > 1600 ? 1500 : 500;
     setTimeout(() => {
         loading.style.display = 'none';
+        isLoading = false;
+        goingBackwards = null;
+        loadBaseMaps();
+        if (isGlobe) drawToGlobe();
     }, waittime);
 }
+loadBaseMaps();
 updateCivs();
 
 String.prototype.hashCode = function () {
@@ -499,6 +510,7 @@ seedInput.addEventListener("input", function (event) {
 
     setTimeout(() => {
         updateCivs();
+        fallback();
     }, 3000);
 
 });
@@ -516,7 +528,16 @@ var rangeDiv = document.querySelector(".range");
 rangeDiv.appendChild(input);
 
 timelineInput.addEventListener('input', () => {
+    let year = Number(timelineInput.value);
+
+    // Skip year 0
+    if (year === 0) year = 1;
+
+    timelineValue.textContent = year;
+});
+timelineInput.addEventListener('change', () => {
     timelineValue.textContent = timelineInput.value;
+    
     // Skip year 0
     if (timelineValue.textContent == 0) {
         timelineValue.textContent = 1;
@@ -525,6 +546,9 @@ timelineInput.addEventListener('input', () => {
 
     nations = [];
     images = [];
+
+    goingBackwards = (Number(timelineInput.value) < previousTime) ? true : false;
+    previousTime = Number(timelineInput.value);
 
     updateCivs();
     redraw();
@@ -611,6 +635,7 @@ function createNewsCanvas(news) {
 
             function finalizeCanvas() {
                 newsContainer.appendChild(canvas);
+                canvas.style.clipPath = 'var(--jagged-edges)';
                 canvas.style.display = 'none';
                 canvas.id = item.id;
                 if (!item.major) {
@@ -703,14 +728,15 @@ if (timelineInput.value == 0) {
     timelineInput.value = 1;
 }
 
-calcSeed(seed);
-
 timelineValue.textContent = timelineInput.value;
 timeline = parseInt(timelineInput.value);
-if (seed != 0) {
+if (seed != "") {
     seedInput.value = seed;
+    calcSeed(seed);
 }
+
 updateCivs();
+fallback();
 
 // Fallback if map doesn't load
 function fallback() {

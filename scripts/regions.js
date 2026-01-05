@@ -429,16 +429,19 @@ function regions(year) {
     if (nextYear == 1969) {
         // Sino-Soviet Split
         if (rng(138, nextYear) <= superUnlikely && civ["CHI"].strength > 0) {
-          c.big_china = true;
-          civ["CHI"].state = "c";
-          civ["CHI"].name = "Chinese Empire";
-          civ["CHI"].x -= 70;
-        } else if (rng(138, nextYear) <= superUnlikely && civ["CHI"].strength > 0) {
-          c.big_china = true;
-          civ["CHI"].state = "b";
-          civ["CHI"].name = "Chinese Empire";
-          civ["CHI"].x -= 70;
-        }
+            c.big_china = true;
+            civ["CHI"].state = "c";
+            civ["CHI"].name = "Chinese Empire";
+            civ["CHI"].x -= 70;
+            if (civ["ALA"].owner == "RUS") {
+                civ["ALA"].owner = "none";
+            }
+        }/* else if (rng(138, nextYear) <= superUnlikely && civ["CHI"].strength > 0) {
+            c.big_china = true;
+            civ["CHI"].state = "b";
+            civ["CHI"].name = "Chinese Empire";
+            civ["CHI"].x -= 70;
+        }*/
     }
     if (nextYear == 1971) {
         if (c.big_china) {
@@ -1061,7 +1064,7 @@ function regions(year) {
     worldNews("Jesus Christ is Born",
                 "In the small town of Bethlehem, a holy child from Mary and Joseph is born in a humble manger.",
                 "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_NG569JegPVJsNULvmeEg7cBnSBC-rL_7TyvMrdyB1-LTMJbzZkdieBJds0JdE28Dfu855BTIbPlmq7H7w1hM9H_zep0FMIyuboElL3i6-5SuuJO-7C3nBCHN_xRGFggDlaAqnAEXXGhK/s1600/23+Jesus.jpg",
-                false, 5, rngRange(rng(4, nextYear),-6,-4), 4, true);
+                false, 5, rngRange(rng(4, nextYear),-6,-4), 5, true);
     if (nextYear == -1) {
         if (civ["ROM"].strong) {
           civ["ISR"].strength = 0;
@@ -2944,7 +2947,7 @@ function regions(year) {
     if (nextYear == 1979 && civ["DENc"].owner == "DEN") {
         civ["DENc"].autonomous = true;
         civ["DENc"].x -= 30;
-        civ["DENc"].y -= 75;
+        civ["DENc"].y -= 60;
         civ["DENc"].size += 5;
     }
 
@@ -3918,7 +3921,7 @@ function regions(year) {
     \_/___________________________*/
 
     // Buddha
-    worldNews("The Buddha is Enlightened",
+    worldNews("Buddha is Enlightened",
                 "Siddhartha Gautama achieves spiritual awakening under the Bodhi Tree.",
                 "https://qph.cf2.quoracdn.net/main-qimg-138efc066fd50ef90c4a13b9d2d0df58-pjlq",
                 false, 6, rngRange(rng(3, nextYear),-563,-400), 10, true);
@@ -5385,6 +5388,7 @@ function regions(year) {
     if (c.colonizingAmerica == 1792) {
         civ["ALA"].strength = 1250;
         civ["ALA"].owner = "RUS";
+        if (isGlobe) civ["ALA"].hideName = true;
     }
     if (c.colonizingAmerica == 1811) {
         civ["ALA"].state = 2;
@@ -5656,10 +5660,12 @@ function regions(year) {
                 civ["ALA"].y = 163;
                 civ["ALA"].size = 9;
                 civ["ALA"].strength += 300;
+                civ["ALA"].hideName = true;
             } else if (rng(59, nextYear) <= unlikely) {
                 civ["ALA"].strength += 300;
             } else if (c.usa_exists) {
                 civ["ALA"].owner = "none";
+                civ["ALA"].hideName = true;
                 annex(civ, "USA", ["ALA"]);
             }
             civ["CAN"].state = 8;
@@ -5712,6 +5718,7 @@ function regions(year) {
         ) {
             civ["DENc"].owner = "USA";
             civ["DENc"].autonomous = false;
+            if (civ["USA"].merge.includes("CAN")) civ["DENc"].hideName = true;
         }
     }
     // [United States]
