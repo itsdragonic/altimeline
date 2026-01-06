@@ -193,7 +193,7 @@ function rearrange(nations) {
     if (civ["OTT"].strong) {
         frontItem(nations, "OTT");
     }
-    if (c.occupied_iran) {
+    if (civ["PER"].owner != "none") {
         endItem(nations, "PER");
     }
 

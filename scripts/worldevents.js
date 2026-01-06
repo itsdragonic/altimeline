@@ -64,6 +64,7 @@ function worldEvents(year) {
     }
     if (nextYear == 1450) {
         c.worldTech = 500;
+        civ["MIS"].strength = 200;
     }
     if (nextYear == 1900) {
         c.worldTech = 600;
@@ -73,10 +74,14 @@ function worldEvents(year) {
     }
 
     // Bronze Age
+    worldNews(`Stonehenge Completed`,
+                `The great stone circle of Stonehenge has been completed, demonstrating advanced engineering and potentially serving ritual or astronomical purposes.`,
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Stonehenge2007_07_30.jpg/1200px-Stonehenge2007_07_30.jpg",
+                false, 117, -1600, 3, false);
     worldNews("Bronze Age Collapse...",
-            "Major cities have been destroyed, whole civilizations have fallen, diplomatic and trade relations are severed, and even writing systems have vanished.",
-            "https://cdn.thecollector.com/wp-content/uploads/2021/07/fall-of-troy-bronze-age-collapse.jpg",
-            false, 7, rngRange(rng(5, nextYear), -1200, -1100), 35, true);
+                "Major cities have been destroyed, whole civilizations have fallen, diplomatic and trade relations are severed, and even writing systems have vanished.",
+                "https://cdn.thecollector.com/wp-content/uploads/2021/07/fall-of-troy-bronze-age-collapse.jpg",
+                false, 7, rngRange(rng(5, nextYear), -1200, -1100), 35, true);
     worldNews(`Solar Eclipse Observed`,
                 `One of the first solar eclipses to ever be recorded has been observed in Mesopotamia, darkening the sky and prompting awe, fear, and religious interpretation.`,
                 "https://cdn.discovermagazine.com/assets/image/57938/illustration-of-an-ancient-total-solar-eclipse-x.png",
@@ -337,6 +342,7 @@ function worldEvents(year) {
                 civ["UKR"].state = "a";
                 civ["UKR"].strength = 1000;
                 civ["KZH"].strength = 500;
+                civ["PER"].owner = "none";
 
                 civ["BYZ"].state = 2;
 
@@ -503,6 +509,7 @@ function worldEvents(year) {
             civ["ITA"].state = 10;
             civ["GRE"].color = [102, 168, 96];
             civ["BUL"].state = 9;
+            civ["PER"].owner = "ENG";
             Allies.push("DEN");
             Allies.push("NOR");
         }
@@ -606,8 +613,8 @@ function worldEvents(year) {
                 civ["AUS"].strength = 300;
                 civ["BUL"].state = 10;
                 civ["VIE"].owner = "none";
+                civ["PER"].owner = "none";
 
-                c.occupied_iran = false;
                 c.cold_war = true;
 
                 altHist(nextYear,"post_ww2_europe_borders");
@@ -678,8 +685,6 @@ function worldEvents(year) {
           civ["QIN"].state = 4;
         }*/
         civ["VIE"].owner = "JAP";
-        c.occupied_iran = true;
-        civ["PER"].name = "Iran ";
         //if (c.ww2) {
 
         if (c.manifest_destiny) {

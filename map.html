@@ -40,6 +40,10 @@
 
 <body data-page="map">
     <!-- HUD Elements -->
+     <div id="info">
+        <h2>Altimeline</h2>
+    </div>
+    
     <div id="seed">
         <input type="text" id="seedInput" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
         <img id="randomSeed" title="Generate Random Seed" src="images/dice.png"></img>
@@ -121,14 +125,22 @@
                             <span class="switch"></span>
                         </label>
                     </div>
-            </div>
 
-            <div id="credits" class="content-section hidden">
-                <div class="credits">
-                    <b>Altimeline II</b>
-                     by Dragonic
+                    <div class="toggle-switch">
+                        <label>
+                            Disable Spinning (Globe Only)
+                            <input type="checkbox" id="spin">
+                            <span class="switch"></span>
+                        </label>
+                    </div>
                 </div>
-            </div>
+
+                <div id="credits" class="content-section hidden">
+                    <div class="credits">
+                        <b>Altimeline II</b>
+                        by Dragonic
+                    </div>
+                </div>
 
             </div>
         </div>

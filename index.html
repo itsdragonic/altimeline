@@ -21,34 +21,6 @@
             z-index: 0;
             pointer-events: auto;
         }
-        #info {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: white;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            z-index: 100;
-        }
-        #info h2 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-        #error {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #ff6b6b;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            display: none;
-            z-index: 200;
-        }
 
         /* Maps */
         #main {
@@ -166,14 +138,22 @@
                             <span class="switch"></span>
                         </label>
                     </div>
-            </div>
 
-            <div id="credits" class="content-section hidden">
-                <div class="credits">
-                    <b>Altimeline II</b>
-                     by Dragonic
+                    <div class="toggle-switch">
+                        <label>
+                            Disable Spinning (Globe Only)
+                            <input type="checkbox" id="spin">
+                            <span class="switch"></span>
+                        </label>
+                    </div>
                 </div>
-            </div>
+
+                <div id="credits" class="content-section hidden">
+                    <div class="credits">
+                        <b>Altimeline</b>
+                        by Dragonic
+                    </div>
+                </div>
 
             </div>
         </div>

@@ -68,7 +68,7 @@ function altHist(year,id) {
             worldNews(`${civ[civ["SPAc"].owner].name} Discovers New World`,
                         `Christopher Columbus set sail from ${civ[civ["SPAc"].owner].name} with 3 ships, seeking a westward route to Asia. However, he accidently discovered an unknown landmass.`,
                         "https://assets.editorial.aetnd.com/uploads/2019/10/columbus-ships-gettyimages-1056336226.jpg",
-                        false, 36, nextYear, 2, true);
+                        civ["SPAc"].owner == "SPA" ? false : true, 36, nextYear, 2, true);
             break;
 
         case "1984":
@@ -138,8 +138,7 @@ function altHist(year,id) {
                 civ["NEP"].state = 'a';
                 annex(civ,"CHI",["NEP","BHU"]);
                 annex(civ,"USA",["CUB", "CEN", "HAI"]);
-
-                c.occupied_iran = true;
+                civ["PER"].owner = "none";
             }
 
             if (nextYear == 1960 && c.orwell1984) {
@@ -174,6 +173,7 @@ function altHist(year,id) {
             }
             if (nextYear == 1974 && c.orwell1984) {
                 civ["USA"].whiteLines = false;
+                civ["RUS"].merge = civ["RUS"].merge.filter(item => item !== "LIV");
                 annex(civ,"RUS",["FIN", "DEN", "SWE"]);
 
                 worldNews(`War with Eurasia`,
@@ -265,7 +265,7 @@ function altHist(year,id) {
                     worldNews("Confederacy of the Golden Circle",
                                 "The Knights of the Golden Circle, a secret society founded by George W. L. Bickley, have formed the Confederacy of the Golden Circle.",
                                 "https://preview.redd.it/akb6mszha3v51.jpg?width=640&crop=smart&auto=webp&s=0b2f4a99df1db559d69cf6bd70cb6296b82604b7",
-                                false, 116, nextYear, 2, true);
+                                true, 116, nextYear, 2, true);
 
                     civ["CSA"].state = 6;
                     civ["CSA"].name = "Confederacy of the Golden Circle";

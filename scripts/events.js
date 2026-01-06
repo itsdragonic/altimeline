@@ -40,7 +40,7 @@ const impossible = 0.01,
     No Greece:  
     Colonization: 1T7iJ4x3
                   22i10amM
-    Soviets win: 97 7INtv313
+    Soviets win: 97 7INtv313    14h13258
     Glitched: l2QyLLl4
     Congo Lake: {128=0}
     Fuhrerreich: {151=0,146=0}
@@ -60,8 +60,8 @@ const impossible = 0.01,
          s897s1L9
 
 <-- Last ID used -->
-    RNG: 154
-    News: 116
+    RNG: 155
+    News: 117
 
 <-- Region Theory -->
   Beginning: Regular year-based increments
@@ -324,19 +324,7 @@ async function updateCivs() {
     ctx2.clearRect(0, 0, buffer.width, buffer.height);
 
     // Handle news display
-    const allnews = newsContainer.children;
-    for (let i = 0; i < allnews.length; i++) {
-        allnews[i].style.display = 'none';
-    }
-    Object.keys(news).forEach(key => {
-        const item = news[key];
-        const element = document.getElementById(item.id);
-        if (element && showNews) {
-            if (item.startDate <= timeline && timeline <= item.startDate + item.duration) {
-                element.style.display = 'flex';
-            }
-        }
-    });
+    showNews(timeline);
 
     nations = Object.keys(civs[timeline]).filter(nation => civs[timeline][nation].strength > 0).filter(nation => civs[timeline][nation].state != null);
 
@@ -505,13 +493,9 @@ seedInput.addEventListener("input", function (event) {
 
     typingTimer = setTimeout(() => {
         calcSeed(event.target.value);
-        fallback();
+        redraw();
+        showNews(timeline);
     }, typingDelay);
-
-    setTimeout(() => {
-        updateCivs();
-        fallback();
-    }, 3000);
 
 });
 
@@ -534,6 +518,9 @@ timelineInput.addEventListener('input', () => {
     if (year === 0) year = 1;
 
     timelineValue.textContent = year;
+
+    showNews(year);
+    
 });
 timelineInput.addEventListener('change', () => {
     timelineValue.textContent = timelineInput.value;
@@ -553,6 +540,22 @@ timelineInput.addEventListener('change', () => {
     updateCivs();
     redraw();
 });
+
+function showNews(year) {
+    const allnews = newsContainer.children;
+    for (let i = 0; i < allnews.length; i++) {
+        allnews[i].style.display = 'none';
+    }
+    Object.keys(news).forEach(key => {
+        const item = news[key];
+        const element = document.getElementById(item.id);
+        if (element && showNews) {
+            if (item.startDate <= year && year <= item.startDate + item.duration) {
+                element.style.display = 'flex';
+            }
+        }
+    });
+}
 
 // News
 function createNewsCanvas(news) {
@@ -736,13 +739,12 @@ if (seed != "") {
 }
 
 updateCivs();
-fallback();
 
 // Fallback if map doesn't load
-function fallback() {
+function fallback(amount = 500) {
     setTimeout(() => {
         redraw();
-    }, 500);
+    }, amount);
 }
 
 // Event List

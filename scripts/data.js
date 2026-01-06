@@ -104,7 +104,6 @@ firstYear[oppositeYear] = {
 
         // 1900s
         ww1: true, // true
-        occupied_iran: false,
         cold_war: false, // true
         orwell1984: false, // false
         af_decolonization_level: 5, // 0 means none, 3 means nearly full decolonization
@@ -599,6 +598,8 @@ addCountry("ZIM", "Mapungubwe", null, 1420, 825, 5);
 addCountry("YOR", "Yoruba", null, 1220, 585, 5);
 addCountry("HAR", "Ifat", null, 1540, 580, 6);
 
+addCountry("MIS", "Mississippi", null, 610, 370, 6);
+
 // Civilizations
 addCountry("MES", "Assyria / Babylon", 1, 1500, 372, 5);
 addCountry("GEO", "Colchis", 1, 1520, 315, 5);
@@ -703,7 +704,7 @@ addCountry("SON", "Songhay", 1, 1200, 530, 8);
 addCountry("BRA", "Portuguese Brazil", 1, 906, 700, 8);
 
 addCountry("KZH", "Yarkent", 1, 1735, 340, 9);
-addCountry("VEZ", "Klein-Venedig", "a", 690, 580, 7);
+addCountry("VEZ", "Klein-Venedig", "a", 710, 585, 7);
 addCountry("MAD", "Merina", 1, 1570, 790, 5);
 addCountry("PHI", "Philippines ( SP )", 1, 2130, 555, 7);
 addCountry("PORa", "Portuguese Colonies", 1, 1345, 775, 7);
@@ -724,7 +725,7 @@ addCountry("ENGk", "British Caribbean", 1);
 addCountry("SWEc", "New Sweden", 1, 735, 343, 4);
 addCountry("SUR", "Suriname", 1, 835, 595, 4);
 addCountry("FGU", "French Guiana", 1, 860, 605, 4);
-addCountry("SWI", "Switzerland", 1, 1310, 280, 2);
+addCountry("SWI", "Switzerland", 1, 1310, 282, 3.5);
 addCountry("DUTs", "Cape Colony", 1, 1280, 915, 7);
 
 addCountry("FRAa", "Mauritius", 1);
@@ -745,20 +746,20 @@ addCountry("FLO", "Spanish Florida", 2);
 addCountry("HAI", "Haiti", 1, 710, 500, 4);
 addCountry("SOK", "Sokoto", 1, 1270, 565, 10);
 addCountry("ARG", "Rio de la Plata", 1, 762, 885, 8);
-addCountry("PAR", "Paraguay", 1, 830, 845, 4);
-addCountry("CHL", "Chile", 1, 740, 910, 7);
+addCountry("PAR", "Paraguay", 1, 825, 845, 4);
+addCountry("CHL", "Chile", 1, 735, 910, 7);
 addCountry("GCO", "Gran Colombia", 1, 660, 610, 7);
 addCountry("CEN", "Central America", 1, 570, 560, 6);
 addCountry("MEX", "Mexico", 1, 480, 470, 10);
-addCountry("PEU", "Peru", 1, 678, 755, 10);
-addCountry("BOL", "Bolivia", 1, 765, 795, 7);
-addCountry("EQU", "Equador", 1, 660, 665, 5.5);
+addCountry("PEU", "Peru", 1, 675, 755, 10);
+addCountry("BOL", "Bolivia", 1, 760, 795, 7);
+addCountry("EQU", "Equador", 1, 655, 665, 5.5);
 addCountry("COL", "Colombia", 1, 670, 630, 8);
-addCountry("URU", "Uruguay", 1, 854, 912, 5);
+addCountry("URU", "Uruguay", 1, 850, 912, 5);
 addCountry("FAK", "Falklands", 1, 900, 1070, 4);
 addCountry("LBR", "Liberia", 1, 1145, 605, 5);
 addCountry("BEL", "Bel.", 1, 1286, 249, 4);
-addCountry("TEX", "Texas", 1, 545, 390, 8);
+addCountry("TEX", "Texas", 1, 550, 390, 8);
 addCountry("AUZ", "Australia", 1, 2120, 850, 15);
 addCountry("FRAx", "French Africa", 1, 1250, 365, 5);
 addCountry("FRAs", "French Sudan", 1);

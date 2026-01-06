@@ -10,6 +10,7 @@ buffer.height = 1297;
 var physicalMap = false;
 var showNames = true;
 var showNews = true;
+var disableSpinning = false;
 
 if (isGlobe) physicalMap = true;
 
@@ -37,6 +38,7 @@ function loadBaseMaps() {
 
 function drawMap(ctx, canvas, thickLines) {
     //console.log(counter);
+    if (isGlobe) ctx.imageSmoothingEnabled = false;
 
     if (physicalMap && baseImages.map) {
         ctx.drawImage(baseImages.map, 0, 0, canvas.width, canvas.height);
@@ -125,7 +127,8 @@ generateSeedButton.addEventListener('click', () => {
     seedInput.value = generateRandomString();
 
     calcSeed(seedInput.value);
-    fallback();
+    redraw();
+    showNews(timeline);
 });
 
 generateDownloadButton.addEventListener('click', () => {
@@ -150,7 +153,7 @@ generateDownloadButton.addEventListener('click', () => {
 });
 
 // Scale map
-var scaleAmount = 1.5
+var scaleAmount = 1.5;
 window.addEventListener('resize', function() {
     const canvas = document.getElementById('main');
     canvas.width = window.innerWidth / scaleAmount;
@@ -225,6 +228,9 @@ document.getElementById('jagged').addEventListener('change', function() {
         canvas.style.clipPath = 'none';
         canvas.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
     }
+});
+document.getElementById('spin').addEventListener('change', function() {
+    disableSpinning = this.checked;
 });
 
 setTimeout(() => {

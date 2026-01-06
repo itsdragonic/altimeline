@@ -6,10 +6,13 @@ let targetRotation = { x: 0, y: 0 };
 let zoom = 5;
 let targetZoom = 5;
 
+let fastSpinOriginY = 0;
+let wasFastSpinning = false;
+
 // Robinson projection coefficients
 const ROBINSON_AA = [
-    0.9986, 0.9954, 0.9900, 0.9822, 0.9730, 0.9600, 0.9427, 0.9216, 0.8962, 0.8679,
-    0.8350, 0.8186, 0.7897, 0.7466, 0.7135, 0.6623, 0.6122, 0.5522
+    0.9986, 0.9954, 0.9900, 0.985, 0.9745, 0.965, 0.95, 0.934, 0.915, 0.89,
+    0.86, 0.83, 0.79, 0.75, 0.7135, 0.6623, 0.6122, 0.5522
 ];
 const ROBINSON_BB = [
     0.0000, 0.0620, 0.1240, 0.1860, 0.2480, 0.3100, 0.3720, 0.4340, 0.4958, 0.5571,
@@ -153,12 +156,9 @@ function generateMapTexture() {
     tempCanvas.width = bufferCanvas.width;
     tempCanvas.height = bufferCanvas.height;
 
-    // Fill white background
     tempCtx.fillStyle = 'white';
     tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-
-    // Draw the map using drawMap function from script.js
-    drawMap(tempCtx, tempCanvas, true);
+    drawMap(tempCtx, tempCanvas, false);
 
     // Draw the generated map onto buffer canvas
     bufferCtx.drawImage(tempCanvas, 0, 0);
@@ -269,6 +269,23 @@ function init() {
                 globe = new THREE.Mesh(geometry, material);
                 scene.add(globe);
 
+                // Atmospheric glow
+                const glowGeometry = new THREE.SphereGeometry(1.03, 64, 64);
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x8dc6ee,
+                    transparent: true,
+                    opacity: 0.25,
+                    side: THREE.BackSide,
+                    depthWrite: false
+                });
+
+                const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+                scene.add(glow);
+
+                // keep glow aligned with globe
+                globe.glow = glow;
+
+
                 // Create moon
                 const moonTexture = new THREE.TextureLoader().load('images/moon.jpg', () => {
                     // Geometry for the Moon
@@ -289,7 +306,7 @@ function init() {
                 });
 
 
-                // Create and add star field
+                // Star field
                 starField = createStarField();
                 scene.add(starField);
 
@@ -361,11 +378,30 @@ function animate() {
         // Zoom
         zoom += (targetZoom - zoom) * 0.1;
         camera.position.z = zoom;
-        if (!isDragging) {
-            let amount = isLoading ? 0.1 : 0.0001;
-            let time = goingBackwards ? -1 : 1;
-            targetRotation.y += amount * time;
+        
+        if (!isDragging && !disableSpinning) {
+            const timeDir = goingBackwards ? -1 : 1;
+
+            if (isLoading) {
+                // Fast spin just started -> store origin
+                if (!wasFastSpinning) {
+                    fastSpinOriginY = targetRotation.y;
+                    wasFastSpinning = true;
+                }
+
+                targetRotation.y += 0.1 * timeDir;
+            } else {
+                // Fast spin just ended -> snap back
+                if (wasFastSpinning) {
+                    targetRotation.y = fastSpinOriginY;
+                    wasFastSpinning = false;
+                }
+
+                // Normal slow spin
+                targetRotation.y += 0.0001 * timeDir;
+            }
         }
+
     }
     if (globe.moon) {
         const radius = 20; // distance from Earth

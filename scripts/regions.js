@@ -1262,9 +1262,11 @@ function regions(year) {
 
     if (nextYear == -611) {
         civ["PER"].strength = 300;
+        civ["PER"].defaultname = "Median Empire";
+        civ["PER"].owner = "none";
     }
     if (nextYear == -548) {
-        civ["PER"].name = "Achaemenid Empire";
+        civ["PER"].defaultname = "Achaemenid Empire";
     }
     if (nextYear == -525) {
         civ["PER"].state = 2;
@@ -1275,7 +1277,7 @@ function regions(year) {
     if (nextYear == -310) {
         civ["PER"].strength = 3000;
         if (!civ["PER"].strong) {
-            civ["PER"].name = "Seleucid Empire";
+            civ["PER"].defaultname = "Seleucid Empire";
             civ["PER"].state = 1;
             civ["PER"].color = [173, 81, 12];
 
@@ -1292,13 +1294,13 @@ function regions(year) {
         }
     }
     if (nextYear == 221) {
-        civ["PER"].name = "Sassanid Empire";
+        civ["PER"].defaultname = "Sassanid Empire";
     }
     if (nextYear == 628) {
         civ["PER"].state = 3;
     }
     if (nextYear == 872) {
-        civ["PER"].name = "Saffarids";
+        civ["PER"].defaultname = "Saffarids";
     }
 
     // Turks
@@ -1324,22 +1326,22 @@ function regions(year) {
         civ["TUR"].state = 5;
     }
     if (nextYear == 1509) {
-        civ["PER"].name = "Safavid Empire";
+        civ["PER"].defaultname = "Safavid Empire";
         civ["PER"].strength += 2000;
         civ["PER"].state = 5;
         civ["PER"].x += 30;
     }
 
     if (nextYear == 1736) {
-        civ["PER"].name = "Afsharid Empire";
+        civ["PER"].defaultname = "Afsharid Empire";
     }
     if (nextYear == 1762) {
-        civ["PER"].name = "Zands";
+        civ["PER"].defaultname = "Zands";
         civ["PER"].x += 20;
         civ["PER"].size += 4;
     }
     if (nextYear == 1792) {
-        civ["PER"].name = "Qajar";
+        civ["PER"].defaultname = "Qajar";
     }
 
     // Modern Era
@@ -1347,20 +1349,18 @@ function regions(year) {
         civ["PER"].state = 6;
     }
     if (nextYear == 1926) {
-        civ["PER"].name = "Iran";
+        civ["PER"].defaultname = "Iran";
         civ["PER"].y += 10;
     }
     if (nextYear == 1947) {
-        civ["PER"].name = "Iran";
+        civ["PER"].defaultname = "Iran";
         if (rng(113, nextYear) >= possible || c.fuhrerreich) {
-            c.occupied_iran = false;
+            civ["PER"].owner = "none";
         }
     }
-    if (c.occupied_iran && civ["ENG"].name != "Oceania") {
-        civ["PER"].color = civ["ENG"].color;
-    } else {
-        civ["PER"].color = [];
-    }
+    
+    owner(civ, "PER", [], "Iran", "Persia", false);
+    // [Persia]
 
 /* ______________________________
  / \                             \.
@@ -1576,7 +1576,7 @@ function regions(year) {
 
     if (nextYear == 64 && civ["ROM"].strong) {
         worldNews("The Great Fire of Rome",
-                "The fire rages six days, destroying ten districts. Nero blames the Christians for this. However, Nero was rumored to haved watched while playing the lyre.",
+                "The fire rages six days, destroying ten districts. Nero blames the Christians for this. However, Nero was rumored to haved watched while playing the lyre...",
                 "https://upload.wikimedia.org/wikipedia/commons/3/3e/Robert%2C_Hubert_-_Incendie_%C3%A0_Rome_-.jpg",
                 false, 18, nextYear, 2, false);
     }
@@ -2071,7 +2071,7 @@ function regions(year) {
         worldNews("Japan Becomes Christian",
                     "In the Shimabra Rebellion, Japanese Roman Catholics which revolted in Kyushu, were ultimately successful and have now taken over the government.",
                     "https://static.wikia.nocookie.net/totalwar-ar/images/c/cd/Shimabara_Rebellion.jpg",
-                    true, 27, nextYear, 2, true);
+                    true, 27, nextYear, 2, false);
     }
     if (civ["JAP"].yearsChristian == null) {
         civ["JAP"].yearsChristian = 0;
@@ -2947,7 +2947,7 @@ function regions(year) {
     if (nextYear == 1979 && civ["DENc"].owner == "DEN") {
         civ["DENc"].autonomous = true;
         civ["DENc"].x -= 30;
-        civ["DENc"].y -= 60;
+        civ["DENc"].y -= 50;
         civ["DENc"].size += 5;
     }
 
@@ -3406,6 +3406,8 @@ function regions(year) {
         c.cold_war &&
         c.superpowers.includes("USA") &&
         c.superpowers.includes("RUS") &&
+        civ["USA"].strength > 0 &&
+        civ["RUS"].strength > 0 &&
         !c.orwell1984
     ) {
         if (rng(95, nextYear) <= impossible) {
@@ -3416,7 +3418,7 @@ function regions(year) {
                         true, 68, nextYear, 3, true);
 
             civ["USA"].state = "b";
-            civ["USA"].name = "U.S. Anarchy";
+            civ["USA"].hideName = true;
             civ["USA"].x += 110;
             civ["CAN"].strength += 500;
             civ["ALA"].strength += 500;
@@ -3459,7 +3461,7 @@ function regions(year) {
             civ["UKR"].state = 1;
             civ["POL"].strength = 500;
             civ["POL"].state = 9;
-            c.occupied_iran = false;
+            civ["PER"].owner = "none";
             c.soviet_union_collapse = true;
         }
     }
@@ -4989,6 +4991,11 @@ function regions(year) {
     if (c.latinAmerica == 1975) {
         civ["SUR"].owner = "none";
     }
+    if (c.latinAmerica == 1980 &&
+        rng(155, nextYear) <= possible
+    ) {
+        civ["FGU"].owner = "none";
+    }
 
     // Names
     altHist(nextYear,"alternate_american_names");
@@ -5152,6 +5159,7 @@ function regions(year) {
     // Caribbean Colonization
     if (c.colonizingAmerica == 1625) {
         civ["FRAk"].strength = 700;
+        civ["FRAk"].owner = "FRA";
     }
     if (c.colonizingAmerica == 1637) {
         civ["ENGk"].strength = 700;
@@ -5165,7 +5173,7 @@ function regions(year) {
     }
     if (c.colonizingAmerica == 1804) {
         civ["FRAk"].state = 1;
-        civ["FRAk"].name = "";
+        civ["FRAk"].hideName = true;
         civ["HAI"].strength = 700;
     }
     if (c.colonizingAmerica == 1842) {
@@ -5229,6 +5237,7 @@ function regions(year) {
     owner(civ,"MEX",[],"Mexico","Mexico",false);
     owner(civ,"CUB",[],"Cuba","Cuba",false);
     owner(civ,"ENGk",[],"","",false);
+    owner(civ,"FRAk",[],"St. Domingue","St. Domingue",false);
 
 /* ______________________________
  / \                             \.
