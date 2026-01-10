@@ -1,4 +1,4 @@
-var seed = 0;
+var seed = "";
 var timeline = 1;
 var seedNumber = 0;
 
@@ -23,215 +23,45 @@ const impossible = 0.01,
     incrediblyLikely = 0.95,
     Default = 1.0;
 
-/* 
-<-- To-Do List -->
+var loading = document.getElementById("loading");
+let nations = [];
+let images = [];
 
-<-- Band-aids over underlying issues -->
-  *Handle Overlapping and Overwhelming timelines*
+// Keybinds
+document.addEventListener('keydown', (event) => {
+    const keyName = event.key;
+    const outputElement = document.getElementById('output');
 
-<-- Game To-Do's -->
-  Arabia & Persia in 1000s
-  Sardinia/Savoy/Piedmont
-  australia antipode
-
-<-- Cool Seeds -->
-    Nova Roma: 7wFQT1Jt
-    Carthage: 888852Ze  civ["ALA"].owner = "none";
-    No Greece:  
-    Colonization: 1T7iJ4x3
-                  22i10amM
-    Soviets win: 97 7INtv313    14h13258
-    Glitched: l2QyLLl4
-    Congo Lake: {128=0}
-    Fuhrerreich: {151=0,146=0}
-    Texas: 50Je7757
-    Pax Fracia: 06011919
-    Austrian's dream: 836x4I53
-    Southern victory: k
-    European Federation: e  {151=0} 2oK6455F
-    Al-Andalus, Austria: sdf    w756mc3s
-    dafuq: {default=true,
-    Straight-forward kaiserreich: 8932574B  7933H819
-    Mexico wins: 762D8860
-    nuclear: 6025p10X
-
-    WTF: 7n35545u
-         04681My9
-         s897s1L9
-
-<-- Last ID used -->
-    RNG: 155
-    News: 117
-
-<-- Region Theory -->
-  Beginning: Regular year-based increments
-  Transition to Modern: more conditional based
-  - Use counters as they build on each other
-  - As world becomes more interconnected, just use conditionals
-    that will be fleshed out in the World Events
-  - Avengers theory: regions can mostly be local but past the 1700s they influence each other
-
-<-- Player Interactive Ideas -->
-  Ultimate goal: to make fiddling with rng values as fun and realistic as possible.
-
-  A full run through a timeline would be called a 'campaign'
-  Play as a certain region
-   - Decisions are panels with buttons for different options
-   - Battles would be decided with some sort of strategy game
-
-*/
-
-var newsContainer = document.getElementById('newsContainer');
-
-function changeColor(img, color) {
-    const canvas1 = document.createElement('canvas');
-    const ctx1 = canvas1.getContext('2d');
-    canvas1.width = img.width;
-    canvas1.height = img.height;
-
-    ctx1.drawImage(img, 0, 0);
-
-    // Get image data
-    const imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
-    const data = imageData.data;
-
-    // Color to change
-    const specificColor = { r: color[0], g: color[1], b: color[2], a: 255 };
-
-    // Iterate through each pixel and replace
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const a = data[i + 3];
-
-        if (!((r === 0 && g === 0 && b === 0) || (r === 255 && g === 255 && b === 255) || a === 0)) {
-            data[i] = specificColor.r;
-            data[i + 1] = specificColor.g;
-            data[i + 2] = specificColor.b;
-            data[i + 3] = specificColor.a;
-        }
-    }
-
-    ctx1.putImageData(imageData, 0, 0);
-    return canvas1;
-}
-
-function mergeCivs(img, x, y, id, color, img2, id2, showWhite, output) {
-    const canvas1 = document.createElement('canvas');
-    const ctx1 = canvas1.getContext('2d');
-
-    let idx = id.x;
-    let idy = id.y;
-    if (x != undefined && y != undefined) {
-        idx = x;
-        idy = y;
-    }
-
-    // Calculate the minimum x and y values
-    let xValue = Math.min(idx, id2.x);
-    let yValue = Math.min(idy, id2.y);
-
-    // Calculate the maximum x and y values
-    const maxX = Math.max(idx + img.width, id2.x + img2.width);
-    const maxY = Math.max(idy + img.height, id2.y + img2.height);
-
-    // Calculate the required width and height for the canvas
-    const canvasWidth = maxX - xValue;
-    const canvasHeight = maxY - yValue;
-
-    // Set the canvas width and height
-    canvas1.width = canvasWidth;
-    canvas1.height = canvasHeight;
-
-    // Draw the first image at its respective position
-    ctx1.drawImage(img, idx - xValue, idy - yValue);
-
-    // Draw the second image at its respective position
-    ctx1.drawImage(changeColor(img2, color), id2.x - xValue, id2.y - yValue);
-
-    // Get image data
-    const imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
-    const data = imageData.data;
-
-    // Iterate through each pixel and replace
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const a = data[i + 3];
-
-        if (r === 0 && g === 0 & b === 0 & a === 255) {
-            if (showWhite || color == undefined || color == null || color == []) {
-                data[i] = 255;
-                data[i + 1] = 255;
-                data[i + 2] = 255;
-                data[i + 3] = 255;
-            } else {
-                data[i] = color[0];
-                data[i + 1] = color[1];
-                data[i + 2] = color[2];
-                data[i + 3] = 255;
-            }
-        }
-    }
-
-    ctx1.putImageData(imageData, 0, 0);
-    switch (output) {
-        case 0:
-            return canvas1;
+    switch (keyName) {
+        case 'n':
+            showNames = !showNames;
+            updateCivs();
             break;
-        case 1:
-            return xValue;
+        case 'm':
+            physicalMap = !physicalMap;
+            updateCivs();
             break;
-        case 2:
-            return yValue;
+        case 's':
+            disableSpinning = !disableSpinning;
             break;
     }
-}
+    if (event.key === ' ') {
+        const direction = event.shiftKey ? -1 : 1;
 
-function drawOutline(ctx2, img, x, y) {
-    const canvas1 = document.createElement('canvas');
-    const ctx1 = canvas1.getContext('2d');
-    canvas1.width = img.width;
-    canvas1.height = img.height;
+        timeline = Number(timeline) + direction;
+        if (timeline == 0) timeline--; // Skip year 0
+        timelineValue.textContent = timeline;
+        timelineInput.value = timeline;
+        console.log(timeline);
+        nations = [];
+        images = [];
 
-    ctx1.drawImage(img, 0, 0);
-
-    // Get image data
-    const imageData = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
-    const data = imageData.data;
-
-    // Iterate through each pixel and replace
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i];
-        const g = data[i + 1];
-        const b = data[i + 2];
-        const a = data[i + 3];
-
-        // Outline border
-        if (!(r === 0 && g === 0 && b === 0 && a === 255) && a != 0) {
-            const left = (i % (canvas1.width * 4) !== 0) ? data[i - 4 + 3] === 0 : true;
-            const right = ((i + 4) % (canvas1.width * 4) !== 0) ? data[i + 4 + 3] === 0 : true;
-            const up = (i >= canvas1.width * 4) ? data[i - canvas1.width * 4 + 3] === 0 : true;
-            const down = (i < data.length - canvas1.width * 4) ? data[i + canvas1.width * 4 + 3] === 0 : true;
-            const topLeft = (i % (canvas1.width * 4) !== 0 && i >= canvas1.width * 4) ? data[i - canvas1.width * 4 - 4 + 3] === 0 : true;
-            const topRight = ((i + 4) % (canvas1.width * 4) !== 0 && i >= canvas1.width * 4) ? data[i - canvas1.width * 4 + 4 + 3] === 0 : true;
-            const bottomLeft = (i % (canvas1.width * 4) !== 0 && i < data.length - canvas1.width * 4) ? data[i + canvas1.width * 4 - 4 + 3] === 0 : true;
-            const bottomRight = ((i + 4) % (canvas1.width * 4) !== 0 && i < data.length - canvas1.width * 4) ? data[i + canvas1.width * 4 + 4 + 3] === 0 : true;
-
-            if (left || right || up || down || topLeft || topRight || bottomLeft || bottomRight) {
-                data[i] = 0;
-                data[i + 1] = 0;
-                data[i + 2] = 0;
-                data[i + 3] = 255;
-            }
-        }
+        goingBackwards = event.shiftKey;
+        previousTime = Number(timeline);
+        
+        updateCivs();
     }
-
-    ctx1.putImageData(imageData, 0, 0);
-    ctx2.drawImage(canvas1, x, y);
-}
+});
 
 // Calculate & Update
 function calculateEvents() {
@@ -301,21 +131,6 @@ function calculateEvents() {
     newsContainer.replaceChildren();
     createNewsCanvas(news);
 }
-calculateEvents();
-
-var loading = document.getElementById("loading");
-
-async function loadImage(src) {
-    return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = () => resolve(null); // Resolve with null if the image fails to load
-        img.src = src;
-    });
-}
-
-let nations = [];
-let images = [];
 
 async function updateCivs() {
     isLoading = true;
@@ -324,7 +139,7 @@ async function updateCivs() {
     ctx2.clearRect(0, 0, buffer.width, buffer.height);
 
     // Handle news display
-    showNews(timeline);
+    displayNews(timeline);
 
     nations = Object.keys(civs[timeline]).filter(nation => civs[timeline][nation].strength > 0).filter(nation => civs[timeline][nation].state != null);
 
@@ -333,7 +148,7 @@ async function updateCivs() {
 
     const redrawInterval = setInterval(() => {
         redraw();
-    }, 100);
+    }, 300);
 
     for (const nation of nations) {
         const civ = civs[timeline][nation];
@@ -406,31 +221,8 @@ async function updateCivs() {
         goingBackwards = null;
         loadBaseMaps();
         if (isGlobe) drawToGlobe();
+        displayNews(timeline);
     }, waittime);
-}
-loadBaseMaps();
-updateCivs();
-
-String.prototype.hashCode = function () {
-    var hash = 0,
-        i, chr;
-    if (this.length === 0) return hash;
-    for (i = 0; i < this.length; i++) {
-        chr = this.charCodeAt(i);
-        hash = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-}
-
-function stringToNumbers(inputString) {
-    // Check if the input is a number
-    if (!isNaN(inputString)) {
-        return Number(inputString);
-    }
-
-    // If the input is a string, compute its hash code
-    return inputString.hashCode();
 }
 
 function calcSeed(val) {
@@ -451,39 +243,8 @@ function calcSeed(val) {
 
 }
 
-function frontItem(array, phraseToMove) {
-    const index = array.indexOf(phraseToMove);
-
-    if (index !== -1) {
-        array.splice(index, 1);
-        array.push(phraseToMove);
-    }
-}
-
-function endItem(arr, phrase) {
-    const index = arr.indexOf(phrase);
-
-    if (index !== -1) {
-        arr.splice(index, 1);
-        arr.unshift(phrase);
-    }
-    return arr;
-}
-
-function grabData(url, val1, val2) {
-    if (url.includes(val1)) {
-        let foo = url.split(val1);
-
-        let foo1 = foo[1];
-        foo2 = foo1.split(val2);
-
-        return foo2[0]
-    } else return 0;
-}
-
 // Seeds
 const seedInput = document.getElementById('seedInput');
-
 
 let typingTimer;
 const typingDelay = 400;
@@ -493,8 +254,8 @@ seedInput.addEventListener("input", function (event) {
 
     typingTimer = setTimeout(() => {
         calcSeed(event.target.value);
+        updateCivs();
         redraw();
-        showNews(timeline);
     }, typingDelay);
 
 });
@@ -519,7 +280,7 @@ timelineInput.addEventListener('input', () => {
 
     timelineValue.textContent = year;
 
-    showNews(year);
+    displayNews(year);
     
 });
 timelineInput.addEventListener('change', () => {
@@ -540,22 +301,6 @@ timelineInput.addEventListener('change', () => {
     updateCivs();
     redraw();
 });
-
-function showNews(year) {
-    const allnews = newsContainer.children;
-    for (let i = 0; i < allnews.length; i++) {
-        allnews[i].style.display = 'none';
-    }
-    Object.keys(news).forEach(key => {
-        const item = news[key];
-        const element = document.getElementById(item.id);
-        if (element && showNews) {
-            if (item.startDate <= year && year <= item.startDate + item.duration) {
-                element.style.display = 'flex';
-            }
-        }
-    });
-}
 
 // News
 function createNewsCanvas(news) {
@@ -645,6 +390,10 @@ function createNewsCanvas(news) {
                     canvas.style.width = '15%';
                 }
 
+                if (isMobile) {
+                    canvas.style.width = item.major ? '45%' : '40%';
+                }
+
                 // Determine Position
                 if (rng(item.id) < 0.5) {
                     canvas.style.left = '12%';
@@ -671,56 +420,6 @@ function createNewsCanvas(news) {
     });
 }
 
-function makeDraggable(element) {
-    let isDragging = false;
-    let startX, startY, offsetX, offsetY;
-
-    element.addEventListener('mousedown', startDrag);
-    element.addEventListener('touchstart', startDrag);
-
-    document.addEventListener('mouseup', endDrag);
-    document.addEventListener('touchend', endDrag);
-
-    function startDrag(event) {
-        event.preventDefault();
-        isDragging = true;
-        if (event.type === 'mousedown') {
-            startX = event.clientX;
-            startY = event.clientY;
-        } else if (event.type === 'touchstart') {
-            startX = event.touches[0].clientX;
-            startY = event.touches[0].clientY;
-        }
-        offsetX = element.offsetLeft - startX;
-        offsetY = element.offsetTop - startY;
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('touchmove', drag);
-        element.style.cursor = 'grabbing';
-    }
-
-    function endDrag() {
-        isDragging = false;
-        document.removeEventListener('mousemove', drag);
-        document.removeEventListener('touchmove', drag);
-        element.style.cursor = 'pointer';
-    }
-
-    function drag(event) {
-        if (!isDragging) return;
-        event.preventDefault();
-        let x, y;
-        if (event.type === 'mousemove') {
-            x = event.clientX + offsetX;
-            y = event.clientY + offsetY;
-        } else if (event.type === 'touchmove') {
-            x = event.touches[0].clientX + offsetX;
-            y = event.touches[0].clientY + offsetY;
-        }
-        element.style.left = x + 'px';
-        element.style.top = y + 'px';
-    }
-}
-
 // Shared seeds
 var url = window.location.href;
 
@@ -733,12 +432,15 @@ if (timelineInput.value == 0) {
 
 timelineValue.textContent = timelineInput.value;
 timeline = parseInt(timelineInput.value);
-if (seed != "") {
+
+loadBaseMaps();
+if (seed != "" || timeline != 1) {
     seedInput.value = seed;
     calcSeed(seed);
+} else {
+    calculateEvents();
+    updateCivs();
 }
-
-updateCivs();
 
 // Fallback if map doesn't load
 function fallback(amount = 500) {

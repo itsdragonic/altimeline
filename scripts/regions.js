@@ -331,60 +331,60 @@ function regions(year) {
         }*/
     }
     if (nextYear == 1635) {
-        civ["QIN"].strength = 700;
+        civ["MAN"].strength = 700;
         /*if (c.new_china) {
           civ["PORi"].strength = 0;
         }*/
     }
     if (nextYear == 1649) {
-        civ["QIN"].state = 2;
+        civ["MAN"].state = 2;
         civ["CHI"].strength = 0;
     }
     if (nextYear == 1700) {
-        civ["QIN"].state = 3;
-        civ["QIN"].x -= 50;
-        civ["QIN"].y += 70;
-        civ["QIN"].size += 2;
+        civ["MAN"].state = 3;
+        civ["MAN"].x -= 50;
+        civ["MAN"].y += 70;
+        civ["MAN"].size += 2;
     }
     if (nextYear == 1865) {
-        civ["QIN"].state = 4;
+        civ["MAN"].state = 4;
     }
 
     // Modern Era
     if (nextYear == 1901) {
         /*if (RNG("Boxer's_Rebellion",year) <= unlikely) {
-            civ["QIN"].state = 5;
-            civ["QIN"].name = "Chinese Warring States";
+            civ["MAN"].state = 5;
+            civ["MAN"].name = "Chinese Warring States";
         }*/
     }
     if (nextYear == 1902) {
         civ["DUTs"].strength = 0;
     
         /*if (RNG("Boxer's_Rebellion",year) <= unlikely) {
-          civ["QIN"].state = "a";
-          civ["QIN"].name = "China";
-          civ["QIN"].x += 72;
-          civ["QIN"].y -= 8;
-          civ["QIN"].size -= 3;
+          civ["MAN"].state = "a";
+          civ["MAN"].name = "China";
+          civ["MAN"].x += 72;
+          civ["MAN"].y -= 8;
+          civ["MAN"].size -= 3;
           civ["KOR"].strength = 0;
           civ["JAPc"].strength = 44;
         }*/
     }
     if (nextYear == 1912) {
-        civ["QIN"].name = "Republic of China";
-        civ["QIN"].x -= 40;
+        civ["MAN"].name = "Republic of China";
+        civ["MAN"].x -= 40;
     } 
     if (nextYear == 1916) {
         //if (RNG("Boxer's_Rebellion",year) > unlikely) {
-        civ["QIN"].state = 5;
+        civ["MAN"].state = 5;
         //}
     }
     if (nextYear == 1947) {
         // Chinese Communist Revolution
         c.isChineseCivilWar = true;
         //if (RNG("Boxer's_Rebellion",year) > unlikely) {
-        civ["QIN"].state = 1;
-        civ["QIN"].color = [255, 219, 37];
+        civ["MAN"].state = 1;
+        civ["MAN"].color = [255, 219, 37];
         //}
         civ["CHI"].strength = 1000;
         civ["CHI"].state = 7;
@@ -393,12 +393,12 @@ function regions(year) {
         civ["CHI"].y -= 70;
     }
     if (nextYear == 1948) {
-        civ["QIN"].state = 2;
+        civ["MAN"].state = 2;
     }
     if (nextYear == 1949) {
         // Chinese Communist Revolution
         //c.isChineseCivilWar = false;
-        civ["QIN"].state = 4;
+        civ["MAN"].state = 4;
         civ["CHI"].x -= 80;
         civ["CHI"].y += 50;
         civ["CHI"].size += 4;
@@ -408,21 +408,21 @@ function regions(year) {
         /*if (c.fuhrerreich) {
           c.communist_china = false;
         } else if (RNG("Chinese_Communist_Revolution",year) <= unlikely) {
-          civ["QIN"].state = 4;
+          civ["MAN"].state = 4;
           civ["CHI"].strength = 0;
           c.communist_china = false;
         } else if (RNG("Chinese_Communist_Revolution",year) <= possible) {
-          civ["QIN"].strength = 0;
+          civ["MAN"].strength = 0;
           civ["CHI"].strength = 3000;
           civ["CHI"].state = "a";
         } else {*/
         civ["CHI"].strength = 3000;
-        civ["QIN"].x += 280;
-        civ["QIN"].y += 70;
-        civ["QIN"].size = 4;
-        civ["QIN"].name = "Taiwan";
+        civ["MAN"].x += 280;
+        civ["MAN"].y += 70;
+        civ["MAN"].size = 4;
+        civ["MAN"].name = "Taiwan";
         /*if (c.new_china) {
-          civ["QIN"].name = "";
+          civ["MAN"].name = "";
         }
       }*/
     }
@@ -446,7 +446,7 @@ function regions(year) {
     if (nextYear == 1971) {
         if (c.big_china) {
             civ["MON"].strength = 0;
-            civ["QIN"].strength = 0;
+            civ["MAN"].strength = 0;
         }
     }
 
@@ -516,6 +516,9 @@ function regions(year) {
         civ["CHO"].state = 4;
         civ["CHO"].name = "Pandyas/Pallavas";
         civ["CHO"].x -= 30;
+    }
+    if (nextYear == 897) {
+        civ["CHO"].name = "Pandyas/Chola";
     }
     if (nextYear == 910) {
         civ["IND"].state = 6;
@@ -1949,6 +1952,7 @@ function regions(year) {
           civ["DRK"].strength = 0;
           civ["KOR"].y -= 10;
           civ["JAP"].x += 15;
+          civ["KOR"].name = "Korea";
         } else if (rng(15, nextYear) <= unlikely) {
           civ["DRK"].strength += 0;
         } else {
@@ -2250,6 +2254,7 @@ function regions(year) {
     }
     if (nextYear == 1242) {
         civ["MON"].state = 6;
+        civ["VOL"].strength = 0;
     }
     if (nextYear == 1248) {
         civ["MON"].state = 7;
@@ -2722,20 +2727,25 @@ function regions(year) {
         civ["ENG"].adjective = "British";
         civ["ENG"].color = [223, 147, 147];
 
-        civ["SCO"].defaultname = "Scotland";
         civ["SCO"].adjective = "Scottish";
     }
     if (nextYear == 519) {
         civ["ENG"].strength = 3000;
     }
+    if (nextYear == 553) {
+        civ["SCO"].strength = 3000;
+    }
     if (nextYear == 690) {
         civ["ENG"].state = 2;
+    }
+    if (nextYear == 843) {
+        civ["SCO"].name = "Scotland";
     }
     if (nextYear == 850) {
         civ["ENG"].state = 3;
         civ["ENG"].x = 1225;
         civ["ENG"].y = 235;
-    }  
+    }
     if (nextYear == 900) {
         civ["ENG"].state = 4;
     }
@@ -2745,6 +2755,9 @@ function regions(year) {
     }
     if (nextYear == 1000) {
         civ["IRE"].strength = 2250;
+    }
+    if (nextYear == 1030) {
+        civ["SCO"].state = 2;
     }
 
     // Vikings
@@ -2780,7 +2793,7 @@ function regions(year) {
         civ["ENG"].y -= 20;
         civ["ENG"].x -= 20;
         civ["ENG"].state = 11;
-        civ["SCO"].state = 2;
+        civ["SCO"].state = 3;
     }
 
     if (nextYear == 1707) {
@@ -3283,8 +3296,15 @@ function regions(year) {
     }
     if (nextYear == 1914) {
         if (rng(34, nextYear) <= unlikely) {
-          civ["ALB"].state = 2;
-          c.big_albania = true;
+            civ["ALB"].state = 2;
+            c.big_albania = true;
+        }
+    }
+    if (nextYear == 1920) {
+        if (rng(156, nextYear) <= possible &&
+            civ["POL"].state == 8
+        ) {
+            civ["POL"].state = "a";
         }
     }
     if (nextYear == 1947) civ["ALB"].strength = 300;
@@ -3324,6 +3344,9 @@ function regions(year) {
         civ["RUS"].color = [73, 112, 87];
     } 
 
+    if (nextYear == 800) {
+        civ["VOL"].strength = 3000;
+    }
     if (nextYear == 860) {
         civ["RUS"].strength = 3000;
     }
@@ -3602,6 +3625,9 @@ function regions(year) {
     if (nextYear == 860) {
         civ["OMA"].strength = 2600;
     }
+    if (nextYear == 945) {
+        civ["ISL"].strength = 0;
+    }
     if (nextYear == 1009) {
         civ["YEM"].name = "Yemen";
     }
@@ -3740,6 +3766,11 @@ function regions(year) {
         civ["POR"].color = [0, 136, 118];
     }
 
+    if (seed == "tordesillas") {
+        colonizeNewWorld = {"SPA":100};
+        colonizeOldWorld = {"POR":100};
+    }
+
     if (nextYear == 1150) {
         if (rng(36, nextYear) <= veryUnlikely) {
           civ["POR"].state = 2;
@@ -3767,7 +3798,7 @@ function regions(year) {
             civ["SPA"].color = [0, 113, 136];
         }
         if (nextYear == 929) {
-            civ["SPA"].name = "Leon";
+            civ["SPA"].name = "León";
             civ["SPA"].color = [255, 223, 102];
         }
         if (nextYear == 982) {
@@ -5219,6 +5250,7 @@ function regions(year) {
     if (c.colonizingAmerica == 1898) {
         //if (!c.csa_victory && c.am_colonization && !c.us_imperialism && !c.nova_roma) {
           civ["CUB"].strength = 900;
+          civ["SPAc"].hideName = true;
           civ["CUB"].owner = "USA";
         //}
     }
@@ -5683,7 +5715,7 @@ function regions(year) {
             }
             if (!c.manifest_destiny || !c.usa_exists) {
                 civ["CAN"].state = "a";
-            } 
+            }
         }
 
         if (c.unitedStates == 1870) {
@@ -5803,6 +5835,10 @@ function regions(year) {
     owner(civ,"CAN",[243, 40, 68],"Canada","Colonies",true);
     owner(civ,"QUE",[],"Quebec","Colonies",true);
     if (!c.burr_plot) owner(civ,"LOU",[],"Louisiana","Louisiana",false);
+    if (c.taken_names.includes("Louisiana") || civ["SPAc"].owner == "FRA") {
+        owner(civ,"LOU",[],"Orléanie","Orléanie",false);
+    }
+
     owner(civ,"DUTc",[],"Amsterdam","Colonies",true);
     owner(civ,"SWEc",[],"Delaware","Colonies",true);
     newLand(civ,"DUTc");
@@ -5865,6 +5901,7 @@ function regions(year) {
         civ["AUZ"].owner = colonizingPercentage(rng(48, nextYear), colonizeOldWorld,"ENG",3);
         civ["ZEA"].state = 2;
         civ["ZEA"].owner = colonizingPercentage(rng(61, nextYear), colonizeOldWorld,"ENG",3);
+        civ["ZEA"].x -= 60;
     }
 
     // Carving of Australia

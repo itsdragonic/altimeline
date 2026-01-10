@@ -1,0 +1,72 @@
+<!--
+  //////////////////////////////////////////////////////////////
+
+  Altimeline II
+      by Dragonic - 2024
+
+      Resources:
+          History of the World: https://www.youtube.com/watch?v=-6Wu0Q7x5D0
+          Image Coordinates: https://www.programminghead.com/Projects/find-coordinates-of-image-online.html
+          
+          Base64 Encoder: https://www.base64-image.de/
+          Base64 Decoder: https://base64.guru/converter/decode/image
+          3d Earth: https://codepen.io/qkevinto/pen/EVGrGq?editors=0010
+
+  //////////////////////////////////////////////////////////////
+-->
+
+
+<-- To-Do List -->
+
+<-- Band-aids over underlying issues -->
+  *Handle Overlapping and Overwhelming timelines*
+
+<-- Game To-Do's -->
+  Arabia & Persia in 1000s
+  Sardinia/Savoy/Piedmont
+  australia antipode
+
+<-- Cool Seeds -->
+    Nova Roma: 7wFQT1Jt
+    Carthage: 888852Ze  civ["ALA"].owner = "none";
+    No Greece:  
+    Colonization: 1T7iJ4x3
+                  22i10amM
+    Soviets win: 97 7INtv313    14h13258
+    Glitched: l2QyLLl4
+    Congo Lake: {128=0}
+    Fuhrerreich: {151=0,146=0}
+    Texas: 50Je7757
+    Pax Fracia: 06011919
+    Austrian's dream: 836x4I53
+    Southern victory: k n6eT0I0u
+    European Federation: e  {151=0} 2oK6455F
+    Al-Andalus, Austria: sdf    w756mc3s
+    dafuq: {default=true,
+    Straight-forward kaiserreich: 8932574B  7933H819
+    Mexico wins: 762D8860
+    nuclear: 6025p10X
+
+    WTF: 7n35545u
+         04681My9
+         s897s1L9
+
+<-- Last ID used -->
+    RNG: 156
+    News: 117
+
+<-- Region Theory -->
+  Beginning: Regular year-based increments
+  Transition to Modern: more conditional based
+  - Use counters as they build on each other
+  - As world becomes more interconnected, just use conditionals
+    that will be fleshed out in the World Events
+  - Avengers theory: regions can mostly be local but past the 1700s they influence each other
+
+<-- Player Interactive Ideas -->
+  Ultimate goal: to make fiddling with rng values as fun and realistic as possible.
+
+  A full run through a timeline would be called a 'campaign'
+  Play as a certain region
+   - Decisions are panels with buttons for different options
+   - Battles would be decided with some sort of strategy game

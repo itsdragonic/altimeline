@@ -6,6 +6,9 @@ let targetRotation = { x: 0, y: 0 };
 let zoom = 5;
 let targetZoom = 5;
 
+let activePointers = new Map();
+let lastPinchDistance = null;
+
 let fastSpinOriginY = 0;
 let wasFastSpinning = false;
 
@@ -181,6 +184,11 @@ function drawToGlobe() {
         // Create new texture and update globe material
         const newTexture = new THREE.CanvasTexture(equirectCanvas);
         globe.material.map = newTexture;
+        if (!physicalMap) globe.material.bumpMap = null;
+        else if (globe.material.bumpMap == null) {
+            const bumpTexture = new THREE.TextureLoader().load('images/bump_map.jpg');
+            globe.material.bumpMap = bumpTexture;
+        }
         globe.material.needsUpdate = true;
         
         //console.log('Globe texture updated successfully');
@@ -221,6 +229,41 @@ function createStarField() {
     return starGroup;
 }
 
+function createGlowMaterial(intensity, fade, color) {
+    return new THREE.ShaderMaterial({
+        uniforms: {
+            c: { value: intensity },
+            p: { value: fade },
+            glowColor: { value: new THREE.Color(color) },
+            viewVector: { value: new THREE.Vector3() }
+        },
+        vertexShader: `
+            uniform vec3 viewVector;
+            uniform float c;
+            uniform float p;
+            varying float intensity;
+            void main() {
+                vec3 vNormal = normalize(normalMatrix * normal);
+                vec3 vNormel = normalize(normalMatrix * viewVector);
+                intensity = pow(c - dot(vNormal, vNormel), p);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform vec3 glowColor;
+            varying float intensity;
+            void main() {
+                vec3 glow = glowColor * intensity;
+                gl_FragColor = vec4(glow, 1.0);
+            }
+        `,
+        side: THREE.BackSide,
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false
+    });
+}
+
 function init() {
     scene = new THREE.Scene();
     
@@ -259,27 +302,26 @@ function init() {
                 // Generate initial map texture
                 const equirectCanvas = generateMapTexture();
                 const texture = new THREE.CanvasTexture(equirectCanvas);
+                const bumpTexture = new THREE.TextureLoader().load('images/bump_map.jpg');
                 
                 const geometry = new THREE.SphereGeometry(1, 64, 64);
                 const material = new THREE.MeshPhongMaterial({
                     map: texture,
-                    shininess: 10
+                    bumpMap: bumpTexture,
+                    bumpScale: 0.025,
+                    shininess: 5,
+                    specular: new THREE.Color(0x444444)
                 });
                 
                 globe = new THREE.Mesh(geometry, material);
                 scene.add(globe);
 
                 // Atmospheric glow
-                const glowGeometry = new THREE.SphereGeometry(1.03, 64, 64);
-                const glowMaterial = new THREE.MeshBasicMaterial({
-                    color: 0x8dc6ee,
-                    transparent: true,
-                    opacity: 0.25,
-                    side: THREE.BackSide,
-                    depthWrite: false
-                });
-
-                const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+                const glowMaterial = createGlowMaterial(0.7, 7.0, 0x93cfef);
+                glow = new THREE.Mesh(
+                    new THREE.SphereGeometry(1.12, 64, 64),
+                    glowMaterial
+                );
                 scene.add(glow);
 
                 // keep glow aligned with globe
@@ -322,31 +364,71 @@ function init() {
     };
     img.src = 'images/map.png';
 
-    renderer.domElement.addEventListener('mousedown', onMouseDown);
-    renderer.domElement.addEventListener('mousemove', onMouseMove);
-    renderer.domElement.addEventListener('mouseup', onMouseUp);
-    renderer.domElement.addEventListener('wheel', onWheel);
+    renderer.domElement.addEventListener('pointerdown', onPointerDown);
+    renderer.domElement.addEventListener('pointermove', onPointerMove);
+    renderer.domElement.addEventListener('pointerup', onPointerUp);
+    renderer.domElement.addEventListener('pointercancel', onPointerUp);
+    renderer.domElement.addEventListener('wheel', onWheel, { passive: false });
     renderer.domElement.addEventListener('contextmenu', (e) => e.preventDefault());
+    renderer.domElement.style.touchAction = 'none';
     window.addEventListener('resize', onWindowResize);
 }
 
-function onMouseDown(event) {
-    isDragging = true;
-    previousMouse = { x: event.clientX, y: event.clientY };
+function onPointerDown(e) {
+    renderer.domElement.setPointerCapture(e.pointerId);
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (activePointers.size === 1) {
+        isDragging = true;
+        previousMouse = { x: e.clientX, y: e.clientY };
+    }
 }
 
-function onMouseMove(event) {
-    if (!isDragging) return;
-    const deltaX = event.clientX - previousMouse.x;
-    const deltaY = event.clientY - previousMouse.y;
-    targetRotation.y += deltaX * 0.005;
-    targetRotation.x += deltaY * 0.005;
-    targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.x));
-    previousMouse = { x: event.clientX, y: event.clientY };
+function onPointerMove(e) {
+    if (!activePointers.has(e.pointerId)) return;
+
+    const prev = activePointers.get(e.pointerId);
+    const dx = e.clientX - prev.x;
+    const dy = e.clientY - prev.y;
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    // ONE finger → rotate
+    if (activePointers.size === 1 && isDragging) {
+        targetRotation.y += dx * 0.005;
+        targetRotation.x += dy * 0.005;
+        targetRotation.x = Math.max(
+            -Math.PI / 2,
+            Math.min(Math.PI / 2, targetRotation.x)
+        );
+    }
+
+    // TWO fingers → pinch zoom
+    if (activePointers.size === 2) {
+        const pts = [...activePointers.values()];
+        const dist = Math.hypot(
+            pts[0].x - pts[1].x,
+            pts[0].y - pts[1].y
+        );
+
+        if (lastPinchDistance !== null) {
+            const delta = lastPinchDistance - dist;
+            targetZoom += delta * 0.005;
+            targetZoom = Math.max(1.5, Math.min(10, targetZoom));
+        }
+        lastPinchDistance = dist;
+    }
 }
 
-function onMouseUp() {
-    isDragging = false;
+function onPointerUp(e) {
+    activePointers.delete(e.pointerId);
+    renderer.domElement.releasePointerCapture(e.pointerId);
+
+    if (activePointers.size < 2) {
+        lastPinchDistance = null;
+    }
+    if (activePointers.size === 0) {
+        isDragging = false;
+    }
 }
 
 function onWheel(event) {
@@ -403,6 +485,11 @@ function animate() {
         }
 
     }
+    if (glow) {
+        glow.material.uniforms.viewVector.value = 
+            new THREE.Vector3().subVectors(camera.position, glow.position);
+    }
+    
     if (globe.moon) {
         const radius = 20; // distance from Earth
         const tilt = -23.44 * (Math.PI / 180); // orbit tilt in radians

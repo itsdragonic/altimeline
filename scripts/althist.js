@@ -54,6 +54,7 @@ function altHist(year,id) {
                     break;
                 case "FRA":
                     civ["ARG"].name = "Louisiana";
+                    c.taken_names.push("Louisiana");
                     break;
                 case "DUT":
                     civ["ARG"].name = "New Zealand";
@@ -120,7 +121,7 @@ function altHist(year,id) {
             if (nextYear == 1956 && c.orwell1984) {
                 annex(civ,"CHI",["BUR", "VIE", "THA", "CAM"]);
 
-                civ["QIN"].strength = 0;
+                civ["MAN"].strength = 0;
                 civ["CHI"].state = 'a';
                 
                 civ["JAP"].ideology = "communism";
@@ -327,7 +328,7 @@ function altHist(year,id) {
                         "DUT", "BEL", "SPA", "POR", "ROM", "GEO", "MON", "JAP", "KOR", "DRK",
                         "IRE", "DEN", "NOR", "SWE", "FIN", "SWI", "AUS", "HUN", "SER", "OTT",
                         "SYR", "LIV", "LIT", "POL", "ALB", "CZE", "ANT", "ISL", "EGY", "ALG",
-                        "MOR", "LIB", "ISR", "PER", "MES", "OMA", "YEM", "QIN", "SPAx", "ENGb",
+                        "MOR", "LIB", "ISR", "PER", "MES", "OMA", "YEM", "MAN", "SPAx", "ENGb",
                         "GERe"
                     ];
                     countriesNuked.forEach(country => {

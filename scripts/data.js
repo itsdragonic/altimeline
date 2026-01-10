@@ -293,7 +293,7 @@ var dependencies = {
     // Rome has to win Punic Wars to Rome colonizes America or fall
     2: ["1"],
     7: ["1"],
-    //99: ["97"],
+    99: ["97"],
 };
 
 var allValues = {}
@@ -364,6 +364,9 @@ function rng(val, year) {
     }
     if (seed.toLowerCase() == 'fallout') {
         if (val == 128) return 0;
+        return 1;
+    }
+    if (seed.toLowerCase() == 'tordesillas') {
         return 1;
     }
 
@@ -620,6 +623,8 @@ addCountry("KSH", "Kushite Empire", 2, 1395, 460, 8);
 addCountry("PER", "Median Empire", 1, 1543, 378, 7);
 addCountry("IND", "Indian Kingdoms", 1, 1710, 454, 8);
 addCountry("CHO", "Pandyas", 1, 1780, 560, 6);
+addCountry("INDc", "Satavahana", null, 1780, 560, 6);
+
 addCountry("ABY", "Axum", 1, 1500, 530, 6);
 addCountry("SPAc", "New Spain", 1, 670, 490, 12);
 addCountry("CSA", "Confederate States of America", 1, 480, 390, 8);
@@ -643,13 +648,14 @@ addCountry("TUR", "Turkish Khaganate", 2, 1340, 280, 7);
 addCountry("TIB", "Tibet", 1, 1860, 410, 8);
 addCountry("ISL", "Rashidun Caliphate", 1, 1360, 410, 11);
 addCountry("BUL", "Bulgaria", 1, 1450, 280, 5);
+addCountry("VOL", "Volga Bulgaria", 1, 1500, 200, 5);
 addCountry("SVJ", "Srivijaya", 1, 1930, 670, 8);
 addCountry("CHA", "Kanem Empire", 1, 1310, 540, 5);
 addCountry("SPA", "Asturias", 1, 1200, 310, 5);
 addCountry("COR", "Visigoths", 0, 1190, 340, 7);
 addCountry("ARA", "Aragon", 2, 1250, 320, 4);
 addCountry("VEN", "Venice", 1, 1330, 290, 4);
-addCountry("PAP", "Papal States", 1, 1315, 305, 3);
+addCountry("PAP", "Papal States", 1, 1315, 305, 3.5);
 addCountry("ALG", "Tahert", 1, 1250, 365, 5);
 addCountry("BRI", "Brittany", 1, 1227, 265, 3);
 addCountry("SER", "Serbia", 1, 1375, 305, 3);
@@ -681,7 +687,7 @@ addCountry("SOM", "Ajuran", 1, 1540, 620, 8);
 addCountry("LIV", "Teutonic", 1, 1390, 200, 4);
 addCountry("LIT", "Lithuania", 5, 1390, 215, 4);
 addCountry("MAL", "Mali Empire", 1, 1140, 545, 6);
-addCountry("SCO", "Scotland", 1, 1215, 205, 5);
+addCountry("SCO", "Picts", 1, 1215, 205, 5);
 addCountry("THA", "Sukhothal", 1, 1940, 530, 5);
 
 addCountry("OTT", "Ottoman Empire", 1, 1380, 340, 9);
@@ -720,7 +726,7 @@ addCountry("DUTi", "Dutch East Indies", 1, 2000, 680, 9);
 addCountry("FRAk", "St. Domingue", 1, 700, 505, 4);
 addCountry("DUTb", "Dutch Brazil", 1, 900, 680, 9);
 addCountry("PORi", "Timor", 1, 2170, 725, 4);
-addCountry("QIN", "Qing Dynasty", 1, 1915, 320, 12);
+addCountry("MAN", "Qing Dynasty", 1, 1915, 320, 12);
 addCountry("ENGk", "British Caribbean", 1);
 addCountry("SWEc", "New Sweden", 1, 735, 343, 4);
 addCountry("SUR", "Suriname", 1, 835, 595, 4);

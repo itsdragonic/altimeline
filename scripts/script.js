@@ -14,6 +14,11 @@ var disableSpinning = false;
 
 if (isGlobe) physicalMap = true;
 
+// Zoom
+var zoomAmount = 1;
+var lastX, lastY, dragStart, dragged;
+var scaleFactor = 1.1;
+
 const baseImages = {
     map: null,
     ocean: null,
@@ -70,9 +75,8 @@ function drawMap(ctx, canvas, thickLines) {
     }
 
     ctx.lineJoin = 'miter';
-    ctx.miterLimit = 2; // adjust
-    // ctx.lineJoin = 'round';
-    // ctx.lineJoin = 'bevel';
+    ctx.miterLimit = 2;
+    ctx.lineJoin = 'round';
     ctx.strokeStyle = '#a4ff11';
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.9)';
   
@@ -105,18 +109,20 @@ function redraw() {
     drawMap(ctx, canvas, false);   
 }
 
-var zoomAmount = 1;
-var lastX, lastY, dragStart, dragged;
-var scaleFactor = 1.1;
-
-function generateRandomString() {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789';
-    let randomString = '';
-    for (let i = 0; i < 8; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        randomString += characters.charAt(randomIndex);
+function displayNews(year) {
+    const allnews = newsContainer.children;
+    for (let i = 0; i < allnews.length; i++) {
+        allnews[i].style.display = 'none';
     }
-    return randomString;
+    Object.keys(news).forEach(key => {
+        const item = news[key];
+        const element = document.getElementById(item.id);
+        if (element && showNews) {
+            if (item.startDate <= year && year <= item.startDate + item.duration) {
+                element.style.display = 'flex';
+            }
+        }
+    });
 }
 
 // Generate Random Seed Button
@@ -128,7 +134,7 @@ generateSeedButton.addEventListener('click', () => {
 
     calcSeed(seedInput.value);
     redraw();
-    showNews(timeline);
+    displayNews(timeline);
 });
 
 generateDownloadButton.addEventListener('click', () => {
@@ -210,15 +216,14 @@ document.getElementById('phy').addEventListener('change', function() {
     updateCivs();
     fallback();
 });
-document.getElementById('show').addEventListener('change', function() {
+document.getElementById('names').addEventListener('change', function() {
     showNames = this.checked;
     updateCivs();
     fallback();
 });
 document.getElementById('news').addEventListener('change', function() {
     showNews = this.checked;
-    updateCivs();
-    fallback();
+    displayNews(timeline);
 });
 document.getElementById('jagged').addEventListener('change', function() {
     if (this.checked) {
@@ -232,7 +237,3 @@ document.getElementById('jagged').addEventListener('change', function() {
 document.getElementById('spin').addEventListener('change', function() {
     disableSpinning = this.checked;
 });
-
-setTimeout(() => {
-    updateCivs();
-}, 3000);

@@ -91,7 +91,7 @@ function rearrange(nations) {
     }
     endItem(nations, "CAM");
     if (civ["CHI"].ideology == "communism") {
-        endItem(nations, "QIN");
+        endItem(nations, "MAN");
     }
     frontItem(nations, "RAJ");
     frontItem(nations, "CHI");

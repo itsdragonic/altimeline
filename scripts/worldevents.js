@@ -264,7 +264,6 @@ function worldEvents(year) {
             civ["UKR"].color = [88, 86, 83];
 
             civ["SER"].state = 5;
-            civ["ROA"].state = 3;
 
             // Sykes-Picot Agreement
         }
@@ -286,7 +285,7 @@ function worldEvents(year) {
             civ["KZH"].size = 10;
 
             /*if (RNG("Russian_Revolution",year) > unlikely && RNG("Boxer's_Rebellion",year) <= unlikely) {
-            civ["QIN"].state = "b";
+            civ["MAN"].state = "b";
             civ["SIB"].strength = 0;
             }*/
 
@@ -381,6 +380,7 @@ function worldEvents(year) {
 
                 civ["ITA"].state = 8;
                 civ["BUL"].state = 10;
+                civ["ROA"].state = 3;
 
                 civ["POL"].strength = 500;
                 civ["POL"].state = 8;
@@ -456,9 +456,9 @@ function worldEvents(year) {
             }
             if (c.ww1Loser.includes("OTT")) {
                 civ["SYR"].strength = 400;
-                civ["SYR"].owner = colonizingPercentage(rng(75, nextYear), colonizeOldWorld, "FRA", 50);
+                civ["SYR"].owner = colonizingPercentage(rng(75, nextYear), colonizeOldWorld, "FRA", 3);
                 civ["ENGb"].strength = 500;
-                civ["ENGb"].owner = colonizingPercentage(rng(76, nextYear), colonizeOldWorld, "ENG", 50);
+                civ["ENGb"].owner = colonizingPercentage(rng(76, nextYear), colonizeOldWorld, "ENG", 3);
                 civ["ENGb"].hideName = true;
             }
         }
@@ -682,7 +682,7 @@ function worldEvents(year) {
     
     if (nextYear == 1941) {
         /*if (RNG("Boxer's_Rebellion",year) > unlikely) {
-          civ["QIN"].state = 4;
+          civ["MAN"].state = 4;
         }*/
         civ["VIE"].owner = "JAP";
         //if (c.ww2) {
