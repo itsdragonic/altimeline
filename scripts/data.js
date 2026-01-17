@@ -633,7 +633,7 @@ addCountry("MOC", "Moche", 1, 640, 700, 6);
 addCountry("YEM", "Himyar", 1, 1560, 530, 6);
 addCountry("CHM", "Champa", 1, 2010, 540, 5);
 addCountry("JAP", "Yamato", 1, 2185, 380, 8);
-addCountry("BYZ", "Eastern Roman Empire", 1, 1370, 340, 9);
+addCountry("BYZ", "E. Roman Empire", 1, 1370, 340, 9);
 addCountry("GHA", "Ghana Empire", 1, 1145, 530, 5);
 addCountry("INC", "Tiwanaku Empire", 1, 710, 780, 6);
 addCountry("HNN", "Hunnic Empire", 1, 1375, 266, 7);

@@ -268,7 +268,7 @@ function init() {
     scene = new THREE.Scene();
     
     camera = new THREE.PerspectiveCamera(
-        45,
+        isMobile ? 45 : 35,
         window.innerWidth / window.innerHeight,
         0.1,
         1000
@@ -283,7 +283,7 @@ function init() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.75);
     directionalLight.position.set(5, 3, 5);
     scene.add(directionalLight);
 
@@ -308,7 +308,7 @@ function init() {
                 const material = new THREE.MeshPhongMaterial({
                     map: texture,
                     bumpMap: bumpTexture,
-                    bumpScale: 0.025,
+                    bumpScale: 0.015,
                     shininess: 5,
                     specular: new THREE.Color(0x444444)
                 });

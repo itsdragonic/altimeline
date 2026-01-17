@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Pixel Editor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 30px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .editor-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .editor-section.active {
+            display: block;
+        }
+        .tools {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .color-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        input[type="color"] {
+            width: 50px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            width: 100px;
+        }
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #333;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .color-btn.black {
+            background: #000000;
+        }
+        .color-btn.white {
+            background: #ffffff;
+        }
+        .tool-btn {
+            padding: 10px 15px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .tool-btn.active {
+            background: #007bff;
+        }
+        #canvas {
+            border: 2px solid #333;
+            cursor: crosshair;
+            image-rendering: pixelated;
+            display: block;
+            margin: 0 auto;
+        }
+        .output-section {
+            margin-top: 20px;
+        }
+        .info {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple Pixel Editor</h1>
+        
+        <div class="input-section">
+            <h3>Paste JSON Input:</h3>
+            <textarea id="jsonInput" placeholder='Paste ID, e.g. bel2'></textarea>
+            <button class="btn btn-primary" onclick="loadImage()">Load Image</button>
+        </div>
+
+        <div class="editor-section" id="editorSection">
+            <h3>Editor</h3>
+            <div class="tools">
+                <button class="tool-btn active" id="brushBtn" onclick="setTool('brush')">Brush (1px)</button>
+                <button class="tool-btn" id="pickerBtn" onclick="setTool('picker')">Color Picker</button>
+                <button class="tool-btn" id="fillBtn" onclick="setTool('fill')">Fill Tool</button>
+                
+                <div class="color-input">
+                    <input type="color" id="colorPicker" value="#000000" onchange="updateColor()">
+                    <input type="text" id="hexInput" value="#000000" onchange="updateColorFromHex()">
+                </div>
+                
+                <div class="color-btn black" onclick="setColor('#000000')" title="Black"></div>
+                <div class="color-btn white" onclick="setColor('#ffffff')" title="White"></div>
+                
+                <button class="btn btn-success" onclick="finish()">Finish & Export</button>
+
+                <button class="tool-btn" id="eraserBtn" onclick="setTool('eraser')">Eraser</button>
+
+                <button class="tool-btn" onclick="addRight()">➕ Right</button>
+                <button class="tool-btn" onclick="addBottom()">➕ Bottom</button>
+                <button class="tool-btn" onclick="addLeft()">➕ Left</button>
+                <button class="tool-btn" onclick="addTop()">➕ Top</button>
+
+                <button class="tool-btn" onclick="removeLeft()">❌ Left</button>
+                <button class="tool-btn" onclick="removeTop()">❌ Top</button>
+                <button class="tool-btn" onclick="removeRight()">❌ Right</button>
+                <button class="tool-btn" onclick="removeBottom()">❌ Bottom</button>
+
+            </div>
+
+            <canvas id="canvas"></canvas>
+
+            <div class="info">
+                <strong>Current Tool:</strong> <span id="currentTool">Brush</span> | 
+                <strong>Current Color:</strong> <span id="currentColor">#000000</span>
+            </div>
+        </div>
+
+        <div class="output-section" id="outputSection" style="display:none;">
+            <h3>Output:</h3>
+            <textarea id="jsonOutput" readonly></textarea>
+            <button class="btn btn-primary" onclick="copyToClipboard()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script src="scripts/image.js"></script>
+<script>
+let canvas, ctx;
+let currentTool = 'brush';
+let currentColor = '#000000';
+let isDrawing = false;
+let originalKey = '';
+let originalX = 0;
+let originalY = 0;
+
+function loadImage() {
+    const id = document.getElementById('jsonInput').value.trim();
+    if (!states[id]) {
+        alert('Invalid image ID');
+        return;
+    }
+
+    const entry = states[id];
+    originalKey = id;
+    originalX = entry.x;
+    originalY = entry.y;
+
+    const img = new Image();
+    img.onload = () => {
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const scale = Math.min(800 / img.width, 600 / img.height, 10);
+        canvas.style.width = img.width * scale + 'px';
+        canvas.style.height = img.height * scale + 'px';
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+
+        document.getElementById('editorSection').classList.add('active');
+
+        canvas.onmousedown = startDrawing;
+        canvas.onmousemove = draw;
+        canvas.onmouseup = stopDrawing;
+        canvas.onmouseleave = stopDrawing;
+    };
+    img.src = entry.img;
+}
+
+function setTool(tool) {
+    currentTool = tool;
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tool + 'Btn').classList.add('active');
+    document.getElementById('currentTool').textContent = tool;
+}
+
+function getMousePos(e) {
+    const r = canvas.getBoundingClientRect();
+    return {
+        x: Math.floor((e.clientX - r.left) * canvas.width / r.width),
+        y: Math.floor((e.clientY - r.top) * canvas.height / r.height)
+    };
+}
+
+function startDrawing(e) {
+    const { x, y } = getMousePos(e);
+
+    if (currentTool === 'picker') return pickColor(x, y);
+    if (currentTool === 'fill') return floodFill(x, y);
+
+    isDrawing = true;
+    drawPixel(x, y);
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    const { x, y } = getMousePos(e);
+    drawPixel(x, y);
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+function drawPixel(x, y) {
+    if (currentTool === 'eraser') {
+        ctx.clearRect(x, y, 1, 1);
+    } else {
+        ctx.fillStyle = currentColor;
+        ctx.fillRect(x, y, 1, 1);
+    }
+}
+
+function pickColor(x, y) {
+    const p = ctx.getImageData(x, y, 1, 1).data;
+    if (p[3] === 0) return;
+    const hex = `#${[p[0],p[1],p[2]].map(v=>v.toString(16).padStart(2,'0')).join('')}`;
+    setColor(hex);
+}
+
+function floodFill(startX, startY) {
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = img.data;
+    const w = canvas.width;
+    const h = canvas.height;
+
+    const idx = (startY * w + startX) * 4;
+    const target = data.slice(idx, idx + 4);
+    const fill = hexToRgba(currentColor);
+
+    // Don't fill if same color
+    if (colorsMatch(target, fill)) return;
+
+    const stack = [[startX, startY]];
+
+    while (stack.length) {
+        const [x, y] = stack.pop();
+        if (x < 0 || y < 0 || x >= w || y >= h) continue;
+
+        const i = (y * w + x) * 4;
+        const current = data.slice(i, i + 4);
+
+        if (!colorsMatch(current, target)) continue;
+
+        data[i]     = fill[0];
+        data[i + 1] = fill[1];
+        data[i + 2] = fill[2];
+        data[i + 3] = 255;
+
+        stack.push([x + 1, y]);
+        stack.push([x - 1, y]);
+        stack.push([x, y + 1]);
+        stack.push([x, y - 1]);
+    }
+
+    ctx.putImageData(img, 0, 0);
+}
+
+function colorsMatch(a, b) {
+    return a[0] === b[0] &&
+           a[1] === b[1] &&
+           a[2] === b[2] &&
+           a[3] === b[3];
+}
+
+function hexToRgba(hex) {
+    hex = hex.replace('#', '');
+    return [
+        parseInt(hex.slice(0, 2), 16),
+        parseInt(hex.slice(2, 4), 16),
+        parseInt(hex.slice(4, 6), 16),
+        255
+    ];
+}
+
+function setColor(c) {
+    currentColor = c;
+    document.getElementById('colorPicker').value = c;
+    document.getElementById('hexInput').value = c;
+    document.getElementById('currentColor').textContent = c;
+}
+
+function updateColor() {
+    const c = document.getElementById('colorPicker').value;
+    setColor(c);
+}
+
+function updateColorFromHex() {
+    let c = document.getElementById('hexInput').value.trim();
+
+    if (!c.startsWith('#')) c = '#' + c;
+    if (!/^#[0-9a-fA-F]{6}$/.test(c)) return;
+
+    setColor(c.toLowerCase());
+}
+
+/* ===== CANVAS RESIZE ===== */
+
+function expand(dx, dy, shiftX = 0, shiftY = 0) {
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    canvas.width += dx;
+    canvas.height += dy;
+    ctx.putImageData(img, shiftX, shiftY);
+}
+
+function addRight() { expand(1, 0); }
+function addBottom() { expand(0, 1); }
+function addLeft() { expand(1, 0, 1, 0); originalX--; }
+function addTop() { expand(0, 1, 0, 1); originalY--; }
+
+function removeRight() {
+    if (canvas.width <= 1) return;
+    const img = ctx.getImageData(0, 0, canvas.width - 1, canvas.height);
+    canvas.width--;
+    ctx.putImageData(img, 0, 0);
+}
+
+function removeBottom() {
+    if (canvas.height <= 1) return;
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height - 1);
+    canvas.height--;
+    ctx.putImageData(img, 0, 0);
+}
+
+function removeLeft() {
+    if (canvas.width <= 1) return;
+    const img = ctx.getImageData(1, 0, canvas.width - 1, canvas.height);
+    canvas.width--;
+    ctx.putImageData(img, 0, 0);
+    originalX++;
+}
+
+function removeTop() {
+    if (canvas.height <= 1) return;
+    const img = ctx.getImageData(0, 1, canvas.width, canvas.height - 1);
+    canvas.height--;
+    ctx.putImageData(img, 0, 0);
+    originalY++;
+}
+
+/* ===== EXPORT ===== */
+
+function finish() {
+    states[originalKey].img = canvas.toDataURL();
+    states[originalKey].x = originalX;
+    states[originalKey].y = originalY;
+
+    document.getElementById('jsonOutput').value =
+        JSON.stringify({ [originalKey]: states[originalKey] }, null, 2);
+    document.getElementById('outputSection').style.display = 'block';
+}
+</script>
+
+</body>
+</html>

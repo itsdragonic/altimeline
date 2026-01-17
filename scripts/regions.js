@@ -1120,7 +1120,7 @@ function regions(year) {
     }
 
     if (nextYear == 1948) {
-        if (c.israel && !civ["ISL"].strong && !c.kaiserreich && !civ["OTT"].strong) {
+        if (c.israel && !civ["ISL"].strong && !c.kaiserreich && !civ["OTT"].strong && !c.orwell1984) {
             civ["ISR"].strength = 2000;
         }
     }
@@ -1610,7 +1610,7 @@ function regions(year) {
     }
     if (civ["ROM"].yearsDecline == 86) {
         civ["ROM"].state = 11;
-        civ["ROM"].name = "Western Roman Empire";
+        civ["ROM"].name = "W. Roman Empire";
         civ["ROM"].x -= 50;
         civ["ROM"].y -= 10;
         civ["ROM"].size -= 4;
@@ -1620,7 +1620,7 @@ function regions(year) {
     if (civ["ROM"].yearsDecline == 125) {
         civ["BYZ"].strength = 0;
         civ["ROM"].state = "10a";
-        if (civ["ROM"].name == "Western Roman Empire") {
+        if (civ["ROM"].name == "W. Roman Empire") {
             civ["ROM"].name = "Roman Empire";
         }
         civ["ROM"].x += 50;
@@ -1629,7 +1629,7 @@ function regions(year) {
     }
     if (civ["ROM"].yearsDecline == 195) {
         civ["ROM"].state = 11;
-        civ["ROM"].name = "Western Roman Empire";
+        civ["ROM"].name = "W. Roman Empire";
         civ["ROM"].x -= 50;
         civ["ROM"].y -= 10;
         civ["ROM"].size -= 4;
@@ -3137,7 +3137,9 @@ function regions(year) {
     if (nextYear == 1995) {
         if (rng(108, nextYear) <= unlikely) {
             civ["SER"].strength += 100;
-        } else if (civ["SER"].name == "Yugoslavia") {
+        } else if (civ["SER"].name == "Yugoslavia" &&
+                    civ["SER"].strength > 0
+        ) {
             worldNews(`Yugoslavia Breaks Apart`,
                         `Ethnic tensions, nationalist movements, and political collapse have lead to the breakup of Yugoslavia.`,
                         "https://upload.wikimedia.org/wikipedia/commons/a/a4/Map_of_war_in_Yugoslavia%2C_1993.png",

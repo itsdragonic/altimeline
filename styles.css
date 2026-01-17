@@ -16,6 +16,9 @@ body {
     #info {
         display: none;
     }
+    #popup {
+        aspect-ratio: 5 / 7;
+    }
 }
 /*---------------*/
 
@@ -382,13 +385,16 @@ input[type=range]:focus::-ms-fill-upper {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+
     background-color: #f0e6d6;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 700px;
-    height: 500px;
-    max-height: 500px;
+
+    width: 70vw;              /* percentage-based */
+    max-width: 700px;         /* keeps desktop size */
+    aspect-ratio: 7 / 5;      /* 700 : 500 ratio */
+
     font-family: 'Lato', sans-serif;
     z-index: 9999;
     animation: slideIn 0.6s ease;
