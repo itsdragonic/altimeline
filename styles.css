@@ -14,7 +14,16 @@ body {
 /* Hide on mobile */
 @media (max-width: 760px), (pointer: coarse) {
     #info {
-        display: none;
+        padding: 0;
+        top: 0px;
+        width: 20px;
+
+        background: url("images/altimeline_alpha.png") no-repeat center center;
+        background-size: contain;
+
+        color: transparent;
+        text-indent: -9999px;
+        overflow: hidden;
     }
     #popup {
         aspect-ratio: 5 / 7;
