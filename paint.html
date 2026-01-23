@@ -166,6 +166,7 @@
                 <div class="color-btn white" onclick="setColor('#ffffff')" title="White"></div>
                 
                 <button class="btn btn-success" onclick="finish()">Finish & Export</button>
+                <button class="tool-btn" onclick="downloadPlaced()">⬇ Download PNG</button>
 
                 <button class="tool-btn" id="eraserBtn" onclick="setTool('eraser')">Eraser</button>
 
@@ -541,6 +542,32 @@ function finish() {
         JSON.stringify({ [originalKey]: states[originalKey] }, null, 2);
     document.getElementById('outputSection').style.display = 'block';
 }
+function downloadPlaced() {
+    if (!canvas) return;
+
+    const OUT_W = 2560;
+    const OUT_H = 1297;
+
+    // Create offscreen canvas
+    const out = document.createElement('canvas');
+    out.width = OUT_W;
+    out.height = OUT_H;
+    const octx = out.getContext('2d');
+
+    // Transparent background by default
+    octx.clearRect(0, 0, OUT_W, OUT_H);
+
+    // Draw current canvas at its world position
+    // originalX / originalY are tile offsets
+    octx.drawImage(canvas, originalX, originalY);
+
+    // Export PNG
+    const link = document.createElement('a');
+    link.download = `${originalKey}.png`;
+    link.href = out.toDataURL('image/png');
+    link.click();
+}
+
 </script>
 
 </body>
