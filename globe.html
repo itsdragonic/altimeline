@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Altimeline</title>
+    <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
+    <link rel="shortcut icon" type="image/png" href="images/altimeline.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: black;
+            color: white;
+        }
+        #globe {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto;
+        }
+
+        /* Maps */
+        #main {
+            display: none;
+        }
+        #buffer {
+            display: none;
+        }
+        #timeline,
+        #timelineValue {
+            text-shadow:
+                -1px -1px 0 black,
+                1px -1px 0 black,
+                -1px  1px 0 black,
+                1px  1px 0 black
+        }
+    </style>
+</head>
+<body data-page="globe">
+    <!-- Map -->
+    <div id="box">
+        <canvas id='main' width='1000' height='563'><canvas>
+        <canvas id='buffer'></canvas>
+    </div>
+
+    <div id="globe"></div>
+    <div id="info" title="Altimeline">
+        <h2>Altimeline</h2>
+    </div>
+    <div id="error">
+        <h2>⚠️ Error Loading Map</h2>
+        <p id="errorMsg"></p>
+    </div>
+
+
+    <!-- HUD Elements -->
+    <div id="seed">
+        <input type="text" id="seedInput" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
+        <img id="randomSeed" title="Generate Random Seed" src="images/dice.png"></img>
+        <button class="button" id="settings" title="Settings"></button>
+    </div>
+
+    <div class="range">
+        <label id="timeline" for="timelineInput">Year </label>
+        <span id="timelineValue">1</span>
+    </div>
+
+    <img id="loading" src="images/loading.gif" alt="Loading..." width="40" height="40"/>
+
+    <!-- World News -->
+    <div id="newsContainer"></div>
+        
+    <!-- To map button -->
+    <a href="map.html" title="Switch to Map View">
+        <button class="button" id="mapButton"></button>
+    </a>
+
+    <!-- Download Button -->
+    <button class="button" id="downloadButton" title="Download Image"></button>
+
+    <!-- Settings Button -->
+    <div id="popup" class="hidden">
+        <div class="settings-window">
+        <div class="header">
+            <h1>Settings</h1>
+            <button class="close-button" id="close-popup">&times;</button>
+        </div>
+
+        <div class="settings-body">
+            <nav class="sidebar">
+            <ul>
+                <li><a href="#events"
+                        class="active">Edit Events</a></li>
+                <li><a href="#visuals">Visual Settings</a></li>
+                <li><a href="#credits">Credits</a></li>
+            </ul>
+            </nav>
+
+            <div class="content">
+            <div id="events" class="content-section">
+                <!-- Event List -->
+                <p><b><u>Edit Events</u></b></p>
+            </div>
+
+            <div id="visuals" class="content-section hidden">
+                <!-- Settings -->
+                <div class="toggle-switch">
+                    <label>
+                        Physical Map 
+                        <input type="checkbox" id="phy" checked>
+                        <span class="switch"></span>
+                    </label>
+                    </div>
+            
+                    <div class="toggle-switch">
+                    <label>
+                        Show Names 
+                        <input type="checkbox" id="names" checked>
+                        <span class="switch"></span>
+                    </label>
+                    </div>
+            
+                    <div class="toggle-switch">
+                    <label>
+                        Show World Events 
+                        <input type="checkbox" id="news" checked>
+                        <span class="switch"></span>
+                    </label>
+                    </div>
+            
+                    <div class="toggle-switch">
+                        <label>
+                            Show Jagged Edges (Map Only)
+                            <input type="checkbox" id="jagged" checked>
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="toggle-switch">
+                        <label>
+                            Disable Spinning (Globe Only)
+                            <input type="checkbox" id="spin">
+                            <span class="switch"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="credits" class="content-section hidden">
+                    <div class="credits">
+                        <b>Altimeline</b>
+                        by Dragonic
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+    <script defer src="scripts/image.js"></script>
+    <script defer src="scripts/abstract.js"></script>
+    <script defer src="scripts/rearrange.js"></script>
+    <script defer src="scripts/data.js"></script>
+    <script defer src="scripts/worldevents.js"></script>
+    <script defer src="scripts/althist.js"></script>
+    <script defer src="scripts/regions.js"></script>
+    <script defer src="scripts/script.js"></script>
+    <script defer src="scripts/events.js"></script>
+    <script defer src="scripts/gui/globe.js"></script>
+</body>
+</html>
