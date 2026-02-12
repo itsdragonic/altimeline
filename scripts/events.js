@@ -29,6 +29,11 @@ let images = [];
 
 // Keybinds
 document.addEventListener('keydown', (event) => {
+    if (document.activeElement.tagName === 'INPUT' || 
+        document.activeElement.tagName === 'TEXTAREA') {
+        return;
+    }
+    
     const keyName = event.key;
     const outputElement = document.getElementById('output');
 
@@ -227,7 +232,12 @@ async function updateCivs() {
 
 function calcSeed(val) {
     seed = val;
-    seedNumber = stringToNumbers(seed);
+
+    var seedUsed = seed;
+    if (seed && seed.includes("{")) {
+        seedUsed = seed.replace(/\{.*\}$/, '');
+    }
+    seedNumber = stringToNumbers(seedUsed);
 
     calculateEvents();
     updateCivs();
@@ -253,6 +263,12 @@ seedInput.addEventListener("input", function (event) {
     clearTimeout(typingTimer); // clear the previous timer
 
     typingTimer = setTimeout(() => {
+        for (let i = 0; i < 200; i++) {
+            allValues[i] = null;
+        }
+        butterflyYear = presentYear;
+        seed = event.target.value;
+
         calcSeed(event.target.value);
         updateCivs();
         redraw();

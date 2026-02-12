@@ -53,11 +53,11 @@ function drawMap(ctx, canvas, thickLines) {
     ctx.drawImage(buffer, 0, 0, canvas.width, canvas.height);
 
     if (physicalMap) {
-        if (baseImages.map) {
+        /*if (baseImages.map) {
             ctx.globalAlpha = 0.25;
             ctx.drawImage(baseImages.map, 0, 0, canvas.width, canvas.height);
             ctx.globalAlpha = 1;
-        }
+        }*/
         if (baseImages.ocean) {
             ctx.drawImage(baseImages.ocean, 0, 0, canvas.width, canvas.height);
         }
@@ -131,6 +131,11 @@ const generateDownloadButton = document.getElementById('downloadButton');
 
 generateSeedButton.addEventListener('click', () => {
     seedInput.value = generateRandomString();
+    for (let i = 0; i < 200; i++) {
+        allValues[i] = null;
+    }
+    butterflyYear = presentYear;
+    seed = seedInput.value;
 
     calcSeed(seedInput.value);
     redraw();
@@ -171,6 +176,10 @@ window.dispatchEvent(new Event('resize'));
 // Settings Modal
 document.getElementById("settings").addEventListener("click", function() {
     document.getElementById("popup").classList.toggle("hidden");
+    
+    //butterflyYear = Number(timeline);
+    //calcSeed(seed);
+    
     addOverlay(); // Call function to add overlay
 });
   
