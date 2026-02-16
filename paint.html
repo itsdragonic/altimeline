@@ -110,12 +110,26 @@
         .tool-btn.active {
             background: #007bff;
         }
-        #canvas {
+        .canvas-container {
             border: 2px solid #333;
-            cursor: crosshair;
-            image-rendering: pixelated;
-            display: block;
+            overflow: hidden;
+            position: relative;
+            width: 800px;
+            height: 600px;
             margin: 0 auto;
+            background: #e0e0e0;
+            cursor: crosshair;
+        }
+        .canvas-container.panning {
+            cursor: grab;
+        }
+        .canvas-container.panning:active {
+            cursor: grabbing;
+        }
+        #canvas {
+            position: absolute;
+            image-rendering: pixelated;
+            transform-origin: 0 0;
         }
         .output-section {
             margin-top: 20px;
@@ -126,6 +140,12 @@
             background: #f8f9fa;
             border-radius: 4px;
             font-size: 14px;
+        }
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -152,6 +172,15 @@
 
         <div class="editor-section" id="editorSection">
             <h3>Editor</h3>
+            
+            <div class="zoom-controls">
+                <button class="tool-btn" onclick="zoomIn()">🔍+ Zoom In</button>
+                <button class="tool-btn" onclick="zoomOut()">🔍- Zoom Out</button>
+                <button class="tool-btn" onclick="resetView()">↺ Reset View</button>
+                <button class="tool-btn" id="panBtn" onclick="setTool('pan')">✋ Pan (Hold R)</button>
+                <span><strong>Zoom:</strong> <span id="zoomLevel">100%</span></span>
+            </div>
+            
             <div class="tools">
                 <button class="tool-btn active" id="brushBtn" onclick="setTool('brush')">Brush (1px)</button>
                 <button class="tool-btn" id="pickerBtn" onclick="setTool('picker')">Color Picker</button>
@@ -185,11 +214,14 @@
 
             </div>
 
-            <canvas id="canvas"></canvas>
+            <div class="canvas-container" id="canvasContainer">
+                <canvas id="canvas"></canvas>
+            </div>
 
             <div class="info">
                 <strong>Current Tool:</strong> <span id="currentTool">Brush</span> | 
-                <strong>Current Color:</strong> <span id="currentColor">#000000</span>
+                <strong>Current Color:</strong> <span id="currentColor">#000000</span> |
+                <strong>Tip:</strong> Hold R to pan, use mouse wheel to zoom
             </div>
         </div>
 
@@ -202,7 +234,7 @@
 
     <script src="scripts/image.js"></script>
 <script>
-let canvas, ctx;
+let canvas, ctx, canvasContainer;
 let currentTool = 'brush';
 let currentColor = '#000000';
 let isDrawing = false;
@@ -213,6 +245,15 @@ let originalY = 0;
 let undoStack = [];
 let redoStack = [];
 const MAX_HISTORY = 100;
+
+// Pan and Zoom variables
+let panX = 0;
+let panY = 0;
+let scale = 1;
+let isPanning = false;
+let lastPanX = 0;
+let lastPanY = 0;
+let panPressed = false;
 
 function saveState() {
     if (!ctx) return;
@@ -226,7 +267,7 @@ function saveState() {
     });
 
     if (undoStack.length > MAX_HISTORY) undoStack.shift();
-    redoStack.length = 0; // clear redo on new action
+    redoStack.length = 0;
 }
 
 function restoreState(state) {
@@ -235,6 +276,7 @@ function restoreState(state) {
     ctx.putImageData(state.img, 0, 0);
     originalX = state.ox;
     originalY = state.oy;
+    updateCanvasTransform();
 }
 
 function undo() {
@@ -265,6 +307,20 @@ function redo() {
     restoreState(redoStack.pop());
 }
 
+function updateCanvasTransform() {
+    canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    updateCursor();
+}
+
+function updateCursor() {
+    if (currentTool === 'pan' || panPressed) {
+        canvasContainer.classList.add('panning');
+    } else {
+        canvasContainer.classList.remove('panning');
+        canvasContainer.style.cursor = 'crosshair';
+    }
+}
+
 function loadImage() {
     const id = document.getElementById('jsonInput').value.trim();
     if (!states[id]) {
@@ -281,28 +337,114 @@ function loadImage() {
     img.onload = () => {
         canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
+        canvasContainer = document.getElementById('canvasContainer');
 
         canvas.width = img.width;
         canvas.height = img.height;
 
-        const scale = Math.min(800 / img.width, 600 / img.height, 10);
-        canvas.style.width = img.width * scale + 'px';
-        canvas.style.height = img.height * scale + 'px';
-
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
 
+        // Initialize view
+        resetView();
+
         document.getElementById('editorSection').classList.add('active');
 
-        canvas.onmousedown = startDrawing;
-        canvas.onmousemove = draw;
-        canvas.onmouseup = stopDrawing;
-        canvas.onmouseleave = stopDrawing;
+        setupEventListeners();
     };
     img.src = entry.img;
 }
 
+function setupEventListeners() {
+    canvasContainer.onmousedown = startDrawing;
+    canvasContainer.onmousemove = draw;
+    canvasContainer.onmouseup = stopDrawing;
+    canvasContainer.onmouseleave = stopDrawing;
+    canvasContainer.onwheel = handleWheel;
+}
+
+function zoomIn() {
+    const newScale = Math.min(scale * 1.5, 50);
+    zoomToCenter(newScale);
+}
+
+function zoomOut() {
+    const newScale = Math.max(scale / 1.5, 0.1);
+    zoomToCenter(newScale);
+}
+
+function zoomToCenter(newScale) {
+    const rect = canvasContainer.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    // Calculate canvas point at center before zoom
+    const canvasX = (centerX - panX) / scale;
+    const canvasY = (centerY - panY) / scale;
+    
+    // Update scale
+    scale = newScale;
+    
+    // Adjust pan to keep the same canvas point at center
+    panX = centerX - canvasX * scale;
+    panY = centerY - canvasY * scale;
+    
+    updateCanvasTransform();
+    document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+}
+
+function resetView() {
+    // Calculate initial scale to fit canvas in container
+    const containerRect = canvasContainer.getBoundingClientRect();
+    const scaleX = (containerRect.width - 40) / canvas.width;
+    const scaleY = (containerRect.height - 40) / canvas.height;
+    scale = Math.min(scaleX, scaleY, 10);
+    
+    // Center the canvas
+    panX = (containerRect.width - canvas.width * scale) / 2;
+    panY = (containerRect.height - canvas.height * scale) / 2;
+    
+    updateCanvasTransform();
+    document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+}
+
+function handleWheel(e) {
+    e.preventDefault();
+    
+    const rect = canvasContainer.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    // Calculate canvas point under mouse before zoom
+    const canvasX = (mouseX - panX) / scale;
+    const canvasY = (mouseY - panY) / scale;
+    
+    // Update scale
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = Math.max(0.1, Math.min(50, scale * delta));
+    scale = newScale;
+    
+    // Adjust pan to keep the same canvas point under mouse
+    panX = mouseX - canvasX * scale;
+    panY = mouseY - canvasY * scale;
+    
+    updateCanvasTransform();
+    document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+}
+
+// Keyboard controls for pan mode
 document.addEventListener('keydown', e => {
+    if (document.activeElement.tagName === 'INPUT' || 
+        document.activeElement.tagName === 'TEXTAREA') {
+        return;
+    }
+
+    if (e.key === 'r' && !panPressed) {
+        e.preventDefault();
+        panPressed = true;
+        updateCursor();
+    }
+    
     if (e.ctrlKey && e.key === 'z') {
         e.preventDefault();
         undo();
@@ -310,6 +452,15 @@ document.addEventListener('keydown', e => {
     if (e.ctrlKey && (e.key === 'y' || (e.shiftKey && e.key === 'Z'))) {
         e.preventDefault();
         redo();
+    }
+});
+
+document.addEventListener('keyup', e => {
+    if (e.key === 'r') {
+        e.preventDefault();
+        panPressed = false;
+        isPanning = false;
+        updateCursor();
     }
 });
 
@@ -327,7 +478,7 @@ input.addEventListener('input', () => {
 
     const matches = Object.keys(states)
         .filter(k => k.startsWith(query))
-        .slice(0, 50); // safety cap
+        .slice(0, 50);
 
     if (!matches.length) {
         resultsBox.style.display = 'none';
@@ -358,22 +509,44 @@ input.addEventListener('input', () => {
 function setTool(tool) {
     currentTool = tool;
     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(tool + 'Btn').classList.add('active');
+    const btn = document.getElementById(tool + 'Btn');
+    if (btn) btn.classList.add('active');
     document.getElementById('currentTool').textContent = tool;
+    updateCursor();
 }
 
 function getMousePos(e) {
-    const r = canvas.getBoundingClientRect();
+    const rect = canvasContainer.getBoundingClientRect();
+    const containerX = e.clientX - rect.left;
+    const containerY = e.clientY - rect.top;
+    
+    // Transform container coordinates to canvas coordinates
+    const canvasX = (containerX - panX) / scale;
+    const canvasY = (containerY - panY) / scale;
+    
     return {
-        x: Math.floor((e.clientX - r.left) * canvas.width / r.width),
-        y: Math.floor((e.clientY - r.top) * canvas.height / r.height)
+        x: Math.floor(canvasX),
+        y: Math.floor(canvasY)
     };
 }
 
 function startDrawing(e) {
+    if (currentTool === 'pan' || panPressed) {
+        isPanning = true;
+        lastPanX = e.clientX;
+        lastPanY = e.clientY;
+        return;
+    }
+    
     const { x, y } = getMousePos(e);
+    
+    // Check if click is within canvas bounds
+    if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
 
-    if (currentTool === 'picker') return pickColor(x, y);
+    if (currentTool === 'picker') {
+        currentTool = 'brush';
+        return pickColor(x, y);
+    }
     saveState();
     if (currentTool === 'fill') return floodFill(x, y);
 
@@ -382,13 +555,29 @@ function startDrawing(e) {
 }
 
 function draw(e) {
+    if (isPanning) {
+        const dx = e.clientX - lastPanX;
+        const dy = e.clientY - lastPanY;
+        panX += dx;
+        panY += dy;
+        lastPanX = e.clientX;
+        lastPanY = e.clientY;
+        updateCanvasTransform();
+        return;
+    }
+    
     if (!isDrawing) return;
     const { x, y } = getMousePos(e);
+    
+    // Check bounds
+    if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
+    
     drawPixel(x, y);
 }
 
 function stopDrawing() {
     isDrawing = false;
+    isPanning = false;
 }
 
 function drawPixel(x, y) {
@@ -417,7 +606,6 @@ function floodFill(startX, startY) {
     const target = data.slice(idx, idx + 4);
     const fill = hexToRgba(currentColor);
 
-    // Don't fill if same color
     if (colorsMatch(target, fill)) return;
 
     const stack = [[startX, startY]];
@@ -483,13 +671,12 @@ function updateColorFromHex() {
     setColor(c.toLowerCase());
 }
 
-/* ===== CANVAS RESIZE ===== */
-
 function expand(dx, dy, shiftX = 0, shiftY = 0) {
     const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
     canvas.width += dx;
     canvas.height += dy;
     ctx.putImageData(img, shiftX, shiftY);
+    updateCanvasTransform();
 }
 
 function addRight() { saveState(); expand(1, 0); }
@@ -503,6 +690,7 @@ function removeRight() {
     const img = ctx.getImageData(0, 0, canvas.width - 1, canvas.height);
     canvas.width--;
     ctx.putImageData(img, 0, 0);
+    updateCanvasTransform();
 }
 
 function removeBottom() {
@@ -511,6 +699,7 @@ function removeBottom() {
     const img = ctx.getImageData(0, 0, canvas.width, canvas.height - 1);
     canvas.height--;
     ctx.putImageData(img, 0, 0);
+    updateCanvasTransform();
 }
 
 function removeLeft() {
@@ -520,6 +709,7 @@ function removeLeft() {
     canvas.width--;
     ctx.putImageData(img, 0, 0);
     originalX++;
+    updateCanvasTransform();
 }
 
 function removeTop() {
@@ -529,9 +719,8 @@ function removeTop() {
     canvas.height--;
     ctx.putImageData(img, 0, 0);
     originalY++;
+    updateCanvasTransform();
 }
-
-/* ===== EXPORT ===== */
 
 function finish() {
     states[originalKey].img = canvas.toDataURL();
@@ -542,30 +731,32 @@ function finish() {
         JSON.stringify({ [originalKey]: states[originalKey] }, null, 2);
     document.getElementById('outputSection').style.display = 'block';
 }
+
 function downloadPlaced() {
     if (!canvas) return;
 
     const OUT_W = 2560;
     const OUT_H = 1297;
 
-    // Create offscreen canvas
     const out = document.createElement('canvas');
     out.width = OUT_W;
     out.height = OUT_H;
     const octx = out.getContext('2d');
 
-    // Transparent background by default
     octx.clearRect(0, 0, OUT_W, OUT_H);
-
-    // Draw current canvas at its world position
-    // originalX / originalY are tile offsets
     octx.drawImage(canvas, originalX, originalY);
 
-    // Export PNG
     const link = document.createElement('a');
     link.download = `${originalKey}.png`;
     link.href = out.toDataURL('image/png');
     link.click();
+}
+
+function copyToClipboard() {
+    const output = document.getElementById('jsonOutput');
+    output.select();
+    document.execCommand('copy');
+    alert('Copied to clipboard!');
 }
 
 </script>
