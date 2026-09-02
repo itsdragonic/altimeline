@@ -8,7 +8,6 @@ Once you select the timeline bar, you can select anywhere on the timeline or use
 
 Newspapers tell you big world events that happened.
 
-[WARNING] Later years (from 1600-present) can become laggy / finicky.
 
 ### Alternate History
 
@@ -20,6 +19,14 @@ Typing any string of characters will lead to unique alternate histories.
 
 Newspapers with red ink mean that it is alternate history.
 
-Special seeds such as "kaiserreich," "fuhrerreich," "1984," or "fallout" give famous alternate histories.
+Special seeds (iykyk):
+- `kaiserreich`
+- `fuhrerreich` or `tno`
+- `southern victory` or `confederate victory`
+- `1984`
+- `the man in the high castle` or `tmithc`
+- `fallout`
+- `tordesillas`
+- `616` or `199999`
 
 You can share timelines and years you find in this format: https://itsdragonic.github.io/altimeline/?year=1936?seed=test

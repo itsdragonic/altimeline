@@ -164,6 +164,16 @@
         </div>
     </div>
 
+    <script>
+        document.getElementById('spin').addEventListener('change', function() {
+            disableSpinning = this.checked;
+        });
+
+        document.getElementById('glitch').addEventListener('change', function() {
+            enableGlitching = this.checked;
+        });
+    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script defer src="scripts/image.js"></script>
