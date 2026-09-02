@@ -504,6 +504,19 @@ function worldEvents(year) {
                         "https://i.redd.it/sbpwibk1k0011.jpg",
                         false, 99, nextYear, 1, false);
         }
+
+        // Operation Sealion
+        if (rng(159, nextYear) <= superUnlikely &&
+            nextYear == rngRange(rng(158, nextYear), 1940, 1944)) {
+            civ["ENG"].color = [88, 86, 83];
+            c.sealion = true;
+            civ["IRE"].strong = true;
+            worldNews(`Operation Sea Lion`,
+                        `Germany has launched Operation Sea Lion, beginning its attempted invasion of Britain after months of aerial and naval warfare across the English Channel.`,
+                        "https://upload.wikimedia.org/wikipedia/commons/f/f4/OperationSealion.svg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original",
+                        true, 118, nextYear, 1, false);
+        }
+
         if (nextYear == 1941) {
             civ["GER"].state = 14;
             civ["ITA"].state = 10;
@@ -520,7 +533,7 @@ function worldEvents(year) {
                         false, 87, nextYear, 1, false);
         }
 
-        if (nextYear == 1943) {
+        if (nextYear == 1943 && !c.sealion) {
             civ["ITA"].color = [88, 86, 83];
             civ["ITA"].y -= 20;
             civ["NAP"].strength = 2;
@@ -528,7 +541,7 @@ function worldEvents(year) {
             civ["NAP"].color = civ["ENG"].color;
             civ["FRA"].color = [57, 113, 228];
         }
-        if (nextYear == 1944) {
+        if (nextYear == 1944 && !c.sealion) {
             civ["ICE"].owner = "none";
 
             /*if (c.ww2) {
@@ -553,11 +566,12 @@ function worldEvents(year) {
             civ["FRA"].size += 2;
         }
         if (nextYear == 1945) {
-            if (rng(92, nextYear) <= superUnlikely) {
+            if (rng(92, nextYear) <= superUnlikely || c.sealion) {
                 // Fuhrerreich
                 c.fuhrerreich = true;
                 c.af_decolonization_level = 0;
                 
+                civ["ITAx"].weak = false;
                 civ["ITAx"].state = "a";
                 civ["SIB"].state = "a";
                 civ["SIB"].strength = 100;
@@ -658,11 +672,8 @@ function worldEvents(year) {
                     civ["SER"].state = "a";
                     civ["BUL"].name = "";
                 }
-            }
-            // Big Japan
-            if (rng(131, nextYear) <= veryUnlikely || !c.manifest_destiny) {
-                civ["JAPc"].strength += 200;
-                c.big_japan = true;
+            } else {
+                civ["ITAx"].owner = "ITA";
             }
         }
     }
@@ -726,6 +737,10 @@ function worldEvents(year) {
         }
     }
 
+    if (rng(159, nextYear) <= impossible) {
+        altHist(nextYear, "the_man_in_the_high_castle");
+        c.cold_war = false;
+    }
     if (rng(99, nextYear) <= impossible) {
         altHist(nextYear, "1984");
         c.cold_war = false;
@@ -797,5 +812,10 @@ function worldEvents(year) {
             `A novel coronavirus, later named COVID-19, has been identified in Wuhan, China. The virus has rapidly spread across the globe, leading to quarantining.`,
             `https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg/1200px-Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg`,
             false, 63, nextYear, 4, true);
+    }
+
+    // special cases
+    if (seed == '616' || seed == '199999' || rng(157, nextYear) < impossible) {
+        altHist(nextYear, "earth_616");
     }
 }

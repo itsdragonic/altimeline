@@ -29,6 +29,11 @@ let images = [];
 
 // Keybinds
 document.addEventListener('keydown', (event) => {
+    if (document.activeElement.tagName === 'INPUT' || 
+        document.activeElement.tagName === 'TEXTAREA') {
+        return;
+    }
+    
     const keyName = event.key;
     const outputElement = document.getElementById('output');
 
@@ -43,6 +48,9 @@ document.addEventListener('keydown', (event) => {
             break;
         case 's':
             disableSpinning = !disableSpinning;
+            break;
+        case 'g':
+            enableGlitching = !enableGlitching;
             break;
     }
     if (event.key === ' ') {
@@ -247,12 +255,15 @@ function calcSeed(val) {
 const seedInput = document.getElementById('seedInput');
 
 let typingTimer;
+let enableGlitching = false;
+let changingDimensions = false;
 const typingDelay = 400;
 
 seedInput.addEventListener("input", function (event) {
     clearTimeout(typingTimer); // clear the previous timer
 
     typingTimer = setTimeout(() => {
+        changingDimensions = enableGlitching ? true : false;
         calcSeed(event.target.value);
         updateCivs();
         redraw();
@@ -280,6 +291,7 @@ timelineInput.addEventListener('input', () => {
 
     timelineValue.textContent = year;
 
+    changingDimensions = false;
     displayNews(year);
     
 });

@@ -53,11 +53,11 @@ function drawMap(ctx, canvas, thickLines) {
     ctx.drawImage(buffer, 0, 0, canvas.width, canvas.height);
 
     if (physicalMap) {
-        if (baseImages.map) {
+        /*if (baseImages.map) {
             ctx.globalAlpha = 0.25;
             ctx.drawImage(baseImages.map, 0, 0, canvas.width, canvas.height);
             ctx.globalAlpha = 1;
-        }
+        }*/
         if (baseImages.ocean) {
             ctx.drawImage(baseImages.ocean, 0, 0, canvas.width, canvas.height);
         }
@@ -236,4 +236,7 @@ document.getElementById('jagged').addEventListener('change', function() {
 });
 document.getElementById('spin').addEventListener('change', function() {
     disableSpinning = this.checked;
+});
+document.getElementById('glitch').addEventListener('change', function() {
+    enableGlitching = this.checked;
 });

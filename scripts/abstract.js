@@ -214,6 +214,7 @@ function endItem(arr, phrase) {
 }
 
 function grabData(url, val1, val2) {
+    url = url.replaceAll('%20', ' ');
     if (url.includes(val1)) {
         let foo = url.split(val1);
 

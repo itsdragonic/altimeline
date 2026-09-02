@@ -52,8 +52,8 @@
          s897s1L9
 
 <-- Last ID used -->
-    RNG: 156
-    News: 117
+    RNG: 159
+    News: 118
 
 <-- Region Theory -->
   Beginning: Regular year-based increments

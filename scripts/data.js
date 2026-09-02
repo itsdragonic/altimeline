@@ -104,8 +104,11 @@ firstYear[oppositeYear] = {
 
         // 1900s
         ww1: true, // true
+        sealion: false, // false
         cold_war: false, // true
         orwell1984: false, // false
+        big_japan: false, // false
+        chinese_civil_war: false, // true
         af_decolonization_level: 5, // 0 means none, 3 means nearly full decolonization
                                     // <= 1 means decolonized first / most likely
         israel: true, // true
@@ -341,32 +344,41 @@ function rng(val, year) {
 
     // special seeds
     if (!seed || seed == 0 || seed == "") return 1;
-    if (seed == 'test') return 0;
-    if (seed == '1984') {    
+    else if (seed == 'test') return 0;
+    else if (seed == '1984') {    
         if ([15, 97, 99, 105, 106, 124].includes(val)) {
             return 0;
         }
         return 1;
     }
-    if (seed.toLowerCase() == 'southern victory' || seed.toLowerCase() == 'southern_victory') {    
+    else if (seed.toLowerCase() == 'southern victory' || seed.toLowerCase() == 'confederate victory') {    
         if ([90, 121].includes(val)) {
             return 0;
         }
         return 1;
     }
-    if (seed.toLowerCase() == 'kaiserreich') {
+    else if (seed.toLowerCase() == 'kaiserreich') {
         if (val == 62) return 0;
         return 1;
     }
-    if (seed.toLowerCase() == 'fuhrerreich' || seed.toLowerCase() == 'tno') {
+    else if (seed.toLowerCase() == 'fuhrerreich' || seed.toLowerCase() == 'tno') {
         if (val == 92) return 0;
         return 1;
     }
-    if (seed.toLowerCase() == 'fallout') {
+    else if (seed.toLowerCase() == 'the man in the high castle' || seed.toLowerCase() == 'tmithc') {
+        if ([92, 131, 159].includes(val)) {
+            return 0;
+        }
+        return 1;
+    }
+    else if (seed.toLowerCase() == 'fallout') {
         if (val == 128) return 0;
         return 1;
     }
-    if (seed.toLowerCase() == 'tordesillas') {
+    else if (seed.toLowerCase() == 'tordesillas') {
+        return 1;
+    }
+    else if (seed == '616' || seed == '199999') {
         return 1;
     }
 
@@ -600,8 +612,9 @@ addCountry("LUB", "Luba", null, 1400, 725, 5);
 addCountry("ZIM", "Mapungubwe", null, 1420, 825, 5);
 addCountry("YOR", "Yoruba", null, 1220, 585, 5);
 addCountry("HAR", "Ifat", null, 1540, 580, 6);
-
 addCountry("MIS", "Mississippi", null, 610, 370, 6);
+
+addCountry("INDg", "Genosha", null, 1620, 690, 6);
 
 // Civilizations
 addCountry("MES", "Assyria / Babylon", 1, 1500, 372, 5);
