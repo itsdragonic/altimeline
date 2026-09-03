@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Altimeline</title>
+    <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
     <link rel="shortcut icon" type="image/png" href="images/altimeline.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700">
 
@@ -11,22 +12,56 @@
 
     <style>
         body {
-            background: #ebe7d8;
-            color: black;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: black;
+            color: white;
         }
-        canvas {
-            background: white;
+        #globe {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto;
         }
 
+        /* Maps */
+        #main {
+            display: none;
+        }
+        #buffer {
+            display: none;
+        }
+        #timeline,
+        #timelineValue {
+            text-shadow:
+                -1px -1px 0 black,
+                1px -1px 0 black,
+                -1px  1px 0 black,
+                1px  1px 0 black
+        }
     </style>
 </head>
+<body data-page="globe">
+    <!-- Map -->
+    <div id="box">
+        <canvas id='main' width='1000' height='563'><canvas>
+        <canvas id='buffer'></canvas>
+    </div>
 
-<body data-page="map">
-    <!-- HUD Elements -->
-     <div id="info" title="Altimeline">
+    <div id="globe"></div>
+    <div id="info" title="Altimeline">
         <h2>Altimeline</h2>
     </div>
-    
+    <div id="error">
+        <h2>⚠️ Error Loading Map</h2>
+        <p id="errorMsg"></p>
+    </div>
+
+
+    <!-- HUD Elements -->
     <div id="seed">
         <input type="text" id="seedInput" required spellcheck="false" placeholder="Change Timeline" title="Enter Seed Here">
         <img id="randomSeed" title="Generate Random Seed" src="images/dice.png"></img>
@@ -42,12 +77,12 @@
 
     <!-- World News -->
     <div id="newsContainer"></div>
-
-    <!-- To globe button -->
-    <a href="globe.html" title="Switch to Globe View">
-        <button class="button" id="globeButton"></button>
-    </a>
         
+    <!-- To map button -->
+    <a href="map.html" title="Switch to Map View">
+        <button class="button" id="mapButton"></button>
+    </a>
+
     <!-- Download Button -->
     <button class="button" id="downloadButton" title="Download Image"></button>
 
@@ -80,7 +115,7 @@
                 <div class="toggle-switch">
                     <label>
                         Physical Map 
-                        <input type="checkbox" id="phy">
+                        <input type="checkbox" id="phy" checked>
                         <span class="switch"></span>
                     </label>
                     </div>
@@ -108,11 +143,19 @@
                             <span class="switch"></span>
                         </label>
                     </div>
+
+                    <div class="toggle-switch">
+                        <label>
+                            Disable Spinning (Globe Only)
+                            <input type="checkbox" id="spin">
+                            <span class="switch"></span>
+                        </label>
+                    </div>
                 </div>
 
                 <div id="credits" class="content-section hidden">
                     <div class="credits">
-                        <b>Altimeline II</b>
+                        <b>Altimeline</b>
                         by Dragonic
                     </div>
                 </div>
@@ -122,13 +165,7 @@
         </div>
     </div>
 
-    <!-- Map -->
-    <div id="box">
-        <canvas id='main' width='1000' height='563'><canvas>
-        <canvas id='buffer'></canvas>
-    </div>
-
-    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
     <script defer src="scripts/image.js"></script>
     <script defer src="scripts/abstract.js"></script>
@@ -139,6 +176,6 @@
     <script defer src="scripts/regions.js"></script>
     <script defer src="scripts/script.js"></script>
     <script defer src="scripts/events.js"></script>
-    <script defer src="scripts/gui/map.js"></script>
+    <script defer src="scripts/gui/globe.js"></script>
 </body>
 </html>

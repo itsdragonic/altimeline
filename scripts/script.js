@@ -131,6 +131,11 @@ const generateDownloadButton = document.getElementById('downloadButton');
 
 generateSeedButton.addEventListener('click', () => {
     seedInput.value = generateRandomString();
+    for (let i = 0; i < 200; i++) {
+        allValues[i] = null;
+    }
+    butterflyYear = presentYear;
+    seed = seedInput.value;
 
     calcSeed(seedInput.value);
     redraw();
@@ -171,6 +176,10 @@ window.dispatchEvent(new Event('resize'));
 // Settings Modal
 document.getElementById("settings").addEventListener("click", function() {
     document.getElementById("popup").classList.toggle("hidden");
+    
+    //butterflyYear = Number(timeline);
+    //calcSeed(seed);
+    
     addOverlay(); // Call function to add overlay
 });
   

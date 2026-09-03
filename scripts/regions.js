@@ -546,7 +546,10 @@ function regions(year) {
     }
 
     // British Raj
-    if (rng(150, nextYear) <= uncommon) {
+    if (nextYear == 1800 && rng(150, nextYear) <= uncommon) {
+        c.independant_india = true;
+    }
+    if (c.independant_india) {
         // If India remained independant timeline
         if (nextYear == 1818) {
             civ["IND"].state = 8;
@@ -1066,10 +1069,12 @@ function regions(year) {
         civ["ISR"].strength += 470;
     }
 
-    worldNews("Jesus Christ is Born",
-                "In the small town of Bethlehem, a holy child from Mary and Joseph is born in a humble manger.",
-                "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_NG569JegPVJsNULvmeEg7cBnSBC-rL_7TyvMrdyB1-LTMJbzZkdieBJds0JdE28Dfu855BTIbPlmq7H7w1hM9H_zep0FMIyuboElL3i6-5SuuJO-7C3nBCHN_xRGFggDlaAqnAEXXGhK/s1600/23+Jesus.jpg",
-                false, 5, rngRange(rng(4, nextYear),-6,-4), 5, true);
+    if (nextYear == -6) {
+        worldNews("Jesus Christ is Born",
+                    "In the small town of Bethlehem, a holy child from Mary and Joseph is born in a humble manger.",
+                    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh_NG569JegPVJsNULvmeEg7cBnSBC-rL_7TyvMrdyB1-LTMJbzZkdieBJds0JdE28Dfu855BTIbPlmq7H7w1hM9H_zep0FMIyuboElL3i6-5SuuJO-7C3nBCHN_xRGFggDlaAqnAEXXGhK/s1600/23+Jesus.jpg",
+                    false, 5, rngRange(4, nextYear,-6,-4), 5, true);
+    }
     if (nextYear == -1) {
         if (civ["ROM"].strong) {
           civ["ISR"].strength = 0;
@@ -1465,7 +1470,7 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
 
-    if (nextYear == rngRange(rng(21, nextYear), -773, -733)) {
+    if (nextYear == rngRange(21, nextYear, -773, -733)) {
         civ["ROM"].strength = 3000;
         worldNews("Founding of Rome",
                     `According to legend, Romulus and Remus have founded the city of Rome. This marks the beginning of what may become one of history's greatest empires.`,
@@ -1493,7 +1498,7 @@ function regions(year) {
          264 BC – 146 BC
     ////////////////////////*/
 
-    if (rng(1, nextYear) > veryUnlikely && civ["ROM"].techecon >= 544) {
+    if (civ["ROM"].techecon == 544 && rng(1, nextYear) > veryUnlikely) {
         civ["ROM"].state = 5;
     }
     // Rome Wins
@@ -1594,7 +1599,7 @@ function regions(year) {
     }
 
     // Rome Discovers America Continued
-    if (rng(2, nextYear) <= incrediblyUnlikely) {
+    if (c.rome_colonizes_america) {
         if (nextYear == 203) {
             civ["CSA"].strength = 3000;
             civ["CSA"].state = "a1";
@@ -1846,13 +1851,13 @@ function regions(year) {
             colonizeNewWorld["POR"] = 0;
             colonizeOldWorld["POR"] = 0;
         }
-        if (c.yearsCeltic == rngRange(rng(39, nextYear),200,400)) {
+        if (c.yearsCeltic == rngRange(39, nextYear,200,400)) {
             civ["FRA"].strength = 3000;
         }
-        if (c.yearsCeltic == rngRange(rng(40, nextYear),200,400)) {
+        if (c.yearsCeltic == rngRange(40, nextYear,200,400)) {
             civ["HRE"].strength = 3000;
         }
-        if (c.yearsCeltic == rngRange(rng(41, nextYear),300,500)) {
+        if (c.yearsCeltic == rngRange(41, nextYear,300,500)) {
             civ["SPA"].strength = 3000;
             civ["SPA"].state = 5;
         }
@@ -2030,13 +2035,14 @@ function regions(year) {
     }
 
     // Mongols
-    if (rng(8, nextYear) < unlikely && nextYear == 1274) {
+    if (nextYear == 1274 && rng(8, nextYear) < unlikely) {
         worldNews("Mongols Invade Japan",
                     "The Mongol fleet managed to land on the coast of Japan and swiftly conquers the island.",
                     "https://www.kcpinternational.com/wp-content/uploads/2015/04/HakataWall.jpg",
                     true, 25, nextYear, 3, true);
         civ["JAP"].name = "";
         civ["JAP"].color = [1, 170, 167];
+        c.mongols_invaded_japan = true;
     } else if (civ["MON"].state == 9 && nextYear == 1274) {
         worldNews("Typhoon Destroys Mongol Attack",
                 "A storm has destroyed much of the Mongol fleet that was sailing to invade Japan.",
@@ -2048,8 +2054,8 @@ function regions(year) {
             false, 24, nextYear+7, 2, true);
     }
 
-    if (rng(8, nextYear) < unlikely &&
-        nextYear == rngRange(rng(9, nextYear),1279,1284)
+    if (c.mongols_invaded_japan &&
+        nextYear == rngRange(9, nextYear,1279,1284)
     ) {
         civ["JAP"].name = "Japan";
     }
@@ -2074,7 +2080,7 @@ function regions(year) {
                     "https://static.wikia.nocookie.net/totalwar-ar/images/c/cd/Shimabara_Rebellion.jpg",
                     false, 26, nextYear, 2, false);
     }
-    if (nextYear == rngRange(rng(11, nextYear),1638,1640) && civ["JAP"].christian) {
+    if (nextYear == rngRange(11, nextYear,1638,1640) && civ["JAP"].christian) {
         civ["JAP"].name = "Japan";
         civ["JAP"].color = [255, 200, 178];
         worldNews("Japan Becomes Christian",
@@ -2088,7 +2094,7 @@ function regions(year) {
     if (civ["JAP"].christian) {
         civ["JAP"].yearsChristian ++;
     }
-    if (civ["JAP"].yearsChristian == rngRange(rng(12, nextYear),50,100)) {
+    if (civ["JAP"].yearsChristian == rngRange(12, nextYear, 50, 100)) {
         civ["PHI"].owner = "JAP";
     }
 
@@ -2115,13 +2121,13 @@ function regions(year) {
     civ["JAP"].yearsImperial ++;
 
     // Japanese Imperialism
-    if (civ["JAP"].yearsImperial == rngRange(rng(13, nextYear),36,40)) {
+    if (civ["JAP"].yearsImperial == rngRange(13, nextYear,36,40)) {
         civ["KOR"].strength = 0;
         civ["JAPc"].strength = 40;
         civ["JAPc"].owner = "JAP";
         civ["JAPc"].hideName = true;
     }
-    if (civ["JAP"].yearsImperial == rngRange(rng(13, nextYear),36,40)+1) {
+    if (civ["JAP"].yearsImperial == rngRange(13, nextYear,36,40)+1) {
         if (rng(14, nextYear) < unlikely) {
             civ["RUS"].manchuria = true;
             
@@ -3545,9 +3551,12 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
 
-    c.eu ++;
-    if (c.ww2 && rng(100, nextYear) <= unlikely && 
-        nextYear == rngRange(rng(96, nextYear),1946,1980)) {
+    c.eu++;
+    if (c.ww2 && nextYear == 1945 && rng(100, nextYear) <= unlikely) {
+        c.eu_exists = true;
+    }
+    if (c.eu_exists && 
+        nextYear == rngRange(96, nextYear, 1946, 1980)) {
         c.eu = 0;
         civ["EU"].strength = 300;
         civ["EU"].color = [20, 72, 175];
@@ -3727,17 +3736,19 @@ function regions(year) {
         civ["YEM"].united = true;
     }
 
-    if ((rng(124, nextYear) < uncommon && nextYear == rngRange(rng(123, nextYear), 1945, 2017) &&
-        !civ["OTT"].strong ) ||
-        c.byzantium
+    if (nextYear == 1940 && ((rng(124, nextYear) < uncommon &&
+        !civ["OTT"].strong ) || c.byzantium)
     ) {
+        c.kurdistan = true;
+    }
+    if (c.kurdistan && nextYear == rngRange(123, nextYear, 1945, 2017)) {
         civ["KUR"].strength = 1000;
         worldNews(`Kurdistan Declares Independence`,
                     `Kurdish leaders have proclaimed independence following a successful referendum, potentially hightening tensions in the Middle East.`,
                     "https://static01.nyt.com/images/2017/09/22/world/22Kurds1/22Kurds1-superJumbo.jpg",
                     true, 82, nextYear, 2, false);
     }
-    if (rng(126, nextYear) < veryUnlikely && rngRange(rng(125, nextYear), 1970, 2025)) {
+    if (nextYear == rngRange(125, nextYear, 1970, 2025) && rng(126, nextYear) < veryUnlikely) {
         civ["KUR"].state = 2;
     }
 
@@ -3960,7 +3971,7 @@ function regions(year) {
     worldNews("Buddha is Enlightened",
                 "Siddhartha Gautama achieves spiritual awakening under the Bodhi Tree.",
                 "https://qph.cf2.quoracdn.net/main-qimg-138efc066fd50ef90c4a13b9d2d0df58-pjlq",
-                false, 6, rngRange(rng(3, nextYear),-563,-400), 10, true);
+                false, 6, rngRange(3, nextYear,-563,-400), 10, true);
 
     if (nextYear == 396) {
         civ["NEP"].strength = 2250;
@@ -4432,7 +4443,7 @@ function regions(year) {
     owner(civ,"ENGn",[],"Nigeria","Colonies",true);
     owner(civ,"ABY",[],"Ethiopia","East Africa",true);
 
-    if (nextYear == rngInfluence(rng(42, nextYear),1580,[
+    if (nextYear == rngInfluence(42, nextYear,1580,[
         [civ["CAR"].strong, -300],
     ])) {
         c.colonizingAfrica = 1580;
@@ -4820,6 +4831,7 @@ function regions(year) {
         civ["INC"].x -= 30;
     }
 
+    // Colonizing
     if (c.colonizingAmerica == 1500) {
         civ["BRA"].strength = 1250;
         if (civ["BRA"].owner == null) {
@@ -4915,10 +4927,10 @@ function regions(year) {
         civ["SPAc"].state = 12;
     }
     if (c.colonizingAmerica == 1825) {
-        //if (RNG("Rome_Colonizes_America",year) > superUnlikely) {
-        civ["SPAc"].state = 1;
-        civ["SPAc"].name = "";
-        //}
+        if (!c.rome_colonizes_america) {
+            civ["SPAc"].state = 1;
+            civ["SPAc"].name = "";
+        }
     }
 
     // Latin American Independence
@@ -5090,12 +5102,12 @@ function regions(year) {
     \_/___________________________*/
 
      /*   MAJOR alternate history branch:
-     *       Rome discovers America - civ["ROM"].america
+     *       Rome discovers America
      */
 
     civ["ROM"].yearsColonizing ++;
     let romanExplorer = "Greek geographer Strabo";
-    if (rng(20, nextYear) < 0.5) {
+    if (nextYear == oppositeYear + 1 && rng(20, nextYear) < 0.5) {
         romanExplorer = "Pomponius Mela";
     }
     if (civ["ROM"].yearsColonizing == 1) {
@@ -5147,9 +5159,9 @@ function regions(year) {
     owner(civ,"SPAc",[],"Pan-American Union","America",true);
     newLand(civ,"SPAc");
 
-    if (nextYear == rngInfluence(rng(38, nextYear),1492,[
+    if (nextYear == rngInfluence(38, nextYear, 1492, [
         [civ["CAR"].strong, -100],
-        [c.reconquista, -5],
+        [!c.reconquista, -5],
         [c.constantinopleSurvives, -100],
     ])) {
         c.colonizingAmerica = 1492;
@@ -5247,8 +5259,8 @@ function regions(year) {
     if (c.colonizingAmerica == 1863) {
         civ["MEXa"].strength = 4;
     }
-    if (rng(143, nextYear) <= possible && 
-        c.colonizingAmerica == 1866 && c.csa_victory) {
+    if (c.colonizingAmerica == 1866 && c.csa_victory && 
+        rng(143, nextYear) <= possible) {
         civ["MEX"].owner = "FRA";
     }
 
@@ -5911,15 +5923,15 @@ function regions(year) {
     }
 
     // Carving of Australia
-    if (nextYear == rngRange(rng(49, nextYear),1788,1830) && rng(50, nextYear) < unlikely) {
+    if (nextYear == rngRange(49, nextYear,1788,1830) && rng(50, nextYear) < unlikely) {
         civ["PORz"].strength = 1000;
         civ["PORz"].owner = colonizingPercentage(rng(51, nextYear), colonizeOldWorld,"POR",2);
     }
-    if (nextYear == rngRange(rng(52, nextYear),1788,1830) && rng(53, nextYear) < unlikely) {
+    if (nextYear == rngRange(52, nextYear,1788,1830) && rng(53, nextYear) < unlikely) {
         civ["DUTz"].strength = 1000;
         civ["DUTz"].owner = colonizingPercentage(rng(54, nextYear), colonizeOldWorld,"DUT",2);
     }
-    if (nextYear == rngRange(rng(55, nextYear),1828,1835) && rng(56, nextYear) < unlikely) {
+    if (nextYear == rngRange(55, nextYear,1828,1835) && rng(56, nextYear) < unlikely) {
         civ["FRAz"].strength = 1000;
         civ["FRAz"].owner = colonizingPercentage(rng(57, nextYear), colonizeOldWorld,"FRA",2);
     }

@@ -235,7 +235,12 @@ async function updateCivs() {
 
 function calcSeed(val) {
     seed = val;
-    seedNumber = stringToNumbers(seed);
+
+    var seedUsed = seed;
+    if (seed && seed.includes("{")) {
+        seedUsed = seed.replace(/\{.*\}$/, '');
+    }
+    seedNumber = stringToNumbers(seedUsed);
 
     calculateEvents();
     updateCivs();
@@ -263,7 +268,12 @@ seedInput.addEventListener("input", function (event) {
     clearTimeout(typingTimer); // clear the previous timer
 
     typingTimer = setTimeout(() => {
-        changingDimensions = enableGlitching ? true : false;
+        for (let i = 0; i < 200; i++) {
+            allValues[i] = null;
+        }
+        butterflyYear = presentYear;
+        seed = event.target.value;
+
         calcSeed(event.target.value);
         updateCivs();
         redraw();

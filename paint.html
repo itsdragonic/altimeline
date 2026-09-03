@@ -147,15 +147,6 @@
             align-items: center;
             margin-bottom: 10px;
         }
-        .stack-option {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-left: 10px;
-            font-weight: bold;
-            user-select: none;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
@@ -349,69 +340,20 @@ function loadImage() {
         ctx = canvas.getContext('2d');
         canvasContainer = document.getElementById('canvasContainer');
 
-        const editorAlreadyActive = document.getElementById('editorSection').classList.contains('active');
-
-        if (isStacking && editorAlreadyActive && canvas.width > 0 && canvas.height > 0) {
-            saveState();
-
-            // Current canvas bounding box in coordinate space
-            const curLeft = originalX;
-            const curTop = originalY;
-            const curRight = originalX + canvas.width;
-            const curBottom = originalY + canvas.height;
-
-            // Incoming image bounding box in coordinate space
-            const newLeft = entry.x;
-            const newTop = entry.y;
-            const newRight = entry.x + img.width;
-            const newBottom = entry.y + img.height;
-
-            // Union bounding box
-            const unionLeft = Math.min(curLeft, newLeft);
-            const unionTop = Math.min(curTop, newTop);
-            const unionRight = Math.max(curRight, newRight);
-            const unionBottom = Math.max(curBottom, newBottom);
-
-            const newWidth = unionRight - unionLeft;
-            const newHeight = unionBottom - unionTop;
-
-            // Snapshot existing canvas
-            const existingData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-            // Resize canvas to new composite size
-            canvas.width = newWidth;
-            canvas.height = newHeight;
-
-            // Restore previous canvas contents shifted to the new union origin
-            ctx.putImageData(existingData, curLeft - unionLeft, curTop - unionTop);
-
-            // Draw new image on top at its proper relative coordinate offset
-            ctx.drawImage(img, newLeft - unionLeft, newTop - unionTop);
-
             // Update state coordinates to the new union top-left
             originalX = unionLeft;
             originalY = unionTop;
             originalKey = id;
 
-            updateCanvasTransform();
-        } else {
-            originalKey = id;
-            originalX = entry.x;
-            originalY = entry.y;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
 
-            undoStack = [];
-            redoStack = [];
+        // Initialize view
+        resetView();
 
-            canvas.width = img.width;
-            canvas.height = img.height;
+        document.getElementById('editorSection').classList.add('active');
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
-
-            resetView();
-            document.getElementById('editorSection').classList.add('active');
-            setupEventListeners();
-        }
+        setupEventListeners();
     };
     img.src = entry.img;
 }
@@ -439,11 +381,14 @@ function zoomToCenter(newScale) {
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     
+    // Calculate canvas point at center before zoom
     const canvasX = (centerX - panX) / scale;
     const canvasY = (centerY - panY) / scale;
     
+    // Update scale
     scale = newScale;
     
+    // Adjust pan to keep the same canvas point at center
     panX = centerX - canvasX * scale;
     panY = centerY - canvasY * scale;
     
@@ -452,11 +397,13 @@ function zoomToCenter(newScale) {
 }
 
 function resetView() {
+    // Calculate initial scale to fit canvas in container
     const containerRect = canvasContainer.getBoundingClientRect();
     const scaleX = (containerRect.width - 40) / canvas.width;
     const scaleY = (containerRect.height - 40) / canvas.height;
     scale = Math.min(scaleX, scaleY, 10);
     
+    // Center the canvas
     panX = (containerRect.width - canvas.width * scale) / 2;
     panY = (containerRect.height - canvas.height * scale) / 2;
     
@@ -471,13 +418,16 @@ function handleWheel(e) {
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     
+    // Calculate canvas point under mouse before zoom
     const canvasX = (mouseX - panX) / scale;
     const canvasY = (mouseY - panY) / scale;
     
+    // Update scale
     const delta = e.deltaY > 0 ? 0.9 : 1.1;
     const newScale = Math.max(0.1, Math.min(50, scale * delta));
     scale = newScale;
     
+    // Adjust pan to keep the same canvas point under mouse
     panX = mouseX - canvasX * scale;
     panY = mouseY - canvasY * scale;
     
@@ -487,11 +437,6 @@ function handleWheel(e) {
 
 // Keyboard controls for pan mode
 document.addEventListener('keydown', e => {
-    if (document.activeElement.tagName === 'INPUT' || 
-        document.activeElement.tagName === 'TEXTAREA') {
-        return;
-    }
-
     if (e.key === 'r' && !panPressed) {
         e.preventDefault();
         panPressed = true;
@@ -573,6 +518,7 @@ function getMousePos(e) {
     const containerX = e.clientX - rect.left;
     const containerY = e.clientY - rect.top;
     
+    // Transform container coordinates to canvas coordinates
     const canvasX = (containerX - panX) / scale;
     const canvasY = (containerY - panY) / scale;
     
@@ -592,6 +538,7 @@ function startDrawing(e) {
     
     const { x, y } = getMousePos(e);
     
+    // Check if click is within canvas bounds
     if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
 
     if (currentTool === 'picker') {
@@ -620,6 +567,7 @@ function draw(e) {
     if (!isDrawing) return;
     const { x, y } = getMousePos(e);
     
+    // Check bounds
     if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
     
     drawPixel(x, y);
@@ -808,6 +756,7 @@ function copyToClipboard() {
     document.execCommand('copy');
     alert('Copied to clipboard!');
 }
+
 </script>
 </body>
 </html>

@@ -5,12 +5,14 @@ function altHist(year,id) {
 
     switch (id) {
         case "alternate_american_names":
-            if (rng(31, nextYear) <= incrediblyUnlikely) {
-                c.newWorld = "Vespuccia";
-            } else if (rng(31, nextYear) <= veryUnlikely) {
-                c.newWorld = "Columbia";
-            } else {
-                c.newWorld = "America";
+            if (nextYear == 0) {
+                if (rng(31, nextYear) <= incrediblyUnlikely) {
+                    c.newWorld = "Vespuccia";
+                } else if (rng(31, nextYear) <= veryUnlikely) {
+                    c.newWorld = "Columbia";
+                } else {
+                    c.newWorld = "America";
+                }
             }
             break;
 
@@ -338,12 +340,12 @@ function altHist(year,id) {
                     civ["nuclear"].strength += 3000;
                 }
             }
-            if (c.yearsNuclear == rngRange(rng(23, nextYear), 1, 8)) {
+            if (c.yearsNuclear == rngRange(23, nextYear, 1, 8)) {
                 if (civ["nuclear"].state == 3) {
                     civ["nuclear"].state = 2;
                 }
             }
-            if (c.yearsNuclear == rngRange(rng(24, nextYear), 4, 12)) {
+            if (c.yearsNuclear == rngRange(24, nextYear, 4, 12)) {
                 civ["DENc"].name = "Greenland";
                 civ["FRAx"].strength = 0;
                 civ["MAL"].strength = 100;

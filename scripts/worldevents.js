@@ -51,9 +51,9 @@ function worldEvents(year) {
         |                               |.
         |   ____________________________|___
         |  /.                              /.
-        \_/______________________________*/
+        \_/______________________________*/ 
 
-    if (nextYear == rngRange(rng(18, nextYear), -1701, -1681)) {
+    if (nextYear == rngRange(18, nextYear, -1701, -1681)) {
         c.worldTech = 200;
     }
     if (nextYear == -1178) {
@@ -81,7 +81,7 @@ function worldEvents(year) {
     worldNews("Bronze Age Collapse...",
                 "Major cities have been destroyed, whole civilizations have fallen, diplomatic and trade relations are severed, and even writing systems have vanished.",
                 "https://cdn.thecollector.com/wp-content/uploads/2021/07/fall-of-troy-bronze-age-collapse.jpg",
-                false, 7, rngRange(rng(5, nextYear), -1200, -1100), 35, true);
+                false, 7, rngRange(5, nextYear, -1200, -1100), 35, true);
     worldNews(`Solar Eclipse Observed`,
                 `One of the first solar eclipses to ever be recorded has been observed in Mesopotamia, darkening the sky and prompting awe, fear, and religious interpretation.`,
                 "https://cdn.discovermagazine.com/assets/image/57938/illustration-of-an-ancient-total-solar-eclipse-x.png",
@@ -90,11 +90,11 @@ function worldEvents(year) {
     // Classical
 
     // Rome Colonizes America
-    if (rng(2, nextYear) <= superUnlikely && civ["ROM"].strong) {
-        if (nextYear == rngRange(rng(19, nextYear), -44, 100)) {
-            civ["ROM"].america = true;
-            civ["ROM"].yearsColonizing = 0;
-        }
+    if (nextYear == -45 && civ["ROM"].strong && rng(2, nextYear) <= superUnlikely) {
+        c.rome_colonizes_america = true;
+    }
+    if (nextYear == rngRange(19, nextYear, -44, 100)) {
+        civ["ROM"].yearsColonizing = 0;
     }
 
     /*
@@ -737,11 +737,7 @@ function worldEvents(year) {
         }
     }
 
-    if (rng(159, nextYear) <= impossible) {
-        altHist(nextYear, "the_man_in_the_high_castle");
-        c.cold_war = false;
-    }
-    if (rng(99, nextYear) <= impossible) {
+    if (nextYear == 1945 && rng(99, nextYear) <= impossible) {
         altHist(nextYear, "1984");
         c.cold_war = false;
     }
