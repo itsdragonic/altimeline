@@ -243,6 +243,3 @@ document.getElementById('jagged').addEventListener('change', function() {
         canvas.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
     }
 });
-document.getElementById('spin').addEventListener('change', function() {
-    disableSpinning = this.checked;
-});

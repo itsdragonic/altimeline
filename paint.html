@@ -168,6 +168,9 @@
             "></div>
 
             <button class="btn btn-primary" onclick="loadImage()">Load Image</button>
+            <label class="stack-option">
+                <input type="checkbox" id="allowStacking"> Allow stacking
+            </label>
         </div>
 
         <div class="editor-section" id="editorSection">
@@ -329,9 +332,7 @@ function loadImage() {
     }
 
     const entry = states[id];
-    originalKey = id;
-    originalX = entry.x;
-    originalY = entry.y;
+    const isStacking = document.getElementById('allowStacking').checked;
 
     const img = new Image();
     img.onload = () => {
@@ -339,8 +340,10 @@ function loadImage() {
         ctx = canvas.getContext('2d');
         canvasContainer = document.getElementById('canvasContainer');
 
-        canvas.width = img.width;
-        canvas.height = img.height;
+            // Update state coordinates to the new union top-left
+            originalX = unionLeft;
+            originalY = unionTop;
+            originalKey = id;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
@@ -538,7 +541,10 @@ function startDrawing(e) {
     // Check if click is within canvas bounds
     if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
 
-    if (currentTool === 'picker') return pickColor(x, y);
+    if (currentTool === 'picker') {
+        currentTool = 'brush';
+        return pickColor(x, y);
+    }
     saveState();
     if (currentTool === 'fill') return floodFill(x, y);
 
@@ -752,6 +758,5 @@ function copyToClipboard() {
 }
 
 </script>
-
 </body>
 </html>

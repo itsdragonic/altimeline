@@ -311,7 +311,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .news:hover {
-    transform: translate(-50%, -50%) scale(2.0) rotate(2deg);
+    transform: translate(-50%, -50%) scale(1.75) rotate(2deg);
     z-index: 999;
 }
 

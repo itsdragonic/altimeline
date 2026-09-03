@@ -49,6 +49,9 @@ document.addEventListener('keydown', (event) => {
         case 's':
             disableSpinning = !disableSpinning;
             break;
+        case 'g':
+            enableGlitching = !enableGlitching;
+            break;
     }
     if (event.key === ' ') {
         const direction = event.shiftKey ? -1 : 1;
@@ -257,6 +260,8 @@ function calcSeed(val) {
 const seedInput = document.getElementById('seedInput');
 
 let typingTimer;
+let enableGlitching = false;
+let changingDimensions = false;
 const typingDelay = 400;
 
 seedInput.addEventListener("input", function (event) {
@@ -296,6 +301,7 @@ timelineInput.addEventListener('input', () => {
 
     timelineValue.textContent = year;
 
+    changingDimensions = false;
     displayNews(year);
     
 });

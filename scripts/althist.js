@@ -73,7 +73,6 @@ function altHist(year,id) {
                         "https://assets.editorial.aetnd.com/uploads/2019/10/columbus-ships-gettyimages-1056336226.jpg",
                         civ["SPAc"].owner == "SPA" ? false : true, 36, nextYear, 2, true);
             break;
-
         case "1984":
             if (nextYear == 1947 &&
                 civ["USA"].ideology == "socialism"
@@ -361,20 +360,53 @@ function altHist(year,id) {
             }
             break;
         
-        case "man_in_the_high_castle":
-            /*if (RNG("WWII",year) <= incrediblyUnlikely) {
-                civ["CAN"].name = "Greater Nazi Reich";
-                civ["CAN"].x -= 60;
-                civ["CAN"].y += 20;
-            }*/
-            /*
-            if (c.fuhrerreich && RNG("Japan's_Fate",year) <= impossible) {
-            civ["USA"].state = "d";
-            civ["USA"].name = "Japan / Neutral Zone";
-            civ["USA"].size -= 4;
-            c.big_japan = true;
+        case "the_man_in_the_high_castle":
+            if (nextYear == 1946) {
+                civ["CAN"].owner = "GER";
+                civ["CAN"].x -= 80;
+                civ["CAN"].y += 50;
+                civ["CAN"].color = [72, 70, 67];
             }
-            */
+            if (nextYear >= 1946 && civ["CAN"].owner == "GER") {
+                civ["CAN"].name = "Greater Nazi Reich";
+            }
+            if (nextYear == 1947 &&
+                c.fuhrerreich && c.big_japan) {
+                civ["USA"].state = "d";
+                civ["USA"].name = "Japan / Neutral Zone";
+                civ["USA"].size -= 4;
+                civ["USA"].merge = [];
+                civ["USA"].color = null;
+                civ["USA"].whiteLines = false;
+                annex(civ, "JAP", ["ALA", "HAW", "ORE"]);
+            }
+            if (nextYear == 1948 &&
+                c.fuhrerreich && c.big_japan) {
+                annex(civ, "JAP", ["PEU", "EQU", "CHL"]);
+                annex(civ, "CAN", ["CUB", "CEN", "HAI", "DOM"]);
+            }
+            break;
+
+        case "earth_616":
+            civ["SOK"].strength = 500;
+            civ["SOK"].name = "Wakanda";
+            civ["BUN"].strength = 500;
+            civ["INDg"].strength = 500;
+            if (civ["ABY"].state >= 4) {
+                civ["SOK"].name = "Imaya";
+                civ["ABY"].state = 4;
+                civ["ABY"].name = "Wakanda / Ethiopia";
+            }
+            if (civ["UKR"].name == "Ukraine") {
+                civ["UKR"].name = "Sokovia  Ukraine";
+            }
+            if (civ["ROA"].name == "Romania") {
+                civ["ROA"].name = "Latveria Symkaria Romania";
+                civ["ROA"].state = 2;
+            }
+            if (civ["BUL"].name == "Bulgaria") {
+                civ["BUL"].name = "Transia  Bulgaria";
+            }
             break;
     }
 }

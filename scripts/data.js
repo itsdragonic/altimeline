@@ -110,8 +110,11 @@ firstYear[oppositeYear] = {
 
         // 1900s
         ww1: true, // true
+        sealion: false, // false
         cold_war: false, // true
         orwell1984: false, // false
+        big_japan: false, // false
+        chinese_civil_war: false, // true
         af_decolonization_level: 5, // 0 means none, 3 means nearly full decolonization
                                     // <= 1 means decolonized first / most likely
         israel: true, // true
@@ -623,8 +626,9 @@ addCountry("LUB", "Luba", null, 1400, 725, 5);
 addCountry("ZIM", "Mapungubwe", null, 1420, 825, 5);
 addCountry("YOR", "Yoruba", null, 1220, 585, 5);
 addCountry("HAR", "Ifat", null, 1540, 580, 6);
-
 addCountry("MIS", "Mississippi", null, 610, 370, 6);
+
+addCountry("INDg", "Genosha", null, 1620, 690, 6);
 
 // Civilizations
 addCountry("MES", "Assyria / Babylon", 1, 1500, 372, 5);

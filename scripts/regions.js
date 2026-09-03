@@ -379,9 +379,9 @@ function regions(year) {
         civ["MAN"].state = 5;
         //}
     }
-    if (nextYear == 1947) {
+    if (nextYear == 1947 && !c.big_japan) {
         // Chinese Communist Revolution
-        c.isChineseCivilWar = true;
+        c.chinese_civil_war = true;
         //if (RNG("Boxer's_Rebellion",year) > unlikely) {
         civ["MAN"].state = 1;
         civ["MAN"].color = [255, 219, 37];
@@ -392,12 +392,12 @@ function regions(year) {
         civ["CHI"].size += 6;
         civ["CHI"].y -= 70;
     }
-    if (nextYear == 1948) {
+    if (nextYear == 1948 && c.chinese_civil_war) {
         civ["MAN"].state = 2;
     }
-    if (nextYear == 1949) {
+    if (nextYear == 1949 && c.chinese_civil_war) {
         // Chinese Communist Revolution
-        //c.isChineseCivilWar = false;
+        c.chinese_civil_war = false;
         civ["MAN"].state = 4;
         civ["CHI"].x -= 80;
         civ["CHI"].y += 50;
@@ -613,7 +613,9 @@ function regions(year) {
                 civ["PAK"].size -= 3;
             }
 
-            civ["SRI"].strength = 500;
+            if (civ["RAJ"].owner == null) {
+                civ["SRI"].strength = 500;
+            }
         }
         if (nextYear == 1971) {
             if (!c.fuhrerreich) {
@@ -784,7 +786,7 @@ function regions(year) {
             civ["BUR"].strength = 0;
         }
     }
-    if (nextYear == 1949) {
+    if (nextYear == 1949 && !c.big_japan) {
         civ["VIE"].owner = "FRA";
     }
 
@@ -797,7 +799,7 @@ function regions(year) {
         civ["CAM"].strength = 200;
     }
     if (nextYear == 1955 &&
-        c.cold_war
+        c.cold_war && !c.big_japan
     ) {
         // Vietnam War
         worldNews(`The Vietnam War`,
@@ -1125,7 +1127,8 @@ function regions(year) {
     }
 
     if (nextYear == 1948) {
-        if (c.israel && !civ["ISL"].strong && !c.kaiserreich && !civ["OTT"].strong && !c.orwell1984) {
+        if (c.israel && !civ["ISL"].strong && !c.kaiserreich &&
+            !civ["OTT"].strong && !c.orwell1984 && !c.fuhrerreich) {
             civ["ISR"].strength = 2000;
         }
     }
@@ -1933,35 +1936,37 @@ function regions(year) {
     }
 
     // Splitting of Korea
-    if (nextYear == 1945) {
-        civ["KOR"].strength = 500;
-        civ["KOR"].y += 15;
-        civ["KOR"].name = "S. Korea";
+    if (c.cold_war) {
+        if (nextYear == 1945) {
+            civ["KOR"].strength = 500;
+            civ["KOR"].y += 15;
+            civ["KOR"].name = "S. Korea";
 
-        civ["DRK"].strength = 400;
-        civ["DRK"].state = 1;
-        civ["DRK"].color = [];
-        civ["DRK"].name = "N. Korea";
-    }
-    if (nextYear == 1953) {
-        worldNews("The Korean War",
-                "After a surprise invasion from North Korea, South Korea with the aid of others managed to hold them off, leading to the creation of a demilitarized zone.",
-                "https://images04.military.com/sites/default/files/styles/full/public/2020-08/Korean%20War%20NKPA%201200.jpg",
-                false, 33, nextYear-3, 3, true);
-        if (rng(15, nextYear) <= superUnlikely || !c.superpowers.includes("USA")) {
-          civ["KOR"].name = "DPR. Korea";
-          civ["DRK"].strength = 0;
-          civ["KOR"].y -= 10;
-          civ["JAP"].x += 15;
-        } else if (rng(15, nextYear) <= veryUnlikely) {
-          civ["DRK"].strength = 0;
-          civ["KOR"].y -= 10;
-          civ["JAP"].x += 15;
-          civ["KOR"].name = "Korea";
-        } else if (rng(15, nextYear) <= unlikely) {
-          civ["DRK"].strength += 0;
-        } else {
-          civ["DRK"].state = 2;
+            civ["DRK"].strength = 400;
+            civ["DRK"].state = 1;
+            civ["DRK"].color = [];
+            civ["DRK"].name = "N. Korea";
+        }
+        if (nextYear == 1953) {
+            worldNews("The Korean War",
+                    "After a surprise invasion from North Korea, South Korea with the aid of others managed to hold them off, leading to the creation of a demilitarized zone.",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8V_7sGZcJYWC0H2mrccvzH2BgSL0bE3occvuYgh0n1A&s=10",
+                    false, 33, nextYear-3, 3, true);
+            if (rng(15, nextYear) <= superUnlikely || !c.superpowers.includes("USA")) {
+            civ["KOR"].name = "DPR. Korea";
+            civ["DRK"].strength = 0;
+            civ["KOR"].y -= 10;
+            civ["JAP"].x += 15;
+            } else if (rng(15, nextYear) <= veryUnlikely) {
+            civ["DRK"].strength = 0;
+            civ["KOR"].y -= 10;
+            civ["JAP"].x += 15;
+            civ["KOR"].name = "Korea";
+            } else if (rng(15, nextYear) <= unlikely) {
+            civ["DRK"].strength += 0;
+            } else {
+            civ["DRK"].state = 2;
+            }
         }
     }
 
@@ -2159,14 +2164,17 @@ function regions(year) {
         }
     }
 
-    if (!c.manifest_destiny) {
-        civ["JAP"].loses = false;
-    } else {
-        civ["JAP"].loses = true;
-    }
-
     if (nextYear == 1945) {
-        if (civ["JAP"].loses) {
+        // Big Japan
+        if (rng(131, nextYear) <= veryUnlikely || !c.manifest_destiny) {
+            civ["JAPc"].strength += 200;
+            civ["VIE"].owner = "JAP";
+            civ["DUTi"].owner = "JAP";
+            civ["MLY"].owner = "JAP";
+            civ["PHI"].owner = "JAP";
+            c.big_japan = true;
+        } else {
+            // Normal Timeline
             civ["JAP"].name = "Japan";
             civ["JAP"].state = 8;
             worldNews("Hiroshima & Nagasaki Bombed",
@@ -2181,12 +2189,6 @@ function regions(year) {
             civ["VIE"].strength = 500;
         }
     }
-
-    // Big Japan
-    if (civ["JAP"].big && !civ["JAP"].loses) {
-        civ["ALA"].owner = "JAP";
-    }
-
     owner(civ, "JAPc", [], "Manchuria", "Manchuria", true);
 
 /* ______________________________
@@ -3438,8 +3440,7 @@ function regions(year) {
         c.superpowers.includes("USA") &&
         c.superpowers.includes("RUS") &&
         civ["USA"].strength > 0 &&
-        civ["RUS"].strength > 0 &&
-        !c.orwell1984
+        civ["RUS"].strength > 0
     ) {
         if (rng(95, nextYear) <= impossible) {
             // USA loses?
@@ -4632,6 +4633,9 @@ function regions(year) {
             civ["NIG"].size += 3;
             civ["NIG"].state = 2;
             civ["ENGn"].strength = 0;
+            if (civ["SOK"].strength > 0) {
+                civ["NIG"].y += 20;
+            }
         }
     
         civ["ALG"].strength = 200;

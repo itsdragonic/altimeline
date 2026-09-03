@@ -443,8 +443,12 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+// Add this near your other global variables at the top of your file if you haven't already:
+let wasGlitching = false;
+
 function animate() {
     requestAnimationFrame(animate);
+    
     if (globe) {
         rotation.x += (targetRotation.x - rotation.x) * 0.1;
         rotation.y += (targetRotation.y - rotation.y) * 0.1;
@@ -461,49 +465,137 @@ function animate() {
         zoom += (targetZoom - zoom) * 0.1;
         camera.position.z = zoom;
         
-        if (!isDragging && !disableSpinning) {
-            const timeDir = goingBackwards ? -1 : 1;
+        // Safe variable access
+        const isSpinDisabled = typeof disableSpinning !== 'undefined' ? disableSpinning : false;
+        const isGoingBackwards = typeof goingBackwards !== 'undefined' ? goingBackwards : false;
+        const currentlyLoading = typeof isLoading !== 'undefined' ? isLoading : false;
+        const isChangingDimensions = typeof changingDimensions !== 'undefined' ? changingDimensions : false;
+        const mobileCheck = typeof isMobile !== 'undefined' ? isMobile : false;
 
-            if (isLoading) {
+        if (!isDragging && !isSpinDisabled) {
+            const timeDir = isGoingBackwards ? -1 : 1;
+
+            if (currentlyLoading) {
                 // Fast spin just started -> store origin
                 if (!wasFastSpinning) {
                     fastSpinOriginY = targetRotation.y;
                     wasFastSpinning = true;
                 }
 
-                targetRotation.y += 0.1 * timeDir;
+                if (isChangingDimensions) {
+                    wasGlitching = true;
+
+                    // 1. Erratic Rotation (Toned down)
+                    targetRotation.y += (0.1 + Math.random() * 0.05) * timeDir;
+                    targetRotation.x += (Math.random() - 0.5) * 0.02;
+
+                    // 2. Camera Shake & FOV (Toned down)
+                    camera.position.x = (Math.random() - 0.5) * 0.15;
+                    camera.position.y = (Math.random() - 0.5) * 0.15;
+                    const baseFov = mobileCheck ? 45 : 35;
+                    camera.fov = baseFov + (Math.random() > 0.85 ? (Math.random() * 30 - 15) : 0);
+                    camera.updateProjectionMatrix();
+
+                    // 3. Globe Mesh Glitching (Toned down)
+                    if (Math.random() > 0.75) {
+                        globe.material.wireframe = true;
+                        globe.scale.setScalar(1 + Math.random() * 0.08); 
+                        globe.material.color.setHSL(Math.random(), 1, 0.6); 
+                    } else {
+                        globe.material.wireframe = false;
+                        globe.scale.setScalar(1 + (Math.random() * 0.01)); 
+                        globe.material.color.setHex(0xffffff);
+                    }
+
+                    // 4. Environment Glitch (Toned down)
+                    if (starField) {
+                        starField.scale.set(1 + Math.random() * 0.5, 1, 1 + Math.random() * 1);
+                    }
+                    if (globe.glow) {
+                        globe.glow.material.uniforms.c.value = 0.5 + Math.random() * 1.0;
+                        globe.glow.material.uniforms.glowColor.value.setHSL(Math.random(), 1, 0.5);
+                    }
+
+                    // 5. Canvas CSS Glitch (Toned down frequency)
+                    if (Math.random() > 0.7) {
+                        renderer.domElement.style.filter = `hue-rotate(${Math.random()*360}deg) saturate(${120 + Math.random()*100}%) invert(${Math.random() > 0.95 ? 100 : 0}%) blur(${Math.random() > 0.85 ? 1.5 : 0}px)`;
+                    } else {
+                        renderer.domElement.style.filter = 'none';
+                    }
+
+                } else {
+                    // LOADING, BUT NOT CHANGING DIMENSIONS
+                    // Revert to original fast spin behavior
+                    targetRotation.y += 0.1 * timeDir;
+
+                    // If we just turned off changingDimensions, clean up the effects immediately
+                    if (wasGlitching) {
+                        resetGlitchEffects(mobileCheck);
+                        wasGlitching = false;
+                    }
+                }
+
             } else {
-                // Fast spin just ended -> snap back
+                // NOT LOADING
                 if (wasFastSpinning) {
                     targetRotation.y = fastSpinOriginY;
+                    targetRotation.x = 0; // Reset wobble
                     wasFastSpinning = false;
+                }
+
+                if (wasGlitching) {
+                    resetGlitchEffects(mobileCheck);
+                    wasGlitching = false;
                 }
 
                 // Normal slow spin
                 targetRotation.y += 0.0001 * timeDir;
             }
         }
-
     }
-    if (glow) {
+    
+    // Original Glow alignment logic
+    if (typeof glow !== 'undefined' && glow) {
         glow.material.uniforms.viewVector.value = 
             new THREE.Vector3().subVectors(camera.position, glow.position);
     }
     
-    if (globe.moon) {
-        const radius = 20; // distance from Earth
-        const tilt = -23.44 * (Math.PI / 180); // orbit tilt in radians
-        const phaseOffset = 3 * Math.PI / 2; // tweak this to set starting position
+    // Original Moon orbit logic
+    if (globe && globe.moon) {
+        const radius = 20; 
+        const tilt = -23.44 * (Math.PI / 180); 
+        const phaseOffset = 3 * Math.PI / 2; 
 
         const time = -globe.rotation.y + phaseOffset;
 
-        // Tilted orbit plane
         globe.moon.position.x = radius * Math.cos(time);
         globe.moon.position.z = radius * Math.sin(time) * Math.cos(tilt);
         globe.moon.position.y = radius * Math.sin(time) * Math.sin(tilt);
         globe.moon.lookAt(globe.position);
     }
+    
     renderer.render(scene, camera);
+}
+
+// Helper function to keep the reset logic clean and reusable
+function resetGlitchEffects(mobileCheck) {
+    camera.position.x = 0;
+    camera.position.y = 0;
+    camera.fov = mobileCheck ? 45 : 35;
+    camera.updateProjectionMatrix();
+    
+    globe.material.wireframe = false;
+    globe.scale.setScalar(1);
+    globe.material.color.setHex(0xffffff);
+    
+    if (starField) starField.scale.setScalar(1);
+    
+    if (globe.glow) {
+        globe.glow.material.uniforms.c.value = 0.7;
+        globe.glow.material.uniforms.glowColor.value.setHex(0x93cfef);
+    }
+    
+    renderer.domElement.style.filter = 'none';
 }
 
 function showError(message) {
