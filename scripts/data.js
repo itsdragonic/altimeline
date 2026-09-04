@@ -1,5 +1,6 @@
 const presentYear = 2026;
 const oppositeYear = -presentYear;
+var butterflyYear = presentYear;
 var firstYear = {};
 
 const page = document.body.dataset.page;
@@ -80,6 +81,12 @@ firstYear[oppositeYear] = {
         superpowers: [],
         taken_names: [], // for colonies
         worldTech: 100,
+        bigEffect: false, // big butterfly effects
+
+        rome_colonizes_america: false, // false
+
+        // 1200s
+        mongols_invaded_japan: false, // false
 
         // 1400s
         constantinopleSurvives: true, // false
@@ -309,10 +316,17 @@ var colonizeOldWorld = {};
 civs = firstYear;
 
 function rng(val, year) {
-    // override1
+    // override 1: butterfly effect
+    if (year > butterflyYear) {
+        allValues[val] = (Date.now() % 100) / 100;
+    }
+
+    // override 2: stored values
     if (allValues[val] != null) return allValues[val];
 
-    // override2
+    var seedUsed = seed;
+
+    // override 3: debug parameters
     if (
         seed &&
         seed.includes("{")
@@ -327,9 +341,7 @@ function rng(val, year) {
                 const key = rawKey.trim();
                 const value = rawValue.trim();
 
-                if (key === "def") {
-                    rules.default = value === "true";
-                } else if (key === "pod") {
+                if (key === "pod") {
                     rules.pointofdeviation = Number(value);
                 } else {
                     rules[Number(key)] = Number(value);
@@ -337,64 +349,65 @@ function rng(val, year) {
             });
 
             if (Object.prototype.hasOwnProperty.call(rules, val)) return rules[val];
-            if (rules.default) return 1;
             if (typeof year === 'number' && rules.pointofdeviation > year) return 1;
         }
     }
 
-    // special seeds
-    if (!seed || seed == 0 || seed == "") return 1;
-    else if (seed == 'test') return 0;
-    else if (seed == '1984') {    
+    if (seed && seed.includes("{")) {
+        seedUsed = seed.replace(/\{.*\}$/, '');
+    }
+
+    // override 4: special seeds
+    if (!seedUsed || seedUsed == 0 || seedUsed == "") return 1;
+    if (seedUsed == 'test') return 0;
+    if (seedUsed == '1984') {    
         if ([15, 97, 99, 105, 106, 124].includes(val)) {
             return 0;
         }
         return 1;
     }
-    else if (seed.toLowerCase() == 'southern victory' || seed.toLowerCase() == 'confederate victory') {    
+    if (seedUsed.toLowerCase() == 'southern victory' || seedUsed.toLowerCase() == 'southern_victory') {    
         if ([90, 121].includes(val)) {
             return 0;
         }
         return 1;
     }
-    else if (seed.toLowerCase() == 'kaiserreich') {
+    if (seedUsed.toLowerCase() == 'kaiserreich') {
         if (val == 62) return 0;
         return 1;
     }
-    else if (seed.toLowerCase() == 'fuhrerreich' || seed.toLowerCase() == 'tno') {
+    if (seedUsed.toLowerCase() == 'fuhrerreich' || seedUsed.toLowerCase() == 'tno') {
         if (val == 92) return 0;
         return 1;
     }
-    else if (seed.toLowerCase() == 'the man in the high castle' || seed.toLowerCase() == 'tmithc') {
-        if ([92, 131, 159].includes(val)) {
-            return 0;
-        }
-        return 1;
-    }
-    else if (seed.toLowerCase() == 'fallout') {
+    if (seedUsed.toLowerCase() == 'fallout') {
         if (val == 128) return 0;
         return 1;
     }
-    else if (seed.toLowerCase() == 'tordesillas') {
-        return 1;
-    }
-    else if (seed == '616' || seed == '199999') {
+    if (seedUsed.toLowerCase() == 'tordesillas') {
         return 1;
     }
 
+    // Ouput
     Math.seedrandom(seedNumber + val);
-    return Math.random();
+    let output = Math.random();
+    if (allValues[val] == null) {
+        allValues[val] = output;
+    }
+    return output;
 }
 
-function rngRange(val, lowerBound, upperBound) {
-    if (val == 1) {
+function rngRange(val, year, lowerBound, upperBound) {
+    if (year > upperBound) return upperBound;
+
+    if (rng(val, year) == 1) {
         return Math.ceil((upperBound + lowerBound) / 2);
     } else {
-        return Math.ceil(rng(val + 1) * (upperBound - lowerBound + 1)) + lowerBound;
+        return Math.ceil(rng(val + 1, year) * (upperBound - lowerBound + 1)) + lowerBound;
     }
 }
 
-function rngInfluence(val, normalVal, conditionals) {
+function rngInfluence(val, year, normalVal, conditionals) {
     if (val == 1) {
         return normalVal;
     } else {
@@ -403,16 +416,18 @@ function rngInfluence(val, normalVal, conditionals) {
         conditionals.forEach(condition => {
             const [name, weight] = condition;
             if (name === true) {
-                newValue -= rngRange(rng(val), 0, 2 * weight);
+                newValue -= rngRange(val, 0, 0, 2 * weight);
             }
         });
-
-        return newValue;
+        if (year <= newValue) {
+            return newValue;
+        }
     }
+    return 1;
 }
 
 function colonizingPercentage(RNG, array, bias, biasAmount, canBeFree) {
-    RNG = Math.min(RNG, 0.999999999999);
+    RNG = Math.min(RNG, 1);
 
     let cumulativeWeights = [];
     let totalWeight = 0;
@@ -423,13 +438,13 @@ function colonizingPercentage(RNG, array, bias, biasAmount, canBeFree) {
     }
 
 
-    if ((rng(98) < possible || rng(98) == 1) && colonizers[bias] > 0) {
+    if ((rng(98, presentYear) < possible || rng(98, presentYear) == 1 || RNG == 1) && colonizers[bias] > 0) {
         return bias;
     }
 
     for (var key in colonizers) {
         totalWeight += colonizers[key];
-        if (key == bias) {
+        if (key == bias && !c.bigEffect) {
             totalWeight *= biasAmount;
         }
         cumulativeWeights.push({ key, weight: totalWeight });
@@ -761,7 +776,7 @@ addCountry("ENGs", "South Africa", 1, 1270, 910, 9);
 
 addCountry("LOU", "Louisiana", 1, 510, 320, 11);
 addCountry("GUY", "British Guiana", 1, 820, 585, 4);
-addCountry("FLO", "Spanish Florida", 2);
+addCountry("FLO", "Florida", 2, 680, 425, 5);
 addCountry("HAI", "Haiti", 1, 710, 500, 4);
 addCountry("SOK", "Sokoto", 1, 1270, 565, 10);
 addCountry("ARG", "Rio de la Plata", 1, 762, 885, 8);
