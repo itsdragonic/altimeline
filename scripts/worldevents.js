@@ -94,6 +94,7 @@ function worldEvents(year) {
         if (nextYear == rngRange(rng(19, nextYear), -44, 100)) {
             civ["ROM"].america = true;
             civ["ROM"].yearsColonizing = 0;
+            c.bigEffect = true;
         }
     }
 
@@ -186,7 +187,7 @@ function worldEvents(year) {
             civ["IRO"].strength = 0;
 
             // If Prussia is still defeated
-            if (rng(32, nextYear) <= unlikely) {
+            if (rng(167, nextYear) <= unlikely) {
                 civ["AUS"].strong = true;
             }
         }
@@ -243,20 +244,6 @@ function worldEvents(year) {
                 civ["USA"].strength > 0 && !c.csa_victory) {
                 Allies.push("USA");
             }
-
-            // Russian Revolution
-            //if (RNG("Russian_Revolution",year) > unlikely) {
-            civ["RUS"].name = "Red Army";
-            civ["RUS"].x += 80;
-            civ["RUS"].y -= 12;
-            civ["RUS"].size += 3;
-            civ["RUS"].color = [124, 13, 24];
-            civ["SIB"].strength = 27;
-            civ["FIN"].strength = 2250;
-            /*  c.soviet_union = true;
-            } else {
-            c.soviet_union = false;
-            }*/
         }
         if (nextYear == 1918) {
             civ["GER"].state = "a";
@@ -269,25 +256,13 @@ function worldEvents(year) {
         }
         if (nextYear == 1919) {
             civ["UKR"].color = [];
-            civ["SIB"].state = 2;
-
-            civ["LIT"].strength = 22;
-            civ["LIT"].state = 5;
             
-            civ["LIV"].strength = 22;
-            civ["LIV"].state = 2;
-            civ["LIV"].name = "Estonia";
-            civ["LIV"].y -= 15;
             civ["KZH"].name = "Alash Orda";
             civ["KZH"].state = "a";
             civ["KZH"].x = 1605;
             civ["KZH"].y = 275;
             civ["KZH"].size = 10;
 
-            /*if (RNG("Russian_Revolution",year) > unlikely && RNG("Boxer's_Rebellion",year) <= unlikely) {
-            civ["MAN"].state = "b";
-            civ["SIB"].strength = 0;
-            }*/
 
             // Treaty of Versailles (WWI Aftermath)
             if (rng(62, nextYear) <= unlikely) {
@@ -561,7 +536,7 @@ function worldEvents(year) {
             civ["ALB"].strength = 300;
             civ["GRE"].color = [];
             civ["SER"].weak = false;
-            civ["FRA"].name = "France";
+            civ["FRA"].name = civ["FRA"].defaultname;
             civ["FRA"].y -= 15;
             civ["FRA"].size += 2;
         }
@@ -698,7 +673,7 @@ function worldEvents(year) {
         civ["VIE"].owner = "JAP";
         //if (c.ww2) {
 
-        if (c.manifest_destiny) {
+        if (c.manifest_destiny && civ["JAP"].expansionist) {
             worldNews(`Pearl Harbor Attacked`,
                     `Japanese aircraft have launched a surprise attack on Pearl Harbor, destroying ships and drawing the United States into the war.`,
                     "https://i0.wp.com/www.nationalreview.com/wp-content/uploads/2016/12/pearl-harbor-attack-photos-116-1.jpg?fit=920%2C537&ssl=1",
@@ -815,7 +790,7 @@ function worldEvents(year) {
     }
 
     // special cases
-    if (seed == '616' || seed == '199999' || rng(157, nextYear) < impossible) {
+    if (seed == '616' || seed == '199999') {
         altHist(nextYear, "earth_616");
     }
 }

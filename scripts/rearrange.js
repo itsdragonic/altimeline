@@ -94,12 +94,12 @@ function rearrange(nations) {
         endItem(nations, "MAN");
     }
     frontItem(nations, "RAJ");
+    frontItem(nations, "UYG");
     frontItem(nations, "CHI");
     frontItem(nations, "NEP");
     frontItem(nations, "JAPn");
     frontItem(nations, "PAK");
     frontItem(nations, "SRI");
-    frontItem(nations, "KZH");
     frontItem(nations, "DRK");
     frontItem(nations, "JAPc");
 

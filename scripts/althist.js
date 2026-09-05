@@ -386,15 +386,9 @@ function altHist(year,id) {
             break;
 
         case "earth_616":
-            civ["SOK"].strength = 500;
-            civ["SOK"].name = "Wakanda";
+            civ["BUN"].name = "Wakanda";
             civ["BUN"].strength = 500;
             civ["INDg"].strength = 500;
-            if (civ["ABY"].state >= 4) {
-                civ["SOK"].name = "Imaya";
-                civ["ABY"].state = 4;
-                civ["ABY"].name = "Wakanda / Ethiopia";
-            }
             if (civ["UKR"].name == "Ukraine") {
                 civ["UKR"].name = "Sokovia  Ukraine";
             }

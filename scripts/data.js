@@ -383,7 +383,9 @@ function rng(val, year) {
     }
 
     Math.seedrandom(seedNumber + val);
-    return Math.random();
+    let output = Math.random();
+    if (c.bigEffect) output = output ** 2;
+    return output;
 }
 
 function rngRange(val, lowerBound, upperBound) {
@@ -423,13 +425,13 @@ function colonizingPercentage(RNG, array, bias, biasAmount, canBeFree) {
     }
 
 
-    if ((rng(98) < possible || rng(98) == 1) && colonizers[bias] > 0) {
+    if ((rng(98) < possible || rng(98) == 1) && colonizers[bias] > 0 && !c.bigEffect) {
         return bias;
     }
 
     for (var key in colonizers) {
         totalWeight += colonizers[key];
-        if (key == bias) {
+        if (key == bias && !c.bigEffect) {
             totalWeight *= biasAmount;
         }
         cumulativeWeights.push({ key, weight: totalWeight });
@@ -609,7 +611,6 @@ addCountry("BER", "Berbers", null, 1255, 385, 5);
 addCountry("AYR", "Tuaregs", null, 1265, 410, 5);
 addCountry("LUO", "Luo", null, 1475, 600, 7);
 addCountry("LUB", "Luba", null, 1400, 725, 5);
-addCountry("ZIM", "Mapungubwe", null, 1420, 825, 5);
 addCountry("YOR", "Yoruba", null, 1220, 585, 5);
 addCountry("HAR", "Ifat", null, 1540, 580, 6);
 addCountry("MIS", "Mississippi", null, 610, 370, 6);
@@ -694,6 +695,7 @@ addCountry("MOR", "Almoravids", 1, 1150, 390, 6);
 addCountry("NAP", "Sicily", 1, 1350, 320, 3.5);
 addCountry("POR", "Portugal", 1, 1150, 340, 4);
 addCountry("BUN", "Kitara", 1, 1425, 650, 5);
+addCountry("ZIM", "Mapungubwe", 1, 1420, 825, 5);
 addCountry("CZE", "Bohemia", 1, 1350, 255, 4);
 addCountry("HAW", "Hawai'i", 1, 130, 485, 6);
 addCountry("SOM", "Ajuran", 1, 1540, 620, 8);
@@ -723,6 +725,7 @@ addCountry("SON", "Songhay", 1, 1200, 530, 8);
 addCountry("BRA", "Portuguese Brazil", 1, 906, 700, 8);
 
 addCountry("KZH", "Yarkent", 1, 1735, 340, 9);
+addCountry("UYG", "Uyghur Khaganate", 1, 1835, 300, 8);
 addCountry("VEZ", "Klein-Venedig", "a", 710, 585, 7);
 addCountry("MAD", "Merina", 1, 1570, 790, 5);
 addCountry("PHI", "Philippines ( SP )", 1, 2130, 555, 7);

@@ -79,13 +79,15 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-family: monospace;
-            width: 100px;
         }
+        input[type="text"] { width: 100px; }
+        input[type="number"] { width: 60px; }
+        
         .color-btn {
             width: 40px;
             height: 40px;
@@ -93,11 +95,10 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .color-btn.black {
-            background: #000000;
-        }
-        .color-btn.white {
-            background: #ffffff;
+        .color-btn.black { background: #000000; }
+        .color-btn.white { background: #ffffff; }
+        .color-btn.transparent { 
+            background: repeating-conic-gradient(#ccc 0% 25%, transparent 0% 50%) 50% / 10px 10px #ffffff; 
         }
         .tool-btn {
             padding: 10px 15px;
@@ -106,6 +107,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            user-select: none;
         }
         .tool-btn.active {
             background: #007bff;
@@ -126,10 +128,32 @@
         .canvas-container.panning:active {
             cursor: grabbing;
         }
-        #canvas {
+        #canvas, #bgCanvas, #overlayCanvas {
             position: absolute;
             image-rendering: pixelated;
             transform-origin: 0 0;
+            transition: opacity 0.2s;
+        }
+        #bgCanvas {
+            z-index: 1; /* Reference Layer */
+        }
+        #canvas {
+            z-index: 2; /* Active Layer */
+        }
+        #overlayCanvas {
+            opacity: 0.5;
+            pointer-events: none;
+            display: none;
+            z-index: 3; /* Imported Overlay Layer */
+        }
+        #selectionBox {
+            display: none;
+            position: absolute;
+            border: 2px dashed #007bff;
+            background: rgba(0, 123, 255, 0.2);
+            pointer-events: none;
+            z-index: 10;
+            box-sizing: border-box;
         }
         .output-section {
             margin-top: 20px;
@@ -147,7 +171,7 @@
             align-items: center;
             margin-bottom: 10px;
         }
-        .stack-option {
+        .stack-option, .overlay-option {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -155,6 +179,15 @@
             font-weight: bold;
             user-select: none;
             cursor: pointer;
+        }
+        .overlay-controls {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            background: #eee;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -180,6 +213,25 @@
             <label class="stack-option">
                 <input type="checkbox" id="allowStacking"> Allow stacking
             </label>
+            <label class="stack-option">
+                <input type="checkbox" id="actualImageCheck"> Actual Image
+            </label>
+            <button class="btn btn-primary" id="toggleBgBtn" onclick="toggleBgLayer()" style="display:none; padding: 5px 10px; font-size: 12px; margin-left: 10px;">Toggle Base Layer</button>
+            
+            <label class="overlay-option" style="margin-left: 20px;">
+                <input type="checkbox" id="overlayToggle" onchange="toggleOverlay()"> Enable Overlay
+            </label>
+
+            <div class="overlay-controls" id="overlayControls">
+                <button class="tool-btn" onclick="document.getElementById('overlayFileInput').click()">Import Overlay</button>
+                <input type="file" id="overlayFileInput" style="display:none;" accept="image/*" onchange="handleOverlayImport(event)">
+                <label>Shift X: <input type="number" id="overlayShiftX" value="267" onchange="updateCanvasTransform()"></label>
+                <label>Shift Y: <input type="number" id="overlayShiftY" value="12" onchange="updateCanvasTransform()"></label>
+                <label>Scale: <input type="number" id="overlayScale" value="0.827" step="0.1" onchange="updateCanvasTransform()"></label>
+                <label class="overlay-option" style="margin-left:auto;">
+                    <input type="checkbox" id="transparencyToggle" onchange="toggleTransparency()"> Swap Opacity
+                </label>
+            </div>
         </div>
 
         <div class="editor-section" id="editorSection">
@@ -189,14 +241,15 @@
                 <button class="tool-btn" onclick="zoomIn()">🔍+ Zoom In</button>
                 <button class="tool-btn" onclick="zoomOut()">🔍- Zoom Out</button>
                 <button class="tool-btn" onclick="resetView()">↺ Reset View</button>
-                <button class="tool-btn" id="panBtn" onclick="setTool('pan')">✋ Pan (Hold R)</button>
+                <button class="tool-btn" id="panBtn" onclick="setTool('pan')">✋ Pan (Hold R or Shift)</button>
                 <span><strong>Zoom:</strong> <span id="zoomLevel">100%</span></span>
             </div>
             
             <div class="tools">
-                <button class="tool-btn active" id="brushBtn" onclick="setTool('brush')">Brush (1px)</button>
-                <button class="tool-btn" id="pickerBtn" onclick="setTool('picker')">Color Picker</button>
-                <button class="tool-btn" id="fillBtn" onclick="setTool('fill')">Fill Tool</button>
+                <button class="tool-btn active" id="brushBtn" onclick="setTool('brush')">Brush (B)</button>
+                <button class="tool-btn" id="pickerBtn" onclick="setTool('picker')">Color Picker (C)</button>
+                <button class="tool-btn" id="fillBtn" onclick="setTool('fill')">Fill Tool (F)</button>
+                <button class="tool-btn" id="regionFillBtn" onclick="setTool('regionFill')">Fill Region (V)</button>
                 
                 <div class="color-input">
                     <input type="color" id="colorPicker" value="#000000" onchange="updateColor()">
@@ -205,35 +258,39 @@
                 
                 <div class="color-btn black" onclick="setColor('#000000')" title="Black"></div>
                 <div class="color-btn white" onclick="setColor('#ffffff')" title="White"></div>
+                <div class="color-btn transparent" onclick="setColor('transparent')" title="Transparent"></div>
+                <div class="color-btn" id="recentColorBtn" onclick="setColor(recentCustomColor)" title="Recent Custom Color" style="background: #808080;"></div>
                 
                 <button class="btn btn-success" onclick="finish()">Finish & Export</button>
                 <button class="tool-btn" onclick="downloadPlaced()">⬇ Download PNG</button>
 
-                <button class="tool-btn" id="eraserBtn" onclick="setTool('eraser')">Eraser</button>
+                <button class="tool-btn" id="eraserBtn" onclick="setTool('eraser')">Eraser (E)</button>
 
-                <button class="tool-btn" onclick="addRight()">➕ Right</button>
-                <button class="tool-btn" onclick="addBottom()">➕ Bottom</button>
-                <button class="tool-btn" onclick="addLeft()">➕ Left</button>
-                <button class="tool-btn" onclick="addTop()">➕ Top</button>
+                <button class="tool-btn" onmousedown="startAction(addRight)" onmouseup="stopAction()" onmouseleave="stopAction()">➕ Right</button>
+                <button class="tool-btn" onmousedown="startAction(addBottom)" onmouseup="stopAction()" onmouseleave="stopAction()">➕ Bottom</button>
+                <button class="tool-btn" onmousedown="startAction(addLeft)" onmouseup="stopAction()" onmouseleave="stopAction()">➕ Left</button>
+                <button class="tool-btn" onmousedown="startAction(addTop)" onmouseup="stopAction()" onmouseleave="stopAction()">➕ Top</button>
 
-                <button class="tool-btn" onclick="removeLeft()">❌ Left</button>
-                <button class="tool-btn" onclick="removeTop()">❌ Top</button>
-                <button class="tool-btn" onclick="removeRight()">❌ Right</button>
-                <button class="tool-btn" onclick="removeBottom()">❌ Bottom</button>
+                <button class="tool-btn" onmousedown="startAction(removeLeft)" onmouseup="stopAction()" onmouseleave="stopAction()">❌ Left</button>
+                <button class="tool-btn" onmousedown="startAction(removeTop)" onmouseup="stopAction()" onmouseleave="stopAction()">❌ Top</button>
+                <button class="tool-btn" onmousedown="startAction(removeRight)" onmouseup="stopAction()" onmouseleave="stopAction()">❌ Right</button>
+                <button class="tool-btn" onmousedown="startAction(removeBottom)" onmouseup="stopAction()" onmouseleave="stopAction()">❌ Bottom</button>
 
                 <button class="tool-btn" onclick="undo()">↩ Undo</button>
                 <button class="tool-btn" onclick="redo()">↪ Redo</button>
-
             </div>
 
             <div class="canvas-container" id="canvasContainer">
+                <canvas id="overlayCanvas"></canvas>
+                <canvas id="bgCanvas"></canvas>
                 <canvas id="canvas"></canvas>
+                <div id="selectionBox"></div>
             </div>
 
             <div class="info">
                 <strong>Current Tool:</strong> <span id="currentTool">Brush</span> | 
                 <strong>Current Color:</strong> <span id="currentColor">#000000</span> |
-                <strong>Tip:</strong> Hold R to pan, use mouse wheel to zoom
+                <strong>Tip:</strong> Hold R or Shift to pan, use mouse wheel to zoom. Use shortcuts (B, C, F, V, E) to swap tools.
             </div>
         </div>
 
@@ -249,10 +306,16 @@
 let canvas, ctx, canvasContainer;
 let currentTool = 'brush';
 let currentColor = '#000000';
+let recentCustomColor = '#808080';
 let isDrawing = false;
 let originalKey = '';
 let originalX = 0;
 let originalY = 0;
+
+let bgOriginalX = 0;
+let bgOriginalY = 0;
+let bgVisible = true;
+let hasPushedToBaseLayer = false;
 
 let undoStack = [];
 let redoStack = [];
@@ -266,6 +329,134 @@ let isPanning = false;
 let lastPanX = 0;
 let lastPanY = 0;
 let panPressed = false;
+
+// Region Fill Variables
+let selStartX = 0;
+let selStartY = 0;
+let lastMousePos = {x: 0, y: 0};
+
+// Overlay State
+let hasImportedOverlay = false;
+
+// Click and hold repeating action logic
+let actionInterval;
+let actionTimeout;
+let holdTicks = 0;
+
+function startAction(actionFunc) {
+    saveState();
+    holdTicks = 0;
+    actionFunc(false, 1);
+    
+    actionTimeout = setTimeout(() => {
+        actionInterval = setInterval(() => {
+            holdTicks++;
+            let amount = 1;
+            if (holdTicks > 10) amount = 5;
+            if (holdTicks > 30) amount = 15;
+            actionFunc(false, amount);
+        }, 50);
+    }, 300);
+}
+
+function stopAction() {
+    clearTimeout(actionTimeout);
+    clearInterval(actionInterval);
+}
+
+function toggleBgLayer() {
+    const bgCanvas = document.getElementById('bgCanvas');
+    bgVisible = !bgVisible;
+    bgCanvas.style.display = bgVisible ? 'block' : 'none';
+}
+
+function toggleOverlay() {
+    const isChecked = document.getElementById('overlayToggle').checked;
+    const controls = document.getElementById('overlayControls');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    
+    if (isChecked) {
+        controls.style.display = 'flex';
+        overlayCanvas.style.display = 'block';
+        if (!hasImportedOverlay) {
+            document.getElementById('overlayFileInput').click();
+        }
+    } else {
+        controls.style.display = 'none';
+        overlayCanvas.style.display = 'none';
+    }
+}
+
+function toggleTransparency() {
+    const isChecked = document.getElementById('transparencyToggle').checked;
+    const mainCanvas = document.getElementById('canvas');
+    const bgCanvas = document.getElementById('bgCanvas');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    
+    if (isChecked) {
+        mainCanvas.style.opacity = '0.5';
+        mainCanvas.style.zIndex = '3';
+        if (bgCanvas) {
+            bgCanvas.style.opacity = '0.5';
+            bgCanvas.style.zIndex = '2';
+        }
+        overlayCanvas.style.opacity = '1.0';
+        overlayCanvas.style.zIndex = '1';
+    } else {
+        mainCanvas.style.opacity = '1.0';
+        mainCanvas.style.zIndex = '2';
+        if (bgCanvas) {
+            bgCanvas.style.opacity = '1.0';
+            bgCanvas.style.zIndex = '1';
+        }
+        overlayCanvas.style.opacity = '0.5';
+        overlayCanvas.style.zIndex = '3';
+    }
+}
+
+function handleOverlayImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+            processOverlayImage(img);
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function processOverlayImage(img) {
+    const TARGET_W = 2560;
+    const TARGET_H = 1297;
+    
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    overlayCanvas.width = TARGET_W;
+    overlayCanvas.height = TARGET_H;
+    const octx = overlayCanvas.getContext('2d');
+    
+    const targetAspect = TARGET_W / TARGET_H;
+    const imgAspect = img.width / img.height;
+    
+    let srcX = 0, srcY = 0, srcW = img.width, srcH = img.height;
+    
+    if (imgAspect > targetAspect) {
+        srcW = img.height * targetAspect;
+        srcX = (img.width - srcW) / 2;
+    } else {
+        srcH = img.width / targetAspect;
+        srcY = (img.height - srcH) / 2;
+    }
+    
+    octx.clearRect(0, 0, TARGET_W, TARGET_H);
+    octx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, TARGET_W, TARGET_H);
+    
+    hasImportedOverlay = true;
+    updateCanvasTransform();
+}
 
 function saveState() {
     if (!ctx) return;
@@ -320,8 +511,53 @@ function redo() {
 }
 
 function updateCanvasTransform() {
-    canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    if (canvas) {
+        canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    }
+    
+    const bgCanvas = document.getElementById('bgCanvas');
+    if (bgCanvas) {
+        const bx = (bgOriginalX || 0) - (originalX || 0);
+        const by = (bgOriginalY || 0) - (originalY || 0);
+        const bgTotalX = panX + (bx * scale);
+        const bgTotalY = panY + (by * scale);
+        bgCanvas.style.transform = `translate(${bgTotalX}px, ${bgTotalY}px) scale(${scale})`;
+    }
+    
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    if (overlayCanvas) {
+        const shiftX = parseInt(document.getElementById('overlayShiftX').value) || 0;
+        const shiftY = parseInt(document.getElementById('overlayShiftY').value) || 0;
+        const overScale = parseFloat(document.getElementById('overlayScale').value) || 1;
+        
+        const ox = shiftX - (originalX || 0);
+        const oy = shiftY - (originalY || 0);
+        
+        const totalX = panX + (ox * scale);
+        const totalY = panY + (oy * scale);
+        
+        overlayCanvas.style.transform = `translate(${totalX}px, ${totalY}px) scale(${scale * overScale})`;
+    }
+    
+    if (isDrawing && currentTool === 'regionFill') {
+        updateSelectionBox(lastMousePos.x, lastMousePos.y);
+    }
+    
     updateCursor();
+}
+
+function updateSelectionBox(currX, currY) {
+    const selBox = document.getElementById('selectionBox');
+    
+    const minX = Math.min(selStartX, currX);
+    const minY = Math.min(selStartY, currY);
+    const w = Math.abs(currX - selStartX) + 1;
+    const h = Math.abs(currY - selStartY) + 1;
+    
+    selBox.style.left = (panX + minX * scale) + 'px';
+    selBox.style.top = (panY + minY * scale) + 'px';
+    selBox.style.width = (w * scale) + 'px';
+    selBox.style.height = (h * scale) + 'px';
 }
 
 function updateCursor() {
@@ -335,13 +571,14 @@ function updateCursor() {
 
 function loadImage() {
     const id = document.getElementById('jsonInput').value.trim();
-    if (!states[id]) {
+    if (!states || !states[id]) {
         alert('Invalid image ID');
         return;
     }
 
     const entry = states[id];
     const isStacking = document.getElementById('allowStacking').checked;
+    const isActualImage = document.getElementById('actualImageCheck').checked;
 
     const img = new Image();
     img.onload = () => {
@@ -351,22 +588,83 @@ function loadImage() {
 
         const editorAlreadyActive = document.getElementById('editorSection').classList.contains('active');
 
-        if (isStacking && editorAlreadyActive && canvas.width > 0 && canvas.height > 0) {
+        if (isActualImage && editorAlreadyActive && canvas.width > 0 && canvas.height > 0) {
+            if (!hasPushedToBaseLayer) {
+                // First time checking Actual Image: Push current map/data to Background Layer
+                const bgCanvas = document.getElementById('bgCanvas');
+                const bgCtx = bgCanvas.getContext('2d');
+                
+                bgCanvas.width = canvas.width;
+                bgCanvas.height = canvas.height;
+                bgCtx.putImageData(ctx.getImageData(0, 0, canvas.width, canvas.height), 0, 0);
+                bgOriginalX = originalX;
+                bgOriginalY = originalY;
+                
+                document.getElementById('toggleBgBtn').style.display = 'inline-block';
+                hasPushedToBaseLayer = true;
+
+                // Load the new image entirely on the fresh active canvas layer
+                originalKey = id;
+                originalX = entry.x;
+                originalY = entry.y;
+                undoStack = [];
+                redoStack = [];
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                
+                updateCanvasTransform();
+            } else {
+                // Actual Image is checked AND we already pushed the base map: Combine into Active Layer
+                saveState();
+
+                const curLeft = originalX;
+                const curTop = originalY;
+                const curRight = originalX + canvas.width;
+                const curBottom = originalY + canvas.height;
+
+                const newLeft = entry.x;
+                const newTop = entry.y;
+                const newRight = entry.x + img.width;
+                const newBottom = entry.y + img.height;
+
+                const unionLeft = Math.min(curLeft, newLeft);
+                const unionTop = Math.min(curTop, newTop);
+                const unionRight = Math.max(curRight, newRight);
+                const unionBottom = Math.max(curBottom, newBottom);
+
+                const newWidth = unionRight - unionLeft;
+                const newHeight = unionBottom - unionTop;
+
+                const existingData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+
+                ctx.putImageData(existingData, curLeft - unionLeft, curTop - unionTop);
+                ctx.drawImage(img, newLeft - unionLeft, newTop - unionTop);
+
+                originalX = unionLeft;
+                originalY = unionTop;
+
+                updateCanvasTransform();
+            }
+            
+        } else if (isStacking && editorAlreadyActive && canvas.width > 0 && canvas.height > 0) {
+            // General stacking
             saveState();
 
-            // Current canvas bounding box in coordinate space
             const curLeft = originalX;
             const curTop = originalY;
             const curRight = originalX + canvas.width;
             const curBottom = originalY + canvas.height;
 
-            // Incoming image bounding box in coordinate space
             const newLeft = entry.x;
             const newTop = entry.y;
             const newRight = entry.x + img.width;
             const newBottom = entry.y + img.height;
 
-            // Union bounding box
             const unionLeft = Math.min(curLeft, newLeft);
             const unionTop = Math.min(curTop, newTop);
             const unionRight = Math.max(curRight, newRight);
@@ -375,26 +673,29 @@ function loadImage() {
             const newWidth = unionRight - unionLeft;
             const newHeight = unionBottom - unionTop;
 
-            // Snapshot existing canvas
             const existingData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-            // Resize canvas to new composite size
             canvas.width = newWidth;
             canvas.height = newHeight;
 
-            // Restore previous canvas contents shifted to the new union origin
             ctx.putImageData(existingData, curLeft - unionLeft, curTop - unionTop);
-
-            // Draw new image on top at its proper relative coordinate offset
             ctx.drawImage(img, newLeft - unionLeft, newTop - unionTop);
 
-            // Update state coordinates to the new union top-left
             originalX = unionLeft;
             originalY = unionTop;
             originalKey = id;
 
             updateCanvasTransform();
         } else {
+            // Hard Reset / Overwrite
+            hasPushedToBaseLayer = false;
+            const bgCanvas = document.getElementById('bgCanvas');
+            if (bgCanvas) {
+                bgCanvas.width = 0;
+                bgCanvas.height = 0;
+            }
+            document.getElementById('toggleBgBtn').style.display = 'none';
+
             originalKey = id;
             originalX = entry.x;
             originalY = entry.y;
@@ -485,31 +786,42 @@ function handleWheel(e) {
     document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
 }
 
-// Keyboard controls for pan mode
 document.addEventListener('keydown', e => {
     if (document.activeElement.tagName === 'INPUT' || 
         document.activeElement.tagName === 'TEXTAREA') {
         return;
     }
+    
+    const keyLow = e.key.toLowerCase();
 
-    if (e.key === 'r' && !panPressed) {
+    if ((keyLow === 'r' || keyLow === 'shift') && !panPressed) {
         e.preventDefault();
         panPressed = true;
         updateCursor();
     }
     
-    if (e.ctrlKey && e.key === 'z') {
+    if (e.ctrlKey && keyLow === 'z') {
         e.preventDefault();
         undo();
     }
-    if (e.ctrlKey && (e.key === 'y' || (e.shiftKey && e.key === 'Z'))) {
+    if (e.ctrlKey && (keyLow === 'y' || (e.shiftKey && keyLow === 'z'))) {
         e.preventDefault();
         redo();
+    }
+    
+    // Left-hand friendly shortcuts
+    if (!e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (keyLow === 'b') setTool('brush');
+        if (keyLow === 'c') setTool('picker');
+        if (keyLow === 'f') setTool('fill');
+        if (keyLow === 'v') setTool('regionFill');
+        if (keyLow === 'e') setTool('eraser');
     }
 });
 
 document.addEventListener('keyup', e => {
-    if (e.key === 'r') {
+    const keyLow = e.key.toLowerCase();
+    if (keyLow === 'r' || keyLow === 'shift') {
         e.preventDefault();
         panPressed = false;
         isPanning = false;
@@ -529,34 +841,36 @@ input.addEventListener('input', () => {
         return;
     }
 
-    const matches = Object.keys(states)
-        .filter(k => k.startsWith(query))
-        .slice(0, 50);
+    if (typeof states !== 'undefined') {
+        const matches = Object.keys(states)
+            .filter(k => k.startsWith(query))
+            .slice(0, 50);
 
-    if (!matches.length) {
-        resultsBox.style.display = 'none';
-        return;
-    }
-
-    matches.forEach(key => {
-        const div = document.createElement('div');
-        div.textContent = key;
-        div.style.padding = '6px 10px';
-        div.style.cursor = 'pointer';
-
-        div.onmouseenter = () => div.style.background = '#f0f0f0';
-        div.onmouseleave = () => div.style.background = '';
-
-        div.onclick = () => {
-            input.value = key;
+        if (!matches.length) {
             resultsBox.style.display = 'none';
-            loadImage();
-        };
+            return;
+        }
 
-        resultsBox.appendChild(div);
-    });
+        matches.forEach(key => {
+            const div = document.createElement('div');
+            div.textContent = key;
+            div.style.padding = '6px 10px';
+            div.style.cursor = 'pointer';
 
-    resultsBox.style.display = 'block';
+            div.onmouseenter = () => div.style.background = '#f0f0f0';
+            div.onmouseleave = () => div.style.background = '';
+
+            div.onclick = () => {
+                input.value = key;
+                resultsBox.style.display = 'none';
+                loadImage();
+            };
+
+            resultsBox.appendChild(div);
+        });
+
+        resultsBox.style.display = 'block';
+    }
 });
 
 function setTool(tool) {
@@ -564,7 +878,9 @@ function setTool(tool) {
     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
     const btn = document.getElementById(tool + 'Btn');
     if (btn) btn.classList.add('active');
-    document.getElementById('currentTool').textContent = tool;
+    
+    const displayName = tool.charAt(0).toUpperCase() + tool.slice(1).replace(/([A-Z])/g, ' $1');
+    document.getElementById('currentTool').textContent = displayName;
     updateCursor();
 }
 
@@ -590,19 +906,38 @@ function startDrawing(e) {
         return;
     }
     
-    const { x, y } = getMousePos(e);
+    const pos = getMousePos(e);
+    lastMousePos = pos;
     
-    if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
+    if (pos.x < 0 || pos.y < 0 || pos.x >= canvas.width || pos.y >= canvas.height) {
+        if (currentTool !== 'regionFill') return;
+    }
 
     if (currentTool === 'picker') {
         currentTool = 'brush';
-        return pickColor(x, y);
+        document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('brushBtn').classList.add('active');
+        document.getElementById('currentTool').textContent = 'Brush';
+        return pickColor(pos.x, pos.y);
     }
+    
     saveState();
-    if (currentTool === 'fill') return floodFill(x, y);
+    
+    if (currentTool === 'regionFill') {
+        selStartX = pos.x;
+        selStartY = pos.y;
+        isDrawing = true;
+        
+        const selBox = document.getElementById('selectionBox');
+        selBox.style.display = 'block';
+        updateSelectionBox(pos.x, pos.y);
+        return;
+    }
+
+    if (currentTool === 'fill') return floodFill(pos.x, pos.y);
 
     isDrawing = true;
-    drawPixel(x, y);
+    drawPixel(pos.x, pos.y);
 }
 
 function draw(e) {
@@ -618,20 +953,41 @@ function draw(e) {
     }
     
     if (!isDrawing) return;
-    const { x, y } = getMousePos(e);
+    const pos = getMousePos(e);
+    lastMousePos = pos;
     
-    if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
+    if (currentTool === 'regionFill') {
+        updateSelectionBox(pos.x, pos.y);
+        return;
+    }
     
-    drawPixel(x, y);
+    if (pos.x < 0 || pos.y < 0 || pos.x >= canvas.width || pos.y >= canvas.height) return;
+    drawPixel(pos.x, pos.y);
 }
 
-function stopDrawing() {
+function stopDrawing(e) {
+    if (isDrawing && currentTool === 'regionFill') {
+        const minX = Math.min(selStartX, lastMousePos.x);
+        const minY = Math.min(selStartY, lastMousePos.y);
+        const w = Math.abs(lastMousePos.x - selStartX) + 1;
+        const h = Math.abs(lastMousePos.y - selStartY) + 1;
+        
+        if (currentColor === 'transparent') {
+            ctx.clearRect(minX, minY, w, h);
+        } else {
+            ctx.fillStyle = currentColor;
+            ctx.fillRect(minX, minY, w, h);
+        }
+        
+        document.getElementById('selectionBox').style.display = 'none';
+    }
+    
     isDrawing = false;
     isPanning = false;
 }
 
 function drawPixel(x, y) {
-    if (currentTool === 'eraser') {
+    if (currentTool === 'eraser' || currentColor === 'transparent') {
         ctx.clearRect(x, y, 1, 1);
     } else {
         ctx.fillStyle = currentColor;
@@ -672,7 +1028,7 @@ function floodFill(startX, startY) {
         data[i]     = fill[0];
         data[i + 1] = fill[1];
         data[i + 2] = fill[2];
-        data[i + 3] = 255;
+        data[i + 3] = fill[3];
 
         stack.push([x + 1, y]);
         stack.push([x - 1, y]);
@@ -691,6 +1047,8 @@ function colorsMatch(a, b) {
 }
 
 function hexToRgba(hex) {
+    if (hex === 'transparent') return [0, 0, 0, 0];
+    
     hex = hex.replace('#', '');
     return [
         parseInt(hex.slice(0, 2), 16),
@@ -702,9 +1060,19 @@ function hexToRgba(hex) {
 
 function setColor(c) {
     currentColor = c;
-    document.getElementById('colorPicker').value = c;
-    document.getElementById('hexInput').value = c;
+    if (c !== 'transparent') {
+        document.getElementById('colorPicker').value = c;
+        document.getElementById('hexInput').value = c;
+    } else {
+        document.getElementById('hexInput').value = 'Clear';
+    }
     document.getElementById('currentColor').textContent = c;
+    
+    const cLower = c.toLowerCase();
+    if (cLower !== '#000000' && cLower !== '#ffffff' && cLower !== 'transparent') {
+        recentCustomColor = cLower;
+        document.getElementById('recentColorBtn').style.background = recentCustomColor;
+    }
 }
 
 function updateColor() {
@@ -729,57 +1097,128 @@ function expand(dx, dy, shiftX = 0, shiftY = 0) {
     updateCanvasTransform();
 }
 
-function addRight() { saveState(); expand(1, 0); }
-function addBottom() { saveState(); expand(0, 1); }
-function addLeft() { saveState(); expand(1, 0, 1, 0); originalX--; }
-function addTop() { saveState(); expand(0, 1, 0, 1); originalY--; }
+function addRight(save = true, amt = 1) { 
+    if(save !== false) saveState(); 
+    expand(amt, 0); 
+}
+function addBottom(save = true, amt = 1) { 
+    if(save !== false) saveState(); 
+    expand(0, amt); 
+}
+function addLeft(save = true, amt = 1) { 
+    if(save !== false) saveState(); 
+    expand(amt, 0, amt, 0); 
+    originalX -= amt; 
+    updateCanvasTransform(); 
+}
+function addTop(save = true, amt = 1) { 
+    if(save !== false) saveState(); 
+    expand(0, amt, 0, amt); 
+    originalY -= amt; 
+    updateCanvasTransform(); 
+}
 
-function removeRight() {
-    saveState();
-    if (canvas.width <= 1) return;
-    const img = ctx.getImageData(0, 0, canvas.width - 1, canvas.height);
-    canvas.width--;
+function removeRight(save = true, amt = 1) {
+    if(save !== false) saveState();
+    amt = Math.min(amt, canvas.width - 1);
+    if (amt <= 0) return;
+    const img = ctx.getImageData(0, 0, canvas.width - amt, canvas.height);
+    canvas.width -= amt;
     ctx.putImageData(img, 0, 0);
     updateCanvasTransform();
 }
 
-function removeBottom() {
-    saveState();
-    if (canvas.height <= 1) return;
-    const img = ctx.getImageData(0, 0, canvas.width, canvas.height - 1);
-    canvas.height--;
+function removeBottom(save = true, amt = 1) {
+    if(save !== false) saveState();
+    amt = Math.min(amt, canvas.height - 1);
+    if (amt <= 0) return;
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height - amt);
+    canvas.height -= amt;
     ctx.putImageData(img, 0, 0);
     updateCanvasTransform();
 }
 
-function removeLeft() {
-    saveState();
-    if (canvas.width <= 1) return;
-    const img = ctx.getImageData(1, 0, canvas.width - 1, canvas.height);
-    canvas.width--;
+function removeLeft(save = true, amt = 1) {
+    if(save !== false) saveState();
+    amt = Math.min(amt, canvas.width - 1);
+    if (amt <= 0) return;
+    const img = ctx.getImageData(amt, 0, canvas.width - amt, canvas.height);
+    canvas.width -= amt;
     ctx.putImageData(img, 0, 0);
-    originalX++;
+    originalX += amt;
     updateCanvasTransform();
 }
 
-function removeTop() {
-    saveState();
-    if (canvas.height <= 1) return;
-    const img = ctx.getImageData(0, 1, canvas.width, canvas.height - 1);
-    canvas.height--;
+function removeTop(save = true, amt = 1) {
+    if(save !== false) saveState();
+    amt = Math.min(amt, canvas.height - 1);
+    if (amt <= 0) return;
+    const img = ctx.getImageData(0, amt, canvas.width, canvas.height - amt);
+    canvas.height -= amt;
     ctx.putImageData(img, 0, 0);
-    originalY++;
+    originalY += amt;
+    updateCanvasTransform();
+}
+
+function trimCanvas() {
+    if (!canvas || !ctx) return;
+    
+    const w = canvas.width;
+    const h = canvas.height;
+    const imgData = ctx.getImageData(0, 0, w, h);
+    const data = imgData.data;
+
+    let minX = w, minY = h, maxX = -1, maxY = -1;
+    let hasPixels = false;
+
+    for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+            const alpha = data[(y * w + x) * 4 + 3];
+            if (alpha > 0) {
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+                hasPixels = true;
+            }
+        }
+    }
+
+    if (!hasPixels) {
+        minX = 0; minY = 0; maxX = 0; maxY = 0;
+    }
+
+    const newW = maxX - minX + 1;
+    const newH = maxY - minY + 1;
+
+    if (newW === w && newH === h) return;
+
+    const trimmedData = ctx.getImageData(minX, minY, newW, newH);
+    
+    canvas.width = newW;
+    canvas.height = newH;
+    ctx.putImageData(trimmedData, 0, 0);
+
+    originalX += minX;
+    originalY += minY;
+    
     updateCanvasTransform();
 }
 
 function finish() {
-    states[originalKey].img = canvas.toDataURL();
-    states[originalKey].x = originalX;
-    states[originalKey].y = originalY;
+    trimCanvas();
 
-    document.getElementById('jsonOutput').value =
-        JSON.stringify({ [originalKey]: states[originalKey] }, null, 2);
-    document.getElementById('outputSection').style.display = 'block';
+    if (typeof states !== 'undefined' && originalKey && states[originalKey]) {
+        states[originalKey].img = canvas.toDataURL();
+        states[originalKey].x = originalX;
+        states[originalKey].y = originalY;
+
+        document.getElementById('jsonOutput').value =
+            JSON.stringify({ [originalKey]: states[originalKey] }, null, 2);
+        document.getElementById('outputSection').style.display = 'block';
+    } else {
+        alert("No valid JSON state found to export.");
+    }
 }
 
 function downloadPlaced() {
@@ -797,7 +1236,7 @@ function downloadPlaced() {
     octx.drawImage(canvas, originalX, originalY);
 
     const link = document.createElement('a');
-    link.download = `${originalKey}.png`;
+    link.download = `${originalKey || 'export'}.png`;
     link.href = out.toDataURL('image/png');
     link.click();
 }
