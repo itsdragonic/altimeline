@@ -39,11 +39,15 @@ document.addEventListener('keydown', (event) => {
 
     switch (keyName) {
         case 'n':
+            dontSpin = true;
             showNames = !showNames;
+            changingDimensions = false;
             updateCivs();
             break;
         case 'm':
+            dontSpin = true;
             physicalMap = !physicalMap;
+            changingDimensions = false;
             updateCivs();
             break;
         case 's':
@@ -441,6 +445,7 @@ timelineInput.value = altimeline;
 if (timelineInput.value == 0) {
     timelineInput.value = 1;
 }
+
 
 timelineValue.textContent = timelineInput.value;
 timeline = parseInt(timelineInput.value);

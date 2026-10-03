@@ -47,6 +47,68 @@ function changeColor(img, color) {
     return canvas1;
 }
 
+function randomColor() {
+    const colors = [
+        [178, 34, 34],    // red
+        [205, 92, 92],    // light red
+        [190, 70, 30],    // orange-red
+        [218, 165, 32],   // gold
+        [154, 120, 40],   // brown-gold
+        [70, 130, 180],   // steel blue
+        [30, 100, 170],   // blue
+        [65, 145, 160],   // teal
+        [45, 140, 90],    // green
+        [100, 150, 65],   // olive green
+        [120, 90, 160],   // purple
+        [150, 100, 150],  // muted purple
+        [190, 100, 140],  // pink
+        [200, 120, 80],   // peach
+        [120, 120, 120],  // gray
+        [80, 80, 80],     // dark gray
+        [210, 180, 140],  // tan
+        [130, 160, 190],  // pale blue
+    ];
+
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function createAdjective(str) {
+    const lower = str.trim().toLowerCase();
+
+    const exceptions = {
+        "france": "French",
+        "england": "English",
+        "germany": "German",
+        "spain": "Spanish",
+        "russia": "Russian",
+        "china": "Chinese",
+        "japan": "Japanese",
+        "italy": "Italian"
+    };
+
+    if (exceptions[lower]) {
+        return exceptions[lower];
+    }
+
+    let adjective;
+
+    if (lower.endsWith("y")) {
+        adjective = str.slice(0, -1) + "ian";
+    } else if (lower.endsWith("a")) {
+        adjective = str + "n";
+    } else if (lower.endsWith("i")) {
+        adjective = str + "an";
+    } else if (lower.endsWith("e")) {
+        adjective = str + "an";
+    } else if (lower.endsWith("stan")) {
+        adjective = str + "i";
+    } else {
+        adjective = str + "ian";
+    }
+
+    return adjective.charAt(0).toUpperCase() + adjective.slice(1);
+}
+
 async function loadImage(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -222,6 +284,8 @@ function grabData(url, val1, val2) {
         foo2 = foo1.split(val2);
 
         return foo2[0]
+    } else if (val1 == '?year=') {
+        return presentYear;
     } else return 0;
 }
 

@@ -61,6 +61,7 @@ function worldEvents(year) {
     }
     if (nextYear == -52) {
         c.worldTech = 400;
+        civ["SAO"].strength = 2000;
     }
     if (nextYear == 1450) {
         c.worldTech = 500;
@@ -450,6 +451,7 @@ function worldEvents(year) {
             civ["CZE"].name = "Bohemia";
             civ["CZE"].state = null;
             civ["POL"].state = null;
+            civ["RUS"].merge = [];
             civ["GER"].state = 11;
 
             worldNews(`Germany Invades Poland`,
@@ -547,7 +549,9 @@ function worldEvents(year) {
                 c.af_decolonization_level = 0;
                 
                 civ["ITAx"].weak = false;
+                civ["ITAx"].hideName = false;
                 civ["ITAx"].state = "a";
+                civ["ITAx"].owner = "ITA";
                 civ["SIB"].state = "a";
                 civ["SIB"].strength = 100;
                 //civ["RUS"].name = "Russian Anarchy States";
@@ -557,10 +561,11 @@ function worldEvents(year) {
                 civ["KZH"].strength = 100;
                 civ["KZH"].x += 30;
                 civ["KZH"].name = "Kazakhs";
-                civ["KZH"].state = 2;
+                civ["KZH"].state = null;
                 civ["GEO"].strength = 100;
                 civ["ARM"].strength = 100;
                 civ["HOR"].strength = 100;
+                civ["HOR"].state = 2;
                 civ["HOR"].hideName = true;
                 civ["HOR"].color = [104, 102, 100];
 
@@ -586,7 +591,7 @@ function worldEvents(year) {
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYrb5V6OnreO3lUL1ZiPFOLtli3ITAKV4EdQ&s",
                         false, 112, nextYear, 2, false);
 
-                civ["GER"].name = "West Germany";
+                civ["GER"].name = "W. Germany";
                 civ["GER"].size = 5;
                 civ["GER"].ideology = "democracy";
                 civ["GERe"].strength = 200;
@@ -713,7 +718,7 @@ function worldEvents(year) {
     }
 
     if (rng(159, nextYear) <= impossible) {
-        altHist(nextYear, "the_man_in_the_high_castle");
+        if (c.fuhrerreich) altHist(nextYear, "the_man_in_the_high_castle");
         c.cold_war = false;
     }
     if (rng(99, nextYear) <= impossible) {
@@ -731,7 +736,7 @@ function worldEvents(year) {
 
             if (rng(128, nextYear) <= incrediblyUnlikely) {
                 altHist(nextYear, "major_nuclear_war");
-            } else if (rng(128, nextYear) <= rare) {
+            } else if (rng(128, nextYear) <= uncommon) {
                 altHist(nextYear, "minor_nuclear_war");
             }
         }
@@ -785,7 +790,7 @@ function worldEvents(year) {
         civ["CHI"].strength > 0 && c.defcon > 2) {
         worldNews(`Covid-19 Pandemic`,
             `A novel coronavirus, later named COVID-19, has been identified in Wuhan, China. The virus has rapidly spread across the globe, leading to quarantining.`,
-            `https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg/1200px-Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg`,
+            `https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg/500px-Covid-19_SP_-_UTI_V._Nova_Cachoeirinha.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail`,
             false, 63, nextYear, 4, true);
     }
 

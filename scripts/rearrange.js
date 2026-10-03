@@ -93,9 +93,12 @@ function rearrange(nations) {
     if (civ["CHI"].ideology == "communism") {
         endItem(nations, "MAN");
     }
+    frontItem(nations, "CHOc");
     frontItem(nations, "RAJ");
     frontItem(nations, "UYG");
+    frontItem(nations, "MONc");
     frontItem(nations, "CHI");
+    frontItem(nations, "CHIt");
     frontItem(nations, "NEP");
     frontItem(nations, "JAPn");
     frontItem(nations, "PAK");
@@ -106,6 +109,8 @@ function rearrange(nations) {
     frontItem(nations, "SIB");
     frontItem(nations, "MON");
     frontItem(nations, "KZH");
+    frontItem(nations, "HOR");
+    frontItem(nations, "MONi");
     frontItem(nations, "TIB");
     if (civ["YEM"].united) {
         frontItem(nations, "YEM");
@@ -168,6 +173,8 @@ function rearrange(nations) {
     frontItem(nations, "PAP");
 
     frontItem(nations, "COR");
+    frontItem(nations, "NAV");
+    frontItem(nations, "SUE");
     frontItem(nations, "GER");
     frontItem(nations, "GERe");
 
@@ -183,8 +190,8 @@ function rearrange(nations) {
     // Exceptions
     frontItem(nations, "ISL");
     if (timeline > 1800 || civ["ISL"].weak) {
-        endItem(nations, "ISL");
         endItem(nations, "OTT");
+        endItem(nations, "ISL");
     }
     if (c.big_arabia) {
         frontItem(nations, "ISL");
@@ -192,6 +199,9 @@ function rearrange(nations) {
     }
     if (civ["OTT"].strong) {
         frontItem(nations, "OTT");
+    }
+    if (civ["EGY"].owner != "none") {
+        frontItem(nations, "EGY");
     }
     if (civ["PER"].owner != "none") {
         endItem(nations, "PER");
@@ -207,7 +217,7 @@ function rearrange(nations) {
     }
 
     if (civ["RAJ"].name == "India") {
-        frontItem(nations, "BUR");
+        frontItem(nations, "MYA");
     }
 
     // WWII

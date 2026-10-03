@@ -52,8 +52,7 @@
          s897s1L9
 
 <-- Last ID used -->
-    RNG: 168
-    News: 119
+    RNG: 171
 
 <-- Region Theory -->
   Beginning: Regular year-based increments
@@ -72,4 +71,4 @@
    - Battles would be decided with some sort of strategy game
 
 
-   267 12 0.827
+   Scale 267 12 0.827

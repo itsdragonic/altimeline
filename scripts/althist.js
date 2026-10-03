@@ -25,6 +25,16 @@ function altHist(year,id) {
                 civ["ARG"].name = "Platania";
                 civ["EQU"].name = "Quito";
                 civ["CHL"].name = "Chili";
+
+                civ["EQU"].color = randomColor();
+                civ["BOL"].color = randomColor();
+                civ["URU"].color = randomColor();
+                civ["COL"].color = randomColor();
+                civ["GCO"].color = randomColor();
+                civ["ARG"].color = randomColor();
+                civ["CHL"].color = randomColor();
+                civ["PAR"].color = randomColor();
+                civ["CUB"].defaultcolor = randomColor();
             }
 
             switch (civ["SPAc"].owner) {
@@ -66,6 +76,10 @@ function altHist(year,id) {
                     break;
             }
 
+            if (civ["SPAc"].owner != "SPA") {
+                civ["ARG"].adjective = createAdjective(civ["ARG"].name);
+            }
+
             worldNews(`${civ[civ["SPAc"].owner].name} Discovers New World`,
                         `Christopher Columbus set sail from ${civ[civ["SPAc"].owner].name} with 3 ships, seeking a westward route to Asia. However, he accidently discovered an unknown landmass.`,
                         "https://assets.editorial.aetnd.com/uploads/2019/10/columbus-ships-gettyimages-1056336226.jpg",
@@ -78,7 +92,7 @@ function altHist(year,id) {
                 civ["FRA"].ideology = "communism";
                 civ["FRA"].name = "French Commune";
                 civ["FRA"].color = [213, 68, 68];
-                civ["FRA"].x -= 85;
+                civ["FRA"].x -= 100;
                 civ["USA"].adjective = "Oceanian";
                 c.unitedStates = -9999;
                 for (const key in civs[nextYear]) {
@@ -89,9 +103,9 @@ function altHist(year,id) {
                 c.orwell1984 = true;
             }
             if (nextYear == 1950 && c.orwell1984) {
-                civ["ENG"].color = [79, 62, 147];
+                civ["ENG"].defaultcolor = [79, 62, 147];
                 civ["ENG"].adjective = "Oceanian";
-                civ["ENG"].name = "Oceania";
+                civ["ENG"].defaultname = "Oceania";
                 civ["USA"].name = "Oceania";
                 civ["USA"].size ++;
                 c.colonizingAfrica = -9999;
@@ -118,7 +132,7 @@ function altHist(year,id) {
             }
             
             if (nextYear == 1956 && c.orwell1984) {
-                annex(civ,"CHI",["BUR", "VIE", "THA", "CAM"]);
+                annex(civ,"CHI",["MYA", "VIE", "THA", "CAM"]);
 
                 civ["MAN"].strength = 0;
                 civ["CHI"].state = 'a';
@@ -380,8 +394,8 @@ function altHist(year,id) {
             }
             if (nextYear == 1948 &&
                 c.fuhrerreich && c.big_japan) {
-                annex(civ, "JAP", ["PEU", "EQU", "CHL"]);
-                annex(civ, "CAN", ["CUB", "CEN", "HAI", "DOM"]);
+                annex(civ, "JAP", ["PEU", "EQU", "CHL", "CEN"]);
+                annex(civ, "CAN", ["CUB", "HAI", "DOM", "VEZ"]);
             }
             break;
 

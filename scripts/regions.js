@@ -19,6 +19,7 @@ function regions(year) {
 
     // Start
     if (nextYear == -2014) {
+        civ["EGY"].defaultname = "Egypt";
         civ["EGY"].state = 2;
     }
     if (nextYear == -1720) {
@@ -54,19 +55,19 @@ function regions(year) {
 
     // Modern Egypt
     if (nextYear == 1807) {
+        civ["EGY"].owner = "none";
         civ["EGY"].state = 1;
-        civ["EGY"].name = "Muhammad Ali";
+        civ["EGY"].defaultname = "Muhammad Ali";
         civ["EGY"].strength = 33;
         civ["EGY"].x -= 40;
         civ["EGY"].y += 20;
     }
     if (nextYear == 1831) {
-        civ["EGY"].name = "Muhammad Ali ";
         civ["EGY"].state = 3;
     }
     if (nextYear == 1867) {
         civ["EGY"].strength = 400;
-        civ["EGY"].name = "Egyptian Khedivate";
+        civ["EGY"].defaultname = "Egyptian Khedivate";
         civ["DAR"].strength = 0;
     }
     if (nextYear == 1875) {
@@ -74,6 +75,7 @@ function regions(year) {
         civ["LUO"].strength = 0;
     }
     if (nextYear == 1882) {
+        civ["EGY"].defaultname = "Egypt";
         civ["EGY"].owner = colonizingPercentage(rng(161, nextYear), colonizeOldWorld, "ENG", 3, true);
         civ["EGY"].size += 3;
         if (c.pax_francia) civ["EGY"].owner = "FRA";
@@ -84,7 +86,7 @@ function regions(year) {
     }
 
     // [Egypt]
-    owner(civ, "EGY", [], "Egypt", "Egypt", false);
+    owner(civ, "EGY", [], civ["EGY"].defaultname, civ["EGY"].defaultname, false);
 
 /* ______________________________
  / \                             \.
@@ -284,7 +286,7 @@ function regions(year) {
     }
     if (nextYear == 600) {
         civ["CHI"].name = "Chinese Warring Kingdoms";
-        civ["CHI"].state = 4;
+        civ["CHI"].state = "5b";
     }
     if (nextYear == 618) {
         civ["CHI"].name = "Tang Dynasty";
@@ -295,14 +297,24 @@ function regions(year) {
     }
     if (nextYear == 930) {
         civ["CHI"].name = "Chinese Warring Kingdoms";
-        civ["CHI"].state = 4;
+        civ["CHI"].state = "5b";
+    }
+    if (nextYear == 936) {
+        civ["CHIt"].strength = 3000;
     }
     if (nextYear == 980) {
         civ["CHI"].name = "Song Dynasty";
         civ["CHI"].state = "5a";
     }
     if (nextYear == 1036) {
-        civ["CHI"].state = "5b";
+        civ["CHI"].state = "5c";
+    }
+    if (nextYear == 1125) {
+        civ["CHIt"].state = 2;
+        civ["CHIt"].name = "Jin";
+        civ["CHIt"].x += 50;
+        civ["CHIt"].y += 15;
+        civ["CHI"].y += 30;
     }
 
     if (nextYear == 1365) {
@@ -311,7 +323,8 @@ function regions(year) {
           c.new_china = true;
         }*/
     }
-    if (nextYear == 1372) {
+    if (nextYear == 1368 && c.mongols) {
+        civ["CHI"].strength = 2000;
         civ["CHI"].state = 6;
         civ["CHI"].name = "Ming Dynasty";
   
@@ -341,6 +354,7 @@ function regions(year) {
     }
     if (nextYear == 1635) {
         civ["MAN"].strength = 700;
+        civ["CHIt"].strength = 0;
         /*if (c.new_china) {
           civ["PORi"].strength = 0;
         }*/
@@ -355,6 +369,25 @@ function regions(year) {
         civ["MAN"].y += 70;
         civ["MAN"].size += 2;
     }
+
+    // Opium Wars
+    if (nextYear >= 1839 &&
+        civ["ENG"].strength > 0 && !c.celtics
+    ) {
+        if (nextYear == 1839) {
+            worldNews(`Opium War Begins`,
+                        `Britain and China have entered open conflict over the opium trade, threatening China's sovereignty and potentially reshaping European influence in Asia.`,
+                        "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d7/British_ships_in_Canton.jpg/330px-British_ships_in_Canton.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+                        false, 0, nextYear, 2, true);
+        }
+        if (nextYear == 1856) {
+            worldNews(`Second Opium War Begins`,
+                        `Britain and France have entered another conflict with China, further weakening Qing authority and potentially expanding foreign influence.`,
+                        "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Second_Opium_War_British_Beijing_1860.jpg/330px-Second_Opium_War_British_Beijing_1860.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+                        false, 0, nextYear, 2, true);
+        }
+    }
+
     if (nextYear == 1865) {
         civ["MAN"].state = 4;
     }
@@ -487,9 +520,15 @@ function regions(year) {
     if (nextYear == -548) {
         civ["CHO"].strength = 4200;
     }
+    if (nextYear == -548) {
+        civ["SRI"].strength = 4200;
+    }
     if (nextYear == -339) {
         civ["IND"].state = 2;
         civ["IND"].name = "Nanda Empire";
+    }
+    if (nextYear == -337) {
+        civ["SRI"].name = "Anuradhapura";
     }
     if (nextYear == -341) {
         civ["CHO"].name = "Cholas";
@@ -499,12 +538,25 @@ function regions(year) {
     if (nextYear == -322) {
         civ["IND"].name = "Mauryan Empire";
     }
+    if (nextYear == -225) {
+        civ["INDc"].strength = 3000;
+    }
+    if (nextYear == -192) {
+        civ["INDc"].state = 2;
+    }
     if (nextYear == -180) {
         civ["IND"].state = 3;
         civ["IND"].name = "Indian Kingdoms";
         civ["IND"].x += 35;
     }
 
+    if (nextYear == 220) {
+        civ["INDc"].strength = 0;
+    }
+    if (nextYear == 235) {
+        civ["INDc"].strength = 3000;
+        civ["INDc"].name = "Vakataka";
+    }
     if (nextYear == 360) {
         civ["IND"].state = 2;
         civ["IND"].name = "Gupta Empire";
@@ -514,44 +566,135 @@ function regions(year) {
         civ["IND"].name = "Gupta Empire";
         civ["CHO"].state = 3;
         civ["CHO"].name = "Kalabhras";
+        civ["CHOc"].strength = 3000;
     }
     if (nextYear == 500) {
         civ["IND"].state = 3;
         civ["IND"].name = "Indian Kingdoms";
 
     }
+    if (nextYear == 543) {
+        civ["CHOc"].name = "Chalukyas";
+    }
+    if (nextYear == 560) {
+        civ["INDc"].name = "Kalachuri";
+        civ["INDc"].state = 3;
+        civ["INDc"].y -= 45;
+        civ["CHOc"].state = 2;
+    }
     if (nextYear == 610) {
         civ["IND"].state = 5;
         civ["CHO"].state = 4;
-        civ["CHO"].name = "Pandyas/Pallavas";
+        civ["CHO"].name = "Pandyas / Pallavas";
         civ["CHO"].x -= 30;
     }
+    if (nextYear == 618) {
+        civ["INDc"].strength = 0;
+    }
+    if (nextYear == 620) {
+        civ["CHOc"].state = 3;
+        civ["CHOc"].y -= 30;
+    }
+    if (nextYear == 643) {
+        civ["IND"].name = "Gurjara";
+    }
+    if (nextYear == 753) {
+        civ["CHOc"].name = "Rashtrakuta";
+    }
+    if (nextYear == 770) {
+        civ["BAN"].strength = 2000;
+    }
+    if (nextYear == 776) {
+        civ["BAN"].state = 2;
+    }
+    if (nextYear == 865) {
+        civ["BAN"].state = 1;
+    }
     if (nextYear == 897) {
-        civ["CHO"].name = "Pandyas/Chola";
+        civ["CHO"].name = "Pandyas / Chola";
     }
     if (nextYear == 910) {
         civ["IND"].state = 6;
-        civ["IND"].name = "Gurjara";
         civ["CHO"].state = 5;
-        civ["CHO"].name = "Rashtrakuta Dynasty";
     }
-    if (nextYear == 1333) {
+    if (nextYear == 920) {
+        // Chola Empire
+        civ["CHO"].name = "Chola";
+        civ["CHO"].adjective = "Chola";
+        civ["CHO"].color = [40, 136, 76];
+    }
+    if (nextYear == 973) {
+        civ["CHOc"].name = "W. Chalukya";
+    }
+    if (nextYear == 993) {
+        annex(civ, "CHO", ["SRI"]);
+        civ["SRI"].strength = 0;
+    }
+    if (nextYear == 1070) {
+        civ["CHO"].merge = [];
+        civ["SRI"].strength = 3000;
+        civ["SRI"].name = "Polonnaruwa";
+    }
+    if (nextYear == 1182) {
+        civ["BAN"].name = "Sena";
+    }
+    if (nextYear == 1196) {
+        civ["CHO"].name = "Yadavas";
+    }
+    if (nextYear == 1310) {
+        civ["SRI"].name = "Yapahuwa";
+    }
+    if (nextYear == 1312) {
         civ["IND"].state = 7;
         civ["IND"].name = "Delhi Sultanate";
+        civ["CHOc"].strength = 0;
         civ["CHO"].state = 6;
         civ["CHO"].name = "Vijayanayaras";
+        civ["BAN"].strength = 0;
     }
-    if (nextYear == 1678) {
+    if (nextYear == 1361) {
+        civ["SRI"].name = "Raigama";
+    }
+    if (nextYear == 1338) {
+        civ["BAN"].name = "Bengal";
+        civ["BAN"].strength = 2000;
+    }
+    if (nextYear == 1412) {
+        civ["SRI"].name = "Kotte";
+    }
+    if (nextYear == 1469) {
+        civ["SRI"].name = "Kotte / Kandy";
+    }
+    if (nextYear == 1556) {
+        civ["CHO"].name = "";
+    }
+    if (nextYear == 1558) {
+        civ["SRI"].name = "Kandy";
+    }
+    if (nextYear == 1573) {
         civ["IND"].state = 8;
         civ["IND"].name = "Mughal Empire";
+        civ["BAN"].strength = 0;
+    }
+    if (nextYear == 1674) {
         civ["CHO"].state = 7;
         civ["CHO"].name = "Marathas";
     }
+    if (nextYear == 1704) {
+        civ["BAN"].name = "Bengal";
+        civ["BAN"].strength = 2000;
+    }
     if (nextYear == 1764) {
         civ["IND"].state = 9;
-        civ["IND"].name = "Maratha Empire";
+        civ["IND"].hideName = true;
+        civ["CHOc"].name = "Maratha Empire";
+        civ["CHOc"].strength = 3000;
+        civ["CHOc"].x = civ["IND"].x;
+        civ["CHOc"].y = civ["IND"].y;
+        civ["CHOc"].size = civ["IND"].size;
+        civ["CHOc"].state = 4;
         civ["CHO"].state = 8;
-        civ["CHO"].name = "";
+        civ["CHO"].hideName = true;
     }
 
     // British Raj
@@ -566,6 +709,7 @@ function regions(year) {
         
         if (nextYear == 1757) {
             civ["RAJ"].strength = 2200;
+            civ["BAN"].strength = 0;
         }
         if (nextYear == 1762) {
             civ["RAJ"].state = 2;
@@ -577,6 +721,9 @@ function regions(year) {
             civ["RAJ"].state = 4;
             civ["CHO"].strength = 0;
             civ["IND"].strength = 0;
+            civ["INDc"].strength = 0;
+            civ["CHOc"].strength = 0;
+            civ["SRI"].strength = 0;
         }
         if (nextYear == 1859) {
             civ["RAJ"].owner = colonizingPercentage(rng(162, nextYear), colonizeOldWorld, "ENG", 3, true);
@@ -611,8 +758,9 @@ function regions(year) {
                 civ["PAK"].size -= 3;
             }
 
-            if (civ["RAJ"].owner == null) {
+            if (civ["RAJ"].owner == "none") {
                 civ["SRI"].strength = 500;
+                civ["SRI"].name = "Sri Lanka";
             }
         }
         if (nextYear == 1971) {
@@ -640,7 +788,7 @@ function regions(year) {
     \_/___________________________*/
 
     if (nextYear == -1504) {
-        civ["BUR"].strength = 4400;
+        civ["MYA"].strength = 4400;
 
         civ["VIE"].defaultcolor = [];
     }
@@ -667,7 +815,7 @@ function regions(year) {
         civ["CHM"].strength = 2450;
     }
     if (nextYear == 300) {
-        civ["BUR"].name = "Waithali";
+        civ["MYA"].name = "Waithali";
     }
     if (nextYear == 540) {
         civ["VIE"].strength = 1000;
@@ -684,7 +832,7 @@ function regions(year) {
         civ["CAM"].name = "Khmer";
     }
     if (nextYear == 825) {
-        civ["BUR"].name = "Le-Mro";
+        civ["MYA"].name = "Le-Mro";
     }
     if (nextYear == 855) {
         civ["CAM"].state = 3;
@@ -701,24 +849,23 @@ function regions(year) {
         civ["VIE"].state = 3;
         civ["VIE"].name = "Dai Viet";
     }
-    if (nextYear == 992) {
-        civ["VIE"].state = 4;
+    if (nextYear == 990) {
         civ["CHM"].strength = 0;
     }
-    if (nextYear == 1045) {
-        civ["BUR"].state = 2;
-        civ["BUR"].name = "Pagan";
-    }
-    if (nextYear == 1009) {
+    if (nextYear == 1005) {
         civ["CHM"].strength = 1000;
+    }
+    if (nextYear == 1045) {
+        civ["MYA"].state = 2;
+        civ["MYA"].name = "Pagan";
     }
 
     if (nextYear == 1265) {
-        civ["BUR"].state = 3;
+        civ["MYA"].state = 3;
     }
     if (nextYear == 1289) {
-        civ["BUR"].name = "Pegu";
-        civ["BUR"].x += 30;
+        civ["MYA"].name = "Pegu";
+        civ["MYA"].x += 30;
     }
     if (nextYear == 1313) {
         civ["CHM"].strength = 0;
@@ -733,22 +880,28 @@ function regions(year) {
         civ["CAM"].name = "Cambodia";
         civ["CAM"].size -= 2;
     }
+    if (nextYear == 1446) {
+        civ["CHM"].state = 2;
+    }
     if (nextYear == 1558) {
-        civ["BUR"].name = "Toungoo";
+        civ["MYA"].name = "Toungoo";
     }
     if (nextYear == 1594) {
         civ["THA"].name = "Ayutthaya";
     }
-    if (nextYear == 1700) {
+    if (nextYear == 1692) {
         civ["CHM"].strength = 0;
     } 
     if (nextYear == 1757) {
-        civ["BUR"].name = "Konbaung";
+        civ["MYA"].name = "Konbaung";
     }
     if (nextYear == 1762) {
-        civ["BUR"].state = 4;
+        civ["MYA"].state = 4;
     }
 
+    if (nextYear == 1756) {
+        civ["VIE"].state = 4;
+    }
     if (nextYear == 1773) {
         civ["THA"].name = "Thonburi";
     } 
@@ -782,7 +935,7 @@ function regions(year) {
     }
     if (nextYear == 1885) {
         if (civ["RAJ"].strength > 0) {
-            civ["BUR"].strength = 0;
+            civ["MYA"].strength = 0;
         }
     }
     if (nextYear == 1949 && civ["VIE"].french && !c.big_japan) {
@@ -791,8 +944,8 @@ function regions(year) {
 
     // Independence
     if (nextYear == 1948) {
-        civ["BUR"].name = "Burma";
-        civ["BUR"].strength = 560;
+        civ["MYA"].name = "Burma";
+        civ["MYA"].strength = 560;
     }
     if (nextYear == 1954) {
         civ["CAM"].strength = 200;
@@ -814,7 +967,7 @@ function regions(year) {
         civ["CHM"].strength = 20;
         civ["CHM"].name = "S. Vietnam";
         civ["CHM"].color = [240, 211, 97];
-        civ["CHM"].state = 2;
+        civ["CHM"].state = 3;
         civ["CHM"].y += 30;
     }
     if (nextYear == 1956) {
@@ -836,7 +989,7 @@ function regions(year) {
     if (nextYear == 1989 &&
         !(rng(154, nextYear) <= possible)
     ) {
-        civ["BUR"].name = "Myanmar";
+        civ["MYA"].name = "Myanmar";
     }
 
     owner(civ,"THA",[],"Thailand","Thailand",false);
@@ -1082,6 +1235,12 @@ function regions(year) {
 
     // Crusades
     if (!civ["COR"].strong) {
+        if (nextYear == 1096) {
+            worldNews(`First Crusade Begins`,
+                        `European Christian armies have launched the First Crusade toward the Holy Land, raising questions over the fate of Jerusalem and the region.`,
+                        "https://upload.wikimedia.org/wikipedia/commons/d/d2/Taking_of_Jerusalem_by_the_Crusaders%2C_15th_July_1099.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+                        false, 0, nextYear, 4, true);
+        }
         if (nextYear == 1100) {
             civ["ISR"].strength = 195;
             civ["ISR"].name = "Crusaders";
@@ -1146,7 +1305,7 @@ function regions(year) {
         worldNews(`Israel-Hamas War`,
                     `Intense fighting has erupted between Israel and Hamas in Gaza, prompting airstrikes, civilian displacement, and international efforts to halt escalation.`,
                     "https://upload.wikimedia.org/wikipedia/commons/f/fa/Damage_in_Gaza_Strip_during_the_October_2023_-_01_%28cropped%29.jpg",
-                    false, 74, nextYear, 2, true);
+                    false, 74, nextYear, 2, false);
     }
 
     // [Israel]
@@ -1304,36 +1463,59 @@ function regions(year) {
     if (nextYear == 221) {
         civ["PER"].defaultname = "Sassanid Empire";
     }
+    if (nextYear == 528) {
+        civ["PER"].state = "3a";
+    }
     if (nextYear == 628) {
         civ["PER"].state = 3;
     }
     if (nextYear == 872) {
         civ["PER"].defaultname = "Saffarids";
+        civ["PER"].hideName = false;
+        
+        civ["ISL"].strong = false;
+        civ["ISL"].weak = true;
+    }
+    if (nextYear == 921) {
+        civ["PER"].defaultname = "Samanid Empire";
     }
 
     // Turks
-    if (nextYear == 1045) {
-        civ["TUR"].strength = 200;
-        civ["TUR"].state = 3;
-        civ["TUR"].x += 10;
-        civ["TUR"].y += 90;
-        civ["TUR"].size -= 2;
-        civ["TUR"].name = "Seljuq Empire";
+    if (nextYear == 997) {
+        civ["SEL"].strength = 500;
+    }
+    if (nextYear == 1042) {
+        civ["SEL"].state = 2;
+        civ["SEL"].name = "Seljuq Empire";
+        civ["SEL"].y += 40;
+        civ["SEL"].x -= 40;
+        civ["SEL"].size += 4;
+        civ["PER"].hideName = true;
+    }
+    if (nextYear == 1353) {
+        civ["MONi"].state = 3;
+        civ["MONi"].size -= 5;
+        civ["MONi"].x -= 40;
+        civ["MONi"].y -= 15;
     }
     if (nextYear == 1389) {
-        civ["TUR"].strength = 120;
-        civ["TUR"].name = "Timurid Empire";
-        civ["TUR"].x += 10;
-        civ["TUR"].y += 10;
-        civ["TUR"].size += 3;
+        civ["SEL"].strength = 120;
+        civ["SEL"].name = "Timurid Empire";
+        civ["SEL"].x += 10;
+        civ["SEL"].y += 10;
+        civ["SEL"].size += 1;
+    }
+    if (nextYear == 1394) {
+        civ["MONi"].strength = 0;
     }
     if (nextYear == 1397) {
-        civ["TUR"].state = 4;
+        civ["SEL"].state = 3;
     }
     if (nextYear == 1453) {
-        civ["TUR"].state = 5;
+        civ["SEL"].state = 4;
     }
     if (nextYear == 1509) {
+        civ["PER"].hideName = false;
         civ["PER"].defaultname = "Safavid Empire";
         civ["PER"].strength += 2000;
         civ["PER"].state = 5;
@@ -1431,8 +1613,16 @@ function regions(year) {
     if (nextYear == 375) {
         civ["HNN"].strength = 50;
     }
-    if (nextYear == 540) {
-        civ["TUR"].strength = 120;
+    if (nextYear == 426) {
+        civ["TUR"].strength = 1000;
+    }
+    if (nextYear == 555) {
+        civ["TUR"].name = "Turkish Khaganate";
+        civ["TUR"].state = 2;
+        civ["TUR"].x = 1740;
+        civ["TUR"].y = 280;
+        civ["TUR"].size += 5;
+        civ["MON"].strength = 0;
     }
     if (nextYear == 568) {
         civ["HNN"].strength = 237;
@@ -1440,16 +1630,33 @@ function regions(year) {
         civ["HNN"].name = "Avar Khaganate";
         civ["HNN"].color = [255, 125, 96];
     }
-
-    if (nextYear == 547) {
-        civ["TUR"].x += 380;
-        civ["TUR"].size += 5;
+    if (nextYear == 581) {
+        civ["TUR"].name = "Tardu / Amrak";
     }
     if (nextYear == 582) {
+        civ["TUR"].name = "Tardu / Ishbara";
+    }
+    if (nextYear == 591) {
         civ["TUR"].name = "W. Turkish Khaganate / E. Turkish Khaganate";
         civ["TUR"].size -= 3;
         civ["TUR"].x -= 150;
-        civ["MON"].strength = 0;
+    }
+    if (nextYear == 630) {
+        civ["TUR"].name = "W. Turkish Khaganate / Syr-Tardush";
+    }
+    if (nextYear == 647) {
+        civ["TUR"].state = 3;
+        civ["TUR"].name = "W. Turkish Khaganate";
+    }
+    if (nextYear == 659) {
+        civ["TUR"].state = 4;
+        civ["TUR"].name = "Kanger Union";
+    }
+    if (nextYear == 750) {
+        civ["TUR"].state = 5;
+        civ["TUR"].name = "Oghuz Yabgu";
+        civ["TUR"].y += 20;
+        civ["TUR"].size -= 3;
     }
     if (nextYear == 744) {
         civ["UYG"].strength = 100;
@@ -1463,16 +1670,22 @@ function regions(year) {
     if (nextYear == 856) {
         civ["UYG"].strength = 300;
         civ["UYG"].state = 3;
-        civ["UYG"].x -= 100;
-        civ["UYG"].y += 50;
+        civ["UYG"].x -= 10;
+        civ["UYG"].y += 35;
         civ["UYG"].name = "Qocho  Gansu"
+    }
+    if (nextYear == 997) {
+        civ["TUR"].strength = 0;
     }
 
     if (nextYear == 1387 && c.mongols) {
         civ["HOR"].strength = 119;
+        civ["HOR"].state = 2;
     }
     if (nextYear == 1513) {
-        civ["KZH"].strength = 195;
+        civ["KZH"].strength = 192;
+        civ["MON"].y -= 60;
+        civ["MON"].name = "Four Oirat";
     }
 
 /* ______________________________
@@ -1638,9 +1851,9 @@ function regions(year) {
     // Decline of Rome (200 AD)
     civ["ROM"].yearsDecline ++; // rng() fix
     if (civ["ROM"].strong && !civ["CAR"].strong && civ["ROM"].techecon == 953) {
-        civ["ROM"].yearsDecline = 0;
+        civ["ROM"].yearsDecline = 200;
     }
-    if (civ["ROM"].yearsDecline == 86) {
+    if (civ["ROM"].yearsDecline == 286) {
         civ["ROM"].state = 11;
         civ["ROM"].name = "W. Roman Empire";
         civ["ROM"].x -= 50;
@@ -1649,7 +1862,7 @@ function regions(year) {
         civ["BYZ"].strength = 1250;
         civ["BYZ"].color = [178, 0, 0];
     }
-    if (civ["ROM"].yearsDecline == 125) {
+    if (civ["ROM"].yearsDecline == 325) {
         civ["BYZ"].strength = 0;
         civ["ROM"].state = "10a";
         if (civ["ROM"].name == "W. Roman Empire") {
@@ -1659,27 +1872,29 @@ function regions(year) {
         civ["ROM"].y += 10;
         civ["ROM"].size += 4;
     }
-    if (civ["ROM"].yearsDecline == 195) {
+    if (civ["ROM"].yearsDecline == 395) {
         civ["ROM"].state = 11;
         civ["ROM"].name = "W. Roman Empire";
         civ["ROM"].x -= 50;
         civ["ROM"].y -= 10;
         civ["ROM"].size -= 4;
         civ["BYZ"].strength = 1250;
-        civ["BYZ"].color = [];
     }
     
-    if (civ["ROM"].yearsDecline == 276) {
+    if (civ["ROM"].yearsDecline == 476) {
         // Fall of Rome
-        if (rng(7, nextYear) <= incrediblyUnlikely) {
+        if (rng(7, nextYear) <= impossible) {
+            c.bigEffect = true;
             civ["ROM"].strength += 2000;
             civ["ROM"].name = "Rome";
             civ["ROM"].x += 80;
+            civ["ROM"].state = 12;
         } else {
             civ["GTH"].name = "Kingdom of Odoacer";
             civ["ROM"].strength = 0;
             civ["ROM"].strong = false;
             civ["BYZ"].name = "Byzantine Empire";
+            civ["BYZ"].color = [];
             worldNews("Fall of Rome",
                         `Odoacer, a Germanic chieftain, has deposed Augustulus, the last emperor of the Western Roman Empire. This event marks the fall of the Western Rome.`,
                         "https://images.aeonmedia.co/images/b1c9cc82-316d-4363-a17f-ae58867e71dc/essay-cole_thomas_the_course_of_empire_destruction_1836.jpg",
@@ -1777,7 +1992,7 @@ function regions(year) {
     }
 
     // Gallic Empire
-    if (civ["ROM"].yearsDecline == 60) {
+    if (civ["ROM"].yearsDecline == 260) {
         civ["FRK"].strength = 400;
         civ["FRK"].color = [32, 172, 160];
         civ["FRK"].state = 1;
@@ -1790,7 +2005,7 @@ function regions(year) {
         civ["ENG"].state = 9;
     }
     if (civ["ROM"].strong) {
-        if (civ["ROM"].yearsDecline == 74) {
+        if (civ["ROM"].yearsDecline == 274) {
             civ["FRK"].strength = 0;
             civ["FRK"].color = [];
             civ["FRK"].name = "Francia";
@@ -1802,50 +2017,71 @@ function regions(year) {
         }    
     }
     
+    // Goths
+    if (civ["ROM"].yearsDecline == 409 && !civ["CAR"].strong) {
+        civ["SUE"].strength = 500;
+    }
+    if (civ["ROM"].yearsDecline == 426 && !civ["CAR"].strong) {
+        civ["SUE"].state = 2;
+    }
     // Vandals
-    if (civ["ROM"].yearsDecline == 238 && !civ["CAR"].strong) {
+    if (civ["ROM"].yearsDecline == 429 && !civ["CAR"].strong) {
         if (civ["CAR"].strength <= 0) {
             civ["CAR"].name = "Vandals";
             civ["CAR"].strength = 100;
-            civ["CAR"].x += 10;
-            civ["CAR"].y += 20;
-            civ["CAR"].color = [213, 158, 78];
+            civ["CAR"].state = 3;
+            civ["CAR"].x += 40;
+            civ["CAR"].y += 15;
+            civ["CAR"].size -= 3;
+            civ["CAR"].color = [230, 134, 186];
         }
     }
-    if (civ["ROM"].yearsDecline == 261) {
+    if (civ["ROM"].yearsDecline == 440 && !civ["CAR"].strong) {
+        civ["CAR"].state = 2;
+    }
+    if (civ["ROM"].yearsDecline == 461) {
         civ["GTH"].strength = 500;
     }
     // Visigoths
-    if (civ["ROM"].yearsDecline == 258) {
+    if (civ["ROM"].yearsDecline == 458) {
         civ["COR"].strength = 1000;
-        civ["COR"].color = [217, 185, 42];
+        civ["COR"].color = [246, 184, 77];
+    }
+    if (civ["ROM"].yearsDecline == 460) {
+        civ["SUE"].state = 1;
     }
 
     // Fall of Rome
-    if (civ["ROM"].yearsDecline == 293) {
-        civ["GTH"].name = "Ostrogothic Kingdom";
+    if (civ["ROM"].yearsDecline == 493) {
+        civ["GTH"].name = "Ostrogoths";
     }
-    if (civ["ROM"].yearsDecline == 306) {
-        civ["GTH"].state = 2;
+    if (civ["ROM"].yearsDecline == 506) {
+        //civ["GTH"].state = 2;
     }
-    if (civ["ROM"].yearsDecline == 353) {
+    if (civ["ROM"].yearsDecline == 553) {
         civ["GTH"].name = "";
     }
-    if (civ["ROM"].yearsDecline == 392) {
+    if (civ["ROM"].yearsDecline == 585) {
+        civ["SUE"].strength = 0;
+    }
+    if (civ["ROM"].yearsDecline == 592) {
         civ["GTH"].state = 3;
     }
-    if (civ["ROM"].yearsDecline == 517) {
+    if (civ["ROM"].yearsDecline == 717) {
         civ["COR"].strength = 0;
         civ["COR"].state = 1;
         civ["COR"].color = [];
         civ["COR"].name = "Cordoba";
     }
-    if (civ["ROM"].yearsDecline == 531) {
+    if (civ["ROM"].yearsDecline == 731) {
         civ["GTH"].state = 4;
         civ["GTH"].name = "Lombards";
         civ["GTH"].x = 1330;
         civ["GTH"].y = 325;
         civ["GTH"].size = 5;
+    }
+    if (civ["ROM"].yearsDecline == 774) {
+        civ["GTH"].strength = 0;
     }
 
     // Celtic Timeline
@@ -1855,10 +2091,16 @@ function regions(year) {
             civ["BRI"].name = "Armorica";
             civ["HRE"].name = "Germania";
 
+            civ["BRIn"].defaultname = "Brigantes";
+            civ["BRIm"].defaultname = "Corieltaum";
+            civ["BRIn"].name = "Brigantes";
+            civ["BRIm"].name = "Corieltaum";
+
             civ["FRA"].defaultname = "Gaul";
             civ["FRA"].name = "Gaul";
             civ["FRA"].size += 2;
             civ["FRA"].adjective = "Gallic";
+            civ["FRK"].strength = 0;
 
             civ["IRE"].name = "Celtic Kingdoms";
             civ["SCO"].name = "Picts";
@@ -2011,7 +2253,7 @@ function regions(year) {
     |                            |.
     |                            |.
     |  Interwebs to fix:         |.
-    |     - Philippies           |.
+    |     - Philippines          |.
     |                            |.
     |                            |.
     |                            |.
@@ -2033,7 +2275,7 @@ function regions(year) {
     }
     worldNews("Taika Reform",
                 "The imperial court of Japan successfully breaks the power of the Soga clan and begins centralization. Reforms are based on Chinese Confucioan ideals.",
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Irukaansatsuzu.jpg/220px-Irukaansatsuzu.jpg",
+                "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Irukaansatsuzu.jpg/250px-Irukaansatsuzu.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
                 false, 21, 645, 2, false);
     if (nextYear == 659) {
         civ["JAP"].state = 3;
@@ -2069,7 +2311,7 @@ function regions(year) {
                         "https://www.kcpinternational.com/wp-content/uploads/2015/04/HakataWall.jpg",
                         true, 25, nextYear, 3, true);
             civ["JAP"].name = "";
-            civ["JAP"].color = [1, 170, 167];
+            civ["JAP"].color = [146, 208, 206];
         } else if (civ["MON"].state == 9 && nextYear == 1274) {
             worldNews("Typhoon Destroys Mongol Attack",
                     "A storm has destroyed much of the Mongol fleet that was sailing to invade Japan.",
@@ -2257,6 +2499,7 @@ function regions(year) {
 
     if (rng(168, nextYear) < unlikely) {
         c.mongols = false;
+        civ["MON"].color = [];
     } else {
         // MONGOL EMPIRE 🏇🏇
         c.mongols = true;
@@ -2266,22 +2509,25 @@ function regions(year) {
             civ["MON"].name = "Mongol Empire";
             civ["MON"].color = [];
         }
-        if (nextYear == 1210) {
-            civ["RUS"].state = 4;
-            civ["RUS"].name = "";
-        }
         if (nextYear == 1215) {
             civ["MON"].state = 2;
         }
         if (nextYear == 1220) {
             civ["MON"].state = 3;
-            civ["CHI"].y += 30;
+        }
+        if (nextYear == 1227) {
+            worldNews(`Genghis Khan Dies`,
+                        `Genghis Khan has died after decades of conquest, leaving his vast empire to his successors and raising questions over the future of Eurasia.`,
+                        "https://res.cloudinary.com/aenetworks/image/upload/c_fill,ar_2,w_3840,h_1920,g_auto/dpr_auto/f_auto/q_auto:eco/v1/genghis-khan-gettyimages-1404441104?_a=BAVMn6E80",
+                        false, 0, nextYear, 2, false);
         }
         if (nextYear == 1230) {
             civ["MON"].state = 4;
         }
         if (nextYear == 1237) {
             civ["MON"].state = 5;
+            civ["CHIt"].strength = 0;
+            civ["SEL"].strength = 0;
         }
         if (nextYear == 1242) {
             civ["MON"].state = 6;
@@ -2293,40 +2539,75 @@ function regions(year) {
         if (nextYear == 1260) {
             civ["MON"].state = 8;
         }
-        if (nextYear == 1265) {
-            civ["MON"].state = 9;
-        }
+
         // Collapse of Mongol Empire
+        if (nextYear == 1264) {
+            civ["MON"].name = "Chagatai Khanate";
+            civ["MON"].state = 9;
+            civ["MON"].size -= 5;
+            civ["MON"].x -= 100;
+            civ["MON"].y += 20;
+            civ["HOR"].strength = 400;
+            civ["MONi"].strength = 200;
+            civ["MONc"].strength = 400;
+            civ["CHI"].state = "5d";
+        }
+        if (nextYear == 1279) {
+            civ["MONc"].state = 2;
+            civ["MONc"].name = "N. Yuan";
+            civ["CHI"].strength = 0;
+            civ["KOR"].strength = 0;
+        }
+        if (nextYear == 1340) {
+            civ["MONi"].state = 2;
+            civ["MONi"].name = "Jalayrids";
+        }
+        if (nextYear == 1356) {
+            civ["KOR"].strength = 2000;
+            civ["MONc"].y -= 20;
+        }
         if (nextYear == 1387) {
             civ["MON"].state = 10;
-            civ["MON"].name = "N. Yuan";
-            civ["MON"].x += 90;
             civ["MON"].size -= 2;
+            civ["MON"].y += 25;
+
+            civ["MONc"].state = 3;
+            civ["MONc"].x -= 30;
+            civ["MONc"].y -= 40;
+            civ["MONc"].size -= 2;
         }
 
-        if (nextYear == 1678) {
+        if (nextYear == 1634) {
             civ["MON"].state = 11;
-            civ["MON"].x -= 70;
-            civ["MON"].size -= 4;
+            civ["MON"].x += 15;
             civ["MON"].name = "Dzungar Khanate";
+        }
+        if (nextYear == 1635) {
+            civ["MONc"].strength = 0;
+        }
+        if (nextYear == 1705) {
+            civ["KZH"].strength = 0;
+            civ["MON"].y += 40;
         }
         if (nextYear == 1720) {
             civ["MON"].state = 12;
         }
-        if (nextYear == 1912) {
-            civ["MON"].strength = 300;
-            civ["MON"].state = 13;
-            civ["MON"].name = "Mongolia";
-            civ["MON"].x = 1840;
-            civ["MON"].y = 280;
-            civ["MON"].size += 2;
-        }
-        if (nextYear == 1920 &&
-            civ["MON"].state == 13
-        ) {
-            if (rng(114, nextYear) <= unlikely) {
-                civ["MON"].state = "a";
-            }
+    }
+
+    // Modern Mongolia
+    if (nextYear == 1911) {
+        civ["MON"].strength = 300;
+        civ["MON"].state = 13;
+        civ["MON"].name = "Mongolia";
+        civ["MON"].x = 1865;
+        civ["MON"].y = 280;
+        civ["MON"].size += 2;
+    }
+    if (nextYear == 1920 &&
+        civ["MON"].state == 13
+    ) {
+        if (rng(114, nextYear) <= unlikely) {
+            civ["MON"].state = "a";
         }
     }
 
@@ -2351,19 +2632,19 @@ function regions(year) {
         civ["FRA"].color = [57, 113, 228];
     }
 
-    if (civ["ROM"].yearsDecline == 281) {
+    if (civ["ROM"].yearsDecline == 481) {
         civ["FRK"].strength = 1500;
     }
-    if (civ["ROM"].yearsDecline == 307) {
+    if (civ["ROM"].yearsDecline == 507) {
         civ["FRK"].state = 2;
         civ["FRK"].y += 20;
     }
-    if (civ["ROM"].yearsDecline == 428) {
+    if (civ["ROM"].yearsDecline == 628) {
         civ["AQU"].strength = 573;
         civ["AQU"].color = [37, 44, 181];
     }
     // Battle of Tours
-    if (civ["ROM"].yearsDecline == 532 && civ["ISL"].strong) {
+    if (civ["ROM"].yearsDecline == 732 && civ["ISL"].strong) {
         if (rng(26, nextYear) < veryUnlikely) {
             worldNews("Muslim Victory at the Battle of Tours",
                         "The Umayyad forces have defeated Charles Martel and the Frankish army at the Battle of Tours. This victory potentially opens a door for further Islamic expansion.",
@@ -2382,6 +2663,7 @@ function regions(year) {
             civ["FRA"].y -= 15;
             civ["SPAc"].owner = "ENG";
             civ["BRA"].owner = "FRA";
+            civ["NAV"].strength = 0;
             colonizeNewWorld["SPA"] = 0;
             colonizeOldWorld["SPA"] = 0;
             colonizeNewWorld["POR"] = 0;
@@ -2398,17 +2680,17 @@ function regions(year) {
                         false, 44, nextYear, 3, true);
         }
     }
-    if (civ["ROM"].yearsDecline == 566) {
+    if (civ["ROM"].yearsDecline == 766) {
         civ["FRK"].state = 3;
     }
-    if (civ["ROM"].yearsDecline == 568 && !civ["COR"].strong) {
+    if (civ["ROM"].yearsDecline == 768 && !civ["COR"].strong) {
         civ["AQU"].strength = 0;
     }
-    if (civ["ROM"].yearsDecline == 579) {
+    if (civ["ROM"].yearsDecline == 779) {
         civ["FRK"].state = 4;
         civ["BRI"].strength = 573;
     }
-    if (civ["ROM"].yearsDecline == 600 && !civ["COR"].strong) {
+    if (civ["ROM"].yearsDecline == 800 && !civ["COR"].strong) {
         worldNews("Charlemagne Crowned Emperor",
                     "On Christmas Day, Pope Leo III has crowned Charlemagne as the Emperor of the Romans, marking a restoration of Western Europe.",
                     "https://c1.staticflickr.com/1/649/22690436826_3af9bb034e_b.jpg",
@@ -2416,32 +2698,67 @@ function regions(year) {
     }
 
     // Treaty of Verdun    
-    if (civ["ROM"].yearsDecline == 642) {
+    if (civ["ROM"].yearsDecline == 843) {
+        civ["FRK"].strength = 0;
         civ["HRE"].strength = 1600;
         civ["FRA"].strength = 2600;
         civ["ITA"].strength = 2600;
+        civ["HRE"].name = "E. Francia";
+        civ["FRA"].name = "W. Francia";
     }
     if (nextYear == 843) {
-        civ["FRK"].strength = 0;
         /*if (!c.roman_empire) {
           civ["GTH"].strength = 0;
         }*/
     }
     if (nextYear == 855) {
+        civ["BUR"].strength = 700;
+    }
+    if (nextYear == 870) {
+        civ["BUR"].strength = 0;
         civ["FRA"].state = 2;
+    }
+    if (nextYear == 879) {
+        civ["BUR"].strength = 3000;
+        civ["BUR"].state = 2;
+        civ["BUR"].y += 35;
+        civ["BUR"].size --;
+        civ["BUR"].name = "Provence";
+    }
+    if (nextYear == 933) {
+        civ["BUR"].name = "Burgundy";
+    }
+    if (nextYear == 987 && civ["FRA"].defaultname != "Gaul") {
+        civ["FRA"].name = "France";
+    }
+    if (nextYear == 1032) {
+        civ["BUR"].color = [255, 204, 0];
     }
     if (nextYear == 1040) {
         civ["FRA"].state = 3;
     }
-    // Wars against Muslims*
+    if (nextYear == 1062) {
+        civ["BUR"].hideName = true;
+    }
+
+    // Wars against the Muslims*
     if (nextYear == 1100 && civ["COR"].strong) {
         civ["AQU"].strength = 2000;
         civ["AQU"].color = [];
         civ["AQU"].name = "Aquitaine";
     }
 
+    if (nextYear == 1536) {
+        civ["BUR"].strength = 0;
+    }
+    if (nextYear == 1559) {
+        civ["BUR"].strength = 100;
+    }
     if (nextYear == 1637) {
         civ["FRA"].state = 4;
+    }
+    if (nextYear == 1648) {
+        civ["BUR"].strength = 0;
     }
 
     // Napoleonic Wars
@@ -2463,6 +2780,11 @@ function regions(year) {
             civ["SWI"].name = "Helvetica";
             civ["DUT"].color = [74, 124, 226];
             civ["SWI"].color = [74, 124, 226];
+        }
+        if (nextYear == 1798) {
+            civ["EGY"].state = "1a";
+            civ["EGY"].strength = 3;
+            civ["EGY"].owner = "FRA";
         }
         if (nextYear == 1806) {
             civ["HRE"].name = "Confed. of Rhine";
@@ -2501,6 +2823,7 @@ function regions(year) {
                         "https://cdn.britannica.com/29/175629-050-11A7121B/Congress-of-Vienna-watercolor-August-Friedrich-Andreas-Campe.jpg",
                         false, 109, nextYear, 3, true);
 
+                civ["EGY"].owner = "none";
                 civ["HRE"].name = "Bavaria";
                 civ["HRE"].size -= 2;
                 civ["HRE"].x += 10;
@@ -2526,7 +2849,7 @@ function regions(year) {
     if (nextYear == 1922) {
         if (rng(144, nextYear) <= veryLikely && c.kaiserreich) {
             civ["FRA"].ideology = "communism";
-            civ["FRA"].x -= 50;
+            civ["FRA"].x -= 100;
         }
     }
 
@@ -2562,7 +2885,7 @@ function regions(year) {
     if (nextYear == oppositeYear+1) {
         civ["GER"].adjective = "German";
         civ["GER"].defaultname = "Germany";
-        civ["GER"].color = [72, 70, 67];
+        civ["GER"].color = [0, 49, 83];
 
         civ["AUS"].adjective = "Austrian";
         civ["AUS"].defaultname = "Austria";
@@ -2572,7 +2895,11 @@ function regions(year) {
     if (nextYear == 855) {
         civ["HRE"].state = 2;
     }
-    if (nextYear == 1040) {
+    if (nextYear == 911) {
+        civ["HRE"].name = "Germany";
+    }
+    if (nextYear == 962) {
+        civ["HRE"].name = "H.R.E.";
         civ["HRE"].state = 3;
     }
     if (nextYear == 1060) {
@@ -2607,6 +2934,9 @@ function regions(year) {
         civ["AUS"].state = 5;
         civ["HUN"].state = 2;
     }
+    if (nextYear == 1701) {
+        civ["GER"].name = "Prussia";
+    }
     if (nextYear == 1714) {
         civ["AUS"].state = 6;
         civ["DUT"].state = 1;
@@ -2634,6 +2964,7 @@ function regions(year) {
             c.unified_germany = false;
         } else {
             civ["GER"].name = "Germany";
+            civ["GER"].color = [72, 70, 67];
             civ["GER"].state = 8;
             civ["HRE"].strength = 0;
 
@@ -2663,8 +2994,12 @@ function regions(year) {
         civ["ROA"].state = 4;
     }
 
+    if (nextYear == 1925 && civ["GER"].state == 10 && civ["POL"].strength == 0 ) {
+        civ["GER"].state = "b";
+    }
+
     // Fascist Germany
-    if (nextYear == 1933) {
+    if (nextYear == 1933 && rng(169, nextYear) > unlikely) {
         if (c.ww2) {
             civ["GER"].name = "German Reich";
             civ["GER"].ideology = "fascism";
@@ -2763,26 +3098,47 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
 
-    if (civ["ENG"].name == " ") {
-        civ["ENG"].color = [153, 115, 93];
-    } else if (civ["ENG"].name == "Prydain") {
-        civ["ENG"].color = [32, 172, 160];
-    } else if (civ["ENG"].name == civ["ENG"].defaultname) {
-        civ["ENG"].color = [223, 147, 147];
+    if (civ["ENG"].defaultname == "Prydain") {
+        civ["ENG"].defaultcolor = [32, 172, 160];
     }
 
     if (nextYear == oppositeYear+1) {
         civ["ENG"].defaultname = "England";
-        civ["ENG"].adjective = "British";
+        civ["ENG"].adjective = "Wessexian";
+        civ["ENG"].defaultcolor = [223, 147, 147];
         civ["ENG"].color = [223, 147, 147];
 
         civ["SCO"].adjective = "Scottish";
+    }
+    if (nextYear == 500) {
+        civ["IRE"].strength = 3000;
     }
     if (nextYear == 519) {
         civ["ENG"].strength = 3000;
     }
     if (nextYear == 553) {
         civ["SCO"].strength = 3000;
+    }
+    if (nextYear == 559) {
+        civ["BRIn"].strength = 3000;
+    }
+    if (nextYear == 597) {
+        civ["BRIn"].state = 2;
+    }
+    if (nextYear == 616) {
+        civ["BRIn"].state = 3;
+    }
+    if (nextYear == 655) {
+        civ["BRIn"].state = 4;
+        if (!c.celtics) civ["BRIn"].name = "Northumbria";
+        civ["BRIn"].y += 5;
+    }
+    if (nextYear == 658) {
+        civ["BRIm"].strength = 3000;
+    }
+    if (nextYear == 679) {
+        civ["BRIn"].state = 5;
+        civ["BRIm"].state = 2;
     }
     if (nextYear == 690) {
         civ["ENG"].state = 2;
@@ -2792,44 +3148,83 @@ function regions(year) {
     }
     if (nextYear == 850) {
         civ["ENG"].state = 3;
-        civ["ENG"].x = 1225;
-        civ["ENG"].y = 235;
     }
-    if (nextYear == 900) {
+
+    // Vikings
+
+    // Battle of York
+    if (nextYear == 867) {
+        civ["BRIn"].state = 2;
+        civ["BRIn"].defaultname = "Jorvik";
+        civ["BRIn"].owner = "DEN";
+        civ["BRIm"].defaultname = "Mercia";
+        civ["BRIm"].owner = "DEN";
+        worldNews(`Vikings Capture York`,
+                        `A Viking army has captured York, establishing a major stronghold in Northumbria and threatening the remaining Anglo-Saxon kingdoms of England.`,
+                        "https://historymedieval.com/wp-content/uploads/2023/02/Vikings-disembarking-in-England-from-a-10th-century-Scandinavian-manuscript.jpg.webp",
+                        false, 121, nextYear, 2, false);
+    }
+    if (nextYear == 872) {
+        civ["BRIn"].owner = "none";
+    }
+    if (nextYear == 875) {
+        civ["BRIn"].owner = "DEN";
+    }
+    if (nextYear == 883) {
         civ["ENG"].state = 4;
     }
-    if (nextYear == 928) {
+    if (nextYear == 910) {
+        civ["BRIn"].owner = "none";
+    }
+    if (nextYear == 918) {
+        civ["BRIn"].owner = "DEN";
+        civ["BRIm"].owner = "ENG";
+    }
+    if (nextYear == 927 && !c.celtics) {
+        civ["BRIn"].owner = "ENG";
         civ["ENG"].name = civ["ENG"].defaultname;
-        civ["ENG"].state = 5;
+        civ["ENG"].adjective = "English";
+        civ["ENG"].y -= 8;
+        worldNews(`England Is United`,
+                    `Æthelstan has united the Anglo-Saxon kingdoms under his rule, establishing a unified Kingdom of England and strengthening royal authority across the island.`,
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Athelstan_%28cropped%29.jpg/250px-Athelstan_%28cropped%29.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
+                    false, 120, nextYear, 2, true);
     }
-    if (nextYear == 1000) {
-        civ["IRE"].strength = 2250;
+    if (nextYear == 939) {
+        civ["BRIn"].owner = "DEN";
     }
+    if (nextYear == 944) {
+        civ["BRIn"].owner = "ENG";
+    }
+    if (nextYear == 947) {
+        civ["BRIn"].owner = "DEN";
+    }
+    if (nextYear == 954 && !c.celtics) {
+        civ["BRIn"].defaultname = "York";
+        civ["BRIn"].owner = "ENG";
+    }
+
+    if (nextYear == 1016) {
+        civ["ENG"].owner = "DEN";
+        civ["DEN"].name = "North Sea Empire";
+        civ["ENG"].hideName = true;
+        civ["BRIn"].hideName = true;
+        civ["BRIm"].hideName = true;
+        civ["DEN"].x -= 60;
+        civ["DEN"].y += 10;
+        civ["BRIn"].owner = "DEN";
+        civ["BRIm"].owner = "DEN";
+    }
+    
     if (nextYear == 1030) {
         civ["SCO"].state = 2;
     }
 
-    // Vikings
-    if (nextYear == 1016) {
-        civ["ENG"].name = " ";
-        civ["DEN"].name = "North Sea Empire";
-        civ["DEN"].x -= 60;
+    if (nextYear == 1041 && !c.celtics) {
+        civ["BRIn"].defaultname = "Northumbria";
     }
-
-    if (nextYear == 1155) {
-        civ["ENG"].state = 6;
-    }
-    if (nextYear == 1205) {
-        civ["ENG"].state = 7;
-    }
-    if (nextYear == 1280) {
-        civ["SCO"].strength = 1250; // fix
-        civ["ENG"].state = 8;
-        civ["THA"].strength = 1250;
-        civ["NAP"].name = "Naples";
-    }
-    if (nextYear == 1480) {
-        civ["ENG"].state = 9;
+    if (nextYear == 1049) {
+        civ["BRIn"].state = 4;
     }
 
     if (c.celtics) {
@@ -2842,6 +3237,45 @@ function regions(year) {
         }
     } else {
         // Normal timeline
+        
+        // William the Conqueror
+        if (nextYear == 1066) {
+            civ["BRIn"].owner = "none";
+            civ["BRIm"].owner = "none";
+            civ["ENG"].defaultcolor = [224, 75, 127];
+            worldNews(`William Conquers England`,
+                        `William the Conqueror has defeated Harold Godwinson and claimed the English throne, beginning a Norman transformation of England's ruling elite.`,
+                        "https://www.historic-uk.com/wp-content/uploads/2017/04/norman-conquest-of-britain.jpg",
+                        false, 122, 1066, 3, true);
+        }
+        if (nextYear == 1067) {
+            civ["ENG"].name = civ["ENG"].defaultname;
+            civ["ENG"].state = 5;
+            civ["ENG"].x = 1225;
+            civ["ENG"].y = 235;
+            civ["BRIn"].strength = 0;
+            civ["BRIm"].strength = 0;
+        }
+
+        if (nextYear == 1154) {
+            civ["ENG"].defaultcolor = [223, 147, 147];
+        }
+        if (nextYear == 1155) {
+            civ["ENG"].state = 6;
+        }
+        if (nextYear == 1205) {
+            civ["ENG"].state = 7;
+        }
+        if (nextYear == 1280) {
+            civ["SCO"].strength = 1250; // fix
+            civ["ENG"].state = 8;
+            civ["THA"].strength = 1250;
+            civ["NAP"].name = "Naples";
+        }
+        if (nextYear == 1480) {
+            civ["ENG"].state = 9;
+        }
+
         if (nextYear == 1545) {
             civ["ENG"].state = 10;
         }
@@ -2854,9 +3288,10 @@ function regions(year) {
                             false, 119, nextYear, 3, true);
         }
         if (nextYear == 1649) {
-            civ["ENG"].name = "Great Britain";
-            civ["ENG"].y -= 20;
-            civ["ENG"].x -= 20;
+            civ["ENG"].defaultname = "Great Britain";
+            civ["ENG"].adjective = "British";
+            civ["ENG"].y -= 10;
+            civ["ENG"].x -= 25;
             civ["ENG"].state = 11;
             civ["SCO"].state = 3;
         }
@@ -2865,14 +3300,14 @@ function regions(year) {
             civ["SCO"].strength = 0;
         }
         if (nextYear == 1801) {
-            civ["ENG"].name = "United Kingdom";
+            civ["ENG"].defaultname = "United Kingdom";
         }
         if (nextYear == 1922) {
             civ["ENG"].state = 12;
             civ["IRE"].name = "Ireland";
             civ["IRE"].state = 2;
             civ["IRE"].x = 1190;
-            civ["IRE"].y = 230;
+            civ["IRE"].y = 233;
             civ["IRE"].size = 5;
         }
 
@@ -2902,6 +3337,9 @@ function regions(year) {
     }
 
     // [British Isles]
+    owner(civ, "BRIn", [], civ["BRIn"].defaultname, civ["BRIn"].defaultname, false);
+    owner(civ, "BRIm", [], civ["BRIm"].defaultname, civ["BRIm"].defaultname, false);
+    owner(civ, "ENG", [], civ["ENG"].defaultname, civ["ENG"].defaultname, false);
 
 /* ______________________________
  / \                             \.
@@ -2937,11 +3375,19 @@ function regions(year) {
     if (nextYear == 970) {
         civ["NOR"].name = "";
     }
-    if (nextYear == 1035) {
+
+    // End of North Sea Empire
+    if (nextYear == 1041) {
         civ["NOR"].name = "Norway";
         civ["DEN"].name = "Denmark";
         civ["DEN"].x += 60;
-        civ["ENG"].name = civ["ENG"].defaultname;
+        civ["DEN"].y -= 10;
+        civ["ENG"].owner = "none";
+        civ["BRIn"].owner = "ENG";
+        civ["BRIm"].owner = "ENG";
+        civ["ENG"].hideName = false;
+        civ["BRIn"].hideName = false;
+        civ["BRIm"].hideName = false;
     }
     if (nextYear == 1260) {
         civ["SWE"].state = 2;
@@ -3026,7 +3472,7 @@ function regions(year) {
     if (nextYear == 1979 && civ["DENc"].owner == "DEN") {
         civ["DENc"].autonomous = true;
         civ["DENc"].x -= 30;
-        civ["DENc"].y -= 50;
+        civ["DENc"].y -= 55;
         civ["DENc"].size += 5;
     }
 
@@ -3370,9 +3816,12 @@ function regions(year) {
     }
     if (nextYear == 1920) {
         if (rng(156, nextYear) <= possible &&
-            civ["POL"].state == 8
+            civ["POL"].state == 8 && c.russian_revolution
         ) {
             civ["POL"].state = "a";
+            civ["POL"].strength = 0;
+            civ["RUS"].whiteLines = true;
+            annex(civ, "RUS", ["POL"]);
         }
     }
     if (nextYear == 1947) civ["ALB"].strength = 300;
@@ -3424,14 +3873,28 @@ function regions(year) {
     if (nextYear == 1040) {
         civ["RUS"].state = 3;
     }
+    if (nextYear == 1054) {
+        civ["RUS"].state = 4;
+        civ["RUS"].name = "Novogrod";
+        civ["RUS"].y -= 70;
+        civ["RUS"].size -= 5;
+    }
+    if (nextYear == 1480) {
+        civ["RUS"].state = 3;
+        civ["RUS"].name = "Muscovy";
+        civ["RUS"].y += 40;
+        civ["RUS"].size += 5;
+    }
     if (nextYear == 1509) {
         civ["RUS"].state = 5;
-        civ["RUS"].y -= 30;
-        civ["RUS"].name = "Novogrod";
+    }
+    if (nextYear == 1547) {
+        civ["RUS"].name = "Russia";
     }
     if (nextYear == 1594) {
         civ["RUS"].state = 6;
         civ["RUS"].name = "Russian Empire";
+        civ["RUS"].x += 25;
         civ["VOL"].strength = 0;
     }
     if (nextYear == 1637) {
@@ -3455,6 +3918,7 @@ function regions(year) {
     // Russian Revolution
     if (c.mongols) {
         if (nextYear == 1917) {
+            c.russian_revolution = true;
             civ["RUS"].name = "Red Army";
             civ["RUS"].x += 80;
             civ["RUS"].y -= 12;
@@ -3600,16 +4064,16 @@ function regions(year) {
     }
     if (nextYear == 2022 &&
         civ["UKR"].strength > 0 &&
-        c.soviet_union_collapse
+        c.soviet_union_collapse && !c.kaiserreich && !c.fuhrerreich
     ) {
         civ["UKR"].state = 3;
         worldNews(`Ukraine War Begins`,
                     `Russia has launched a full-scale invasion of Ukraine, triggering widespread fighting, sanctions, and global concern over European security.`,
                     "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Anti-terrorist_operation_in_eastern_Ukraine_%28War_Ukraine%29_%2827843153986%29.jpg/250px-Anti-terrorist_operation_in_eastern_Ukraine_%28War_Ukraine%29_%2827843153986%29.jpg",
-                    false, 73, nextYear, 2, true);
+                    false, 73, nextYear, 2, false);
     }
     if (nextYear == 2023) {
-        if (!c.kaiserreich && !c.fuhrerreich) {
+        if (!c.kaiserreich && !c.fuhrerreich && c.soviet_union_collapse) {
             // Ukraine War
             if (rng(111, nextYear) <= superUnlikely) {
                 civ["UKR"].strength = 0;
@@ -3689,8 +4153,8 @@ function regions(year) {
     }
     if (nextYear == 622) {
         worldNews("Muhammad's Hijra to Medina",
-                    "Facing persecution in Mecca, the Prophet Muhammad has migrated to Medina. This event, known as the Hijra, marks the beginning of the Islamic calendar.",
-                    "https://www.metmuseum.org/-/media/images/exhibitions/2012/byzantium-and-islam/blog/hajj2a.jpg",
+                    "Facing persecution in Mecca, the Prophet Muhammad has migrated to Medina. This event, known as the Hijra, will mark the beginning of the Islamic calendar.",
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Hijra_Abyssinia_%28Rashid_ad-Din%29.jpg/500px-Hijra_Abyssinia_%28Rashid_ad-Din%29.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail",
                     false, 43, nextYear, 3, true);
     }
     if (nextYear == 628) {
@@ -3705,17 +4169,17 @@ function regions(year) {
     if (nextYear == 662) {
         civ["ISL"].name = "Umayyad Caliphate";
         civ["ISL"].state = 4;
+        civ["PER"].hideName = true;
     }
     if (nextYear == 715) {
         civ["ISL"].state = 5;
+        civ["NAV"].strength = 0;
     }
     if (nextYear == 642) {
         civ["ISL"].state = 3;
     }
     if (nextYear == 750) {
         civ["ISL"].name = "Abbasid Caliphate";
-        civ["ISL"].strong = false;
-        civ["ISL"].weak = true;
     }
     if (nextYear == 800) {
         civ["ISL"].state = 6;
@@ -3869,6 +4333,16 @@ function regions(year) {
         colonizeOldWorld = {"POR":100};
     }
 
+    if (nextYear == 455) {
+        civ["NAV"].strength = 3000;
+    }
+    if (nextYear == 824 &&
+        (civ["COR"].strength <= 0 || civ["COR"].state != 0)
+    ) {
+        civ["NAV"].strength = 3000;
+        civ["NAV"].name = "Nav.";
+        civ["NAV"].state = 2;
+    }
     if (nextYear == 1150) {
         if (rng(36, nextYear) <= veryUnlikely) {
           civ["POR"].state = 2;
@@ -3892,7 +4366,7 @@ function regions(year) {
             civ["SPA"].state = 3;
         }
         if (nextYear == 914) {
-            civ["SPA"].name = "Leon-Galicia";
+            civ["SPA"].name = "León-Galicia";
             civ["SPA"].color = [0, 113, 136];
         }
         if (nextYear == 929) {
@@ -3900,10 +4374,10 @@ function regions(year) {
             civ["SPA"].color = [255, 223, 102];
         }
         if (nextYear == 982) {
-            civ["SPA"].state = 5;
+            civ["SPA"].state = 4;
         }
         if (nextYear == 1008) {
-            civ["SPA"].name = "Leon-Galicia";
+            civ["SPA"].name = "León-Galicia";
             civ["SPA"].color = [0, 113, 136];
         }
         if (nextYear == 1014) {
@@ -3918,8 +4392,8 @@ function regions(year) {
         if (nextYear == 1034) {
             civ["ARA"].strength = 600;
         }
-        if (nextYear == 1036) {
-            civ["SPA"].name = "Castile";
+        if (nextYear == 1037) {
+            civ["SPA"].name = "León-Castile";
             civ["SPA"].state = 6;
             civ["SPA"].color = [255, 223, 102];
         }
@@ -3927,7 +4401,7 @@ function regions(year) {
             civ["COR"].name = "Seville";
         }
         if (nextYear == 1072) {
-            civ["SPA"].name = "Leon";
+            civ["SPA"].name = "León";
         }
         if (nextYear == 1091) {
             civ["COR"].name = "Almoravids";
@@ -3942,8 +4416,10 @@ function regions(year) {
             civ["COR"].name = "(Almohads)";
             civ["COR"].size -= 1;
         }
-        if (nextYear == 1230) {
+        if (nextYear == 1157) {
             civ["SPA"].name = "Castile";
+        }
+        if (nextYear == 1230) {
             civ["ARA"].state = 1;
         }
         if (nextYear == 1230) {
@@ -3951,6 +4427,10 @@ function regions(year) {
         }
         if (nextYear == 1234) {
             civ["COR"].state = 3;
+
+            civ["SPA"].x += 15;
+            civ["SPA"].y += 25;
+            civ["SPA"].size ++;
         }
         if (nextYear == 1237) {
             civ["COR"].name = "Granada";
@@ -3960,14 +4440,10 @@ function regions(year) {
         if (nextYear == 1325 && civ["ARA"].strength > 0) {
             civ["ITA"].color = [239, 159, 20];
         }
-        if (nextYear == 1357) {
-            civ["SPA"].x += 15;
-            civ["SPA"].y += 25;
-            civ["SPA"].size ++;
-        }
         if (nextYear == 1469) {
             civ["SPA"].name = "Spain";
-            civ["ARA"].strength = 0;
+            civ["ARA"].color = civ["SPA"].color;
+            civ["ARA"].hideName = true;
             civ["ITA"].color = [255, 223, 102];
             worldNews("Marriage of Ferdinand & Isabella",
                         "Ferdinand of Aragon and Isabella of Castile have married, uniting their two powerful kingdoms and laying the foundation for a unified Spain.",
@@ -3983,6 +4459,13 @@ function regions(year) {
                         "With the fall of Granada, the Reconquista is complete, making the Iberian Peninsula fully controlled by Christian Kingdoms.",
                         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSta9A141RRen59fWk6awaBb80IPeaDm9dxuw&s",
                         false, 38, 1492, 2, true);
+        }
+        if (nextYear == 1512) {
+            civ["NAV"].strength = 0;
+        }
+        if (nextYear == 1516) {
+            civ["ARA"].strength = 0;
+
         }
 
         // Iberian Union
@@ -4083,12 +4566,12 @@ function regions(year) {
     if (nextYear == 1242) {
         civ["TIB"].strength = 0;
     }
-    if (nextYear == 1355) {
+    if (nextYear == 1354) {
         civ["TIB"].strength = 900;
         civ["TIB"].name = "Phagmodrupa";
         civ["TIB"].state = 2;
         civ["TIB"].x -= 30;
-        civ["TIB"].y -= 10;
+        civ["TIB"].y -= 20;
     }
     if (nextYear == 1486) {
         civ["TIB"].name = "Ringpungpa";
@@ -4144,6 +4627,12 @@ function regions(year) {
     if (nextYear == 651) {
         civ["SVJ"].strength = 2250;
     }
+    if (nextYear == 900) {
+        civ["TON"].strength = 2250;
+    }
+    if (nextYear == 1000) {
+        civ["BUT"].strength = 2250;
+    }
     if (nextYear == 1136) {
         civ["MAJ"].strength = 600;
         civ["MAJ"].color = [208, 162, 69];
@@ -4154,6 +4643,7 @@ function regions(year) {
     if (nextYear == 1221) {
         civ["MAJ"].name = "Singhasari";
         civ["MAJ"].y -= 10;
+        civ["TON"].state = 2;
     }
     if (nextYear == 1290) {
         civ["SVJ"].state = 2;
@@ -4161,6 +4651,9 @@ function regions(year) {
     if (nextYear == 1293) {
         civ["MAJ"].name = "Majapahit";
         civ["MAJ"].color = [];
+    }
+    if (nextYear == 1320) {
+        civ["GOW"].strength = 2000;
     }
     if (nextYear == 1340) {
         civ["MAJ"].strength = 2250;
@@ -4179,9 +4672,22 @@ function regions(year) {
         civ["MLY"].size ++;
         civ["MLY"].x += 10;
     }
-    if (nextYear == 1575) {
+    if (nextYear == 1550) {
+        civ["GOW"].state = 2;
+    }
+    if (nextYear == 1589) {
         civ["PHI"].strength = 653;
+        civ["TON"].strength = 0;
         civ["PHI"].owner = colonizingPercentage(rng(46, nextYear),colonizeOldWorld,"SPA",3);
+    }
+    if (nextYear == 1605) {
+        civ["GOW"].name = "Sultanate of Gowa";
+    }
+    if (nextYear == 1615) {
+        civ["GOW"].state = 3;
+    }
+    if (nextYear == 1620) {
+        civ["GOW"].state = 4;
     }
     if (nextYear == 1757) {
         civ["PHI"].state = 2;
@@ -4195,13 +4701,16 @@ function regions(year) {
     }
 
     // Europeans
-    if (nextYear == 1622) {
-        civ["DUTi"].strength = 2553;
-        civ["DUTi"].owner = colonizingPercentage(rng(45, nextYear),colonizeOldWorld,"DUT",3);
-    }
-    if (nextYear == 1630) {
+    if (nextYear == 1515) {
         civ["PORi"].strength = 1553;
         civ["PORi"].owner = colonizingPercentage(rng(47, nextYear),colonizeOldWorld,"POR",3);
+    }
+    if (nextYear == 1667) {
+        civ["GOW"].state = 1;
+        civ["GOW"].name = "Gowa";
+        civ["GOW"].strength = 0;
+        civ["DUTi"].strength = 2553;
+        civ["DUTi"].owner = colonizingPercentage(rng(45, nextYear),colonizeOldWorld,"DUT",3);
     }
     if (nextYear == 1799) {
         civ["DUTi"].state = 2;
@@ -4216,12 +4725,11 @@ function regions(year) {
     if (nextYear == 1890) {
         civ["MLY"].state = 2;
         civ["DUTi"].state = 4;
-        civ["PHI"].state = 3;
     }
     if (nextYear == 1946) {
-        //if (RNG("US_Imperialism",year) >= unlikely) {
-        civ["PHI"].owner = "none";
-        //}
+        if (!c.us_imperialism) {
+            civ["PHI"].owner = "none";
+        }
     }
     if (nextYear == 1947) {
         if (!c.new_china) {
@@ -4311,7 +4819,7 @@ function regions(year) {
     if (nextYear == 1658) {
         civ["MOR"].name = "Morocco";
     }
-    if (nextYear == 1951) {
+    if (nextYear == 1951 && c.af_decolonization_level >= 1) {
         civ["LIB"].strength = 100;
     }
     if (nextYear == 1952) {
@@ -4388,6 +4896,10 @@ function regions(year) {
     }
     if (nextYear == 690) {
         civ["CHA"].strength = 2250;
+        civ["SAO"].strength = 0;
+    }
+    if (nextYear == 850) {
+        civ["SOK"].strength = 3000;
     }
     if (nextYear == 930) {
         civ["ABY"].state = 3;
@@ -4466,8 +4978,12 @@ function regions(year) {
     if (nextYear == 1586) {
         civ["LUB"].strength = 3000;
     }
-    if (nextYear == 1591) {
-        civ["SON"].strength = 0;
+    if (nextYear == 1592) {
+        civ["SON"].name = "Dendi";
+        civ["SON"].state = 2;
+        civ["SON"].size -= 2;
+        civ["SON"].y += 15;
+        civ["SON"].x += 65;
     }
     if (nextYear == 1594) {
         civ["SOM"].state = 2;
@@ -4477,7 +4993,7 @@ function regions(year) {
     }
     if (nextYear == 1607) {
         civ["MAL"].state = 2;
-        civ["MAL"].name = "Bamara";
+        civ["MAL"].name = "Bamana";
         civ["MAL"].x += 20;
         civ["MAL"].size += 2;
     }
@@ -4494,9 +5010,13 @@ function regions(year) {
         civ["ZIM"].name = "Rozvi  Mutap Kingdom";
         civ["ZIM"].x += 35;
     }
-    if (nextYear == 1806) {
-        civ["SOK"].strength = 98;
+    if (nextYear == 1804) {
+        civ["SOK"].name = "Sokoto";
         civ["NIG"].y += 10;
+    }
+    if (nextYear == 1824) {
+        civ["SOK"].state = 2;
+        civ["SOK"].size += 2;
     }
     if (nextYear == 1828) {
         civ["MAD"].state = 2;
@@ -4516,18 +5036,19 @@ function regions(year) {
 
     // European Colonization
     c.colonizingAfrica ++;
-    owner(civ,"PORa",[],"Angola Zambia Mozambique","Colonies",true);
-    owner(civ,"FRAs",[],"","",true);
-    owner(civ,"FRAx",[],"Tunisia","Africa",true);
-    owner(civ,"KON",[],civ["KON"].defaultname,"Congo",true);
-    owner(civ,"GERx",[],"Tanzania","Africa",true);
-    owner(civ,"SPAx",[],"Western Sahara","Sahara",true);
-    owner(civ,"ITAx",[],"Eritrea","Africa",true);
+    owner(civ, "PORa", [], "Angola Zambia Mozambique", "Colonies", true);
+    owner(civ, "FRAs", [], "", "", true);
+    owner(civ, "FRAx", [], "Tunisia", "Africa", true);
+    owner(civ, "MAD", [], "Madagascar", "Madagascar", false);
+    owner(civ, "KON", [], civ["KON"].defaultname, "Congo", true);
+    owner(civ, "GERx", [], "Tanzania", "Africa", true);
+    owner(civ, "SPAx", [], "Western Sahara", "Sahara", true);
+    owner(civ, "ITAx", [], "Eritrea", "Africa", true);
     if (civ["EAF"].strength <= 0) {
-        owner(civ,"ENGx",[],"Kenya","Colonies",true);
+        owner(civ, "ENGx", [], "Kenya", "Colonies", true);
     }
-    owner(civ,"ENGn",[],"Nigeria","Colonies",true);
-    owner(civ,"ABY",[],"Ethiopia","East Africa",true);
+    owner(civ, "ENGn", [], "Nigeria", "Colonies", true);
+    owner(civ, "ABY", [], "Ethiopia", "East Africa", true);
 
     if (nextYear == rngInfluence(rng(42, nextYear),1580,[
         [civ["CAR"].strong, -300],
@@ -4560,9 +5081,9 @@ function regions(year) {
         civ["SPAx"].strength = 300;
         civ["ITAx"].strength = 300;
 
-        civ["GERx"].owner = colonizingPercentage(rng(67, nextYear), colonizeOldWorld,"GER",3);
-        civ["SPAx"].owner = colonizingPercentage(rng(68, nextYear), colonizeOldWorld,"SPA",3);
-        civ["ITAx"].owner = colonizingPercentage(rng(69, nextYear), colonizeOldWorld,"ITA",3);
+        civ["GERx"].owner = colonizingPercentage(rng(67, nextYear), colonizeOldWorld, "GER", 3);
+        civ["SPAx"].owner = colonizingPercentage(rng(68, nextYear), colonizeOldWorld, "SPA", 3);
+        civ["ITAx"].owner = colonizingPercentage(rng(69, nextYear), colonizeOldWorld, "ITA", 3);
 
         civ["PORa"].state = 3;
             if (rng(72, nextYear) <= unlikely) {
@@ -4572,9 +5093,15 @@ function regions(year) {
             }  
         civ["SOM"].strength = 0;
     }
+    if (c.colonizingAfrica == 1897) {
+        civ["MAD"].state = 3;
+        civ["MAD"].size += 2;
+        civ["MAD"].y += 8;
+        civ["MAD"].owner = colonizingPercentage(rng(171, nextYear), colonizeOldWorld, "FRA", 2);
+    }
     if (c.colonizingAfrica == 1898) {
         civ["ENGx"].strength = 300;
-        civ["ENGx"].owner = colonizingPercentage(rng(69, nextYear), colonizeOldWorld,"ENG",3);
+        civ["ENGx"].owner = colonizingPercentage(rng(69, nextYear), colonizeOldWorld, "ENG", 3);
     
         // Hala'ib Triangle
         if (civ["ENGx"].owner == civ["EGY"].owner) {
@@ -4623,8 +5150,10 @@ function regions(year) {
         civ["CHA"].strength = 0;
         civ["NIG"].strength = 0;
         civ["YOR"].strength = 0;
-        civ["MAD"].strength = 0;
         //}
+    }
+    if (c.colonizingAfrica == 1903) {
+        civ["SOK"].strength = 0;
     }
     if (c.colonizingAfrica == 1912) {
         civ["MOR"].strength = 0;
@@ -4668,12 +5197,6 @@ function regions(year) {
         civ["CHA"].size += 5;
         civ["CHA"].x += 20;
         civ["CHA"].y += 10;
-    
-        civ["MAD"].strength = 150;
-        civ["MAD"].name = "Madagascar";
-        civ["MAD"].state = 3;
-        civ["MAD"].x -= 15;
-        civ["MAD"].y += 25;
 
         if (c.af_decolonization_level >= 2 && c.usa_exists) {
             civ["FRAx"].state = 3;
@@ -4685,14 +5208,17 @@ function regions(year) {
             civ["FRAs"].owner = civ["FRAx"].owner;
         }
         
-        if (civ["LIB"].strength <= 0) {
+        if (c.af_decolonization_level >= 1 && civ["LIB"].strength <= 0) {
             civ["LIB"].strength = 200;
             civ["LIB"].name = "Tripolitania";
             civ["LIB"].state = 2;
             civ["LIB"].x -= 40;
             //c.tripolitania = true;
         }
-        //}
+        
+        if (c.af_decolonization_level >= 1) {
+            civ["MAD"].owner = "none";
+        }
     }
     if (c.colonizingAfrica == 1962) {
         // British Colonization
@@ -4744,7 +5270,12 @@ function regions(year) {
             civ["JOL"].strength = 900;
             civ["ZIM"].strength = 900;
             civ["AYR"].strength = 900;
+            civ["SOK"].strength = 900;
+            civ["SON"].strength = 900;
+            civ["GHA"].strength = 900;
+            civ["LUB"].strength = 900;
             civ["KON"].name = "Kongo";
+            civ["GERx"].owner = "none";
         }
     }
     if (c.colonizingAfrica == 1967) {
@@ -5014,7 +5545,7 @@ function regions(year) {
     if (c.colonizingAmerica == 1825) {
         //if (RNG("Rome_Colonizes_America",year) > superUnlikely) {
         civ["SPAc"].state = 1;
-        civ["SPAc"].name = "";
+        civ["SPAc"].size -= 5;
         //}
     }
 
@@ -5160,11 +5691,13 @@ function regions(year) {
             c.taken_names.push(civ["BRA"].defaultname);
             break;
         case "POR":
-        case null:
         default:
-            civ["BRA"].defaultname = "Brazil";
-            civ["BRA"].defaultname2 = civ["BRA"].defaultname;
-            civ["BRA"].defaultcolor = [13, 185, 57];
+            if (!civ["BRA"].defaultname) {
+                civ["BRA"].defaultname = "Brazil";
+                civ["BRA"].defaultname2 = civ["BRA"].defaultname;
+                civ["BRA"].defaultcolor = [13, 185, 57];
+            }
+            break;
     }
 
     owner(civ,"BRA",civ["BRA"].defaultcolor,civ["BRA"].defaultname,civ["BRA"].defaultname2,true);
@@ -5358,7 +5891,7 @@ function regions(year) {
           civ["CUB"].owner = "USA";
         //}
     }
-    if (c.colonizingAmerica == 1902) {
+    if (c.colonizingAmerica == 1902 && !c.us_imperialism) {
         civ["CUB"].owner = "none";
     }
     if (c.colonizingAmerica == 1950) {
@@ -5389,12 +5922,19 @@ function regions(year) {
     |  /.                           /.
     \_/___________________________*/
 
+    if (nextYear == oppositeYear+1) {
+        civ["CAN"].name2 = "Colonies";
+    }
+
     // Vikings
     if (nextYear == 985) {
         civ["VIN"].strength = 139;
     }
 
     // Natives
+    if (nextYear == 900) {
+        civ["PUE"].strength = 500;
+    }
     if (nextYear == 1400) {
         civ["IRO"].strength = 2200;
     }
@@ -5486,6 +6026,11 @@ function regions(year) {
         if (civ["USA"].state < 4) {
             civ["CAN"].state = 8;
         }
+        if (civ["CAN"].state == 8 && civ["USA"].strength <= 0) {
+            civ["USA"].state = 2;
+            civ["USA"].strength = 500;
+            civ["USA"].owner = civ["CAN"].owner;
+        }
     }
     if (c.colonizingAmerica == 1850) {
         if (!c.manifest_destiny) {
@@ -5493,15 +6038,20 @@ function regions(year) {
         }
     }
     if (c.colonizingAmerica == 1870) {
-        civ["CAN"].owner = "none";
         civ["CAN"].hideName = false;
+        civ["CAN"].nameFirst = false;
+        civ["CAN"].x -= 30;
+        civ["CAN"].y -= 20;
+        civ["CAN"].size += 8;
+        civ["CAN"].name2 = "Canada";
         if (c.pax_francia) {
             civ["CAN"].name = "Quebec";
             civ["CAN"].color = [57, 113, 228];
         }
-        civ["CAN"].x -= 30;
-        civ["CAN"].y -= 20;
-        civ["CAN"].size += 8;
+    }
+    if (c.colonizingAmerica == 1931) {
+        civ["CAN"].owner = "none";
+        if (civ["USA"].owner) civ["USA"].owner = "none";
     }
 
     // French America
@@ -5529,12 +6079,12 @@ function regions(year) {
     }
 
     // Spanish North America
-    if (c.colonizingAmerica == 1800) {
-        civ["FLO"].strength = 17;
+    if (c.colonizingAmerica == 1783) {
+        civ["FLO"].strength = 500;
         civ["FLO"].owner = colonizingPercentage(rng(166, nextYear), colonizeOldWorld, "SPA", 2, true);
     }
-    if (c.colonizingAmerica == 1803) {
-        civ["FLO"].state = 1;
+    if (c.colonizingAmerica == 1821) {
+        civ["FLO"].strength = 0;
     }
 
     // Russian America
@@ -5587,7 +6137,7 @@ function regions(year) {
         worldNews("Declaration of Independence",
                     "The United States has adopted the Declaration of Independence, formally announcing the colonies' separation from Britain and the birth of a new nation.",
                     "https://cdn.britannica.com/21/143621-159-3EDE9040/Declaration-of-Independence-canvas-rotunda-John-Trumbull-July-4-1776.jpg",
-                    false, 52, nextYear, 3, true);
+                    false, 52, nextYear, 3, false);
         //}
     }
     if (c.unitedStates == 1777) {
@@ -5652,13 +6202,17 @@ function regions(year) {
             }
         }
     }
-    if (c.unitedStates == 1819) {
+    if (c.unitedStates == 1818) {
         civ["ORE"].strength = 200;
-        civ["ORE"].color = [200, 200, 200];
+        civ["ORE"].color = [180, 180, 180];
+        if (civ["CAN"].owner == "ENG" && c.usa_exists && c.louisiana_purchase) {
+            civ["ORE"].name = "Columbia (UK/US)";
+        }
     }
     if (c.unitedStates == 1821) {
-        if (c.manifest_destiny) {
+        if (c.louisiana_purchase) {
             civ["USA"].state = 4;
+            c.manifest_destiny = true;
         }
     }
     if (c.unitedStates == 1835) {
@@ -5675,7 +6229,7 @@ function regions(year) {
             `https://www.texasobserver.org/wp-content/uploads/2022/05/texas.webp`,
             false, 55, nextYear, 1, true);
         if (!c.usa_exists || !c.manifest_destiny || c.pax_francia) {
-            civ["TEX"].state = "a";
+            //civ["TEX"].state = "a";
         }
     }
     if (c.unitedStates == 1837) {
@@ -5693,7 +6247,7 @@ function regions(year) {
                 civ["TEX"].strength = 399;
             }
             if (!c.usa_exists) {
-                civ["TEX"].state = "a";
+                //civ["TEX"].state = "a";
             }
         }
         if (c.unitedStates == 1845) {
@@ -5716,12 +6270,18 @@ function regions(year) {
                 // Mexico Wins
                 c.big_mexico = true;
                 civ["USA"].state = 8;
+                civ["CEN"].name = "Panama";
+                civ["CEN"].x += 45;
+                civ["CEN"].y += 15;
             } else if (rng(88, nextYear) <= superUnlikely) {
                 // Mexico Wins
                 c.big_mexico = true;
                 civ["MEX"].state = 1;
                 civ["USA"].state = 8;
                 civ["TEX"].strength += 500;
+                civ["CEN"].name = "Panama";
+                civ["CEN"].x += 45;
+                civ["CEN"].y += 15;
             } else if (rng(88, nextYear) <= unlikely) {
                 // annex northern mexico
                 civ["USA"].state = "c12";
@@ -5845,9 +6405,11 @@ function regions(year) {
         if (c.unitedStates == 1898) {
             // Spanish-American War
             if (civ["PHI"].owner == "SPA") {
-            civ["PHI"].owner = "USA";
-            civ["HAW"].owner = "USA";
-            civ["HAW"].hideName = true;
+                civ["PHI"].state = 3;
+                civ["BUT"].strength = 0;
+                civ["PHI"].owner = "USA";
+                civ["HAW"].owner = "USA";
+                civ["HAW"].hideName = true;
             }
             civ["SPAc"].owner = "USA";
             civ["SPAc"].hideName = true;
@@ -5869,7 +6431,7 @@ function regions(year) {
             worldNews("September 11 Attacks",
                 "Terrorists hijacked four planes, crashing them into the World Trade Center in New York City and the Pentagon in Washington, D.C.",
                 "https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/7060821/GettyImages-1161124.jpg",
-                false, 49, nextYear, 1, true);
+                false, 49, nextYear, 2, true);
         }
     }
     if (nextYear == 2024) {
@@ -5892,10 +6454,12 @@ function regions(year) {
         if (c.usa_exists) {
             civ["LBR"].strength = 2250;
         }
-        /*if (RNG("US_Imperialism",year) <= unlikely && c.usa_exists) {
-          c.us_imperialism = true;
-          civ["LBR"].name = "U.S. Africa";
-        }*/
+        if (rng(170, nextYear) <= unlikely && c.usa_exists) {
+            c.us_imperialism = true;
+            colonizeOldWorld["USA"] = 30;
+            civ["LBR"].name = "U.S. Africa";
+            civ["LBR"].color = civ["USA"].color;
+        }
     }
     if (c.unitedStates == 1829) {
         if (c.us_imperialism) {
@@ -5951,9 +6515,9 @@ function regions(year) {
         civ["USA"].color = [183, 105, 105];
     }
 
-    owner(civ,"CAN", [243, 40, 68], "Canada", "Colonies", true);
-    owner(civ,"QUE", [],"Quebec", "Colonies", true);
-    owner(civ,"FLO", [206, 128, 56], "Florida", "Florida", true);
+    owner(civ, "CAN", [243, 40, 68], "Canada", civ["CAN"].name2, true);
+    owner(civ, "QUE", [], "Quebec", "Colonies", true);
+    owner(civ, "FLO", [206, 128, 56], "Florida", "Florida", true);
     if (!c.burr_plot) owner(civ, "LOU", [], "Louisiana", "Louisiana", false);
     if (c.taken_names.includes("Louisiana") || civ["SPAc"].owner == "FRA") {
         owner(civ, "LOU", [], "Orléanie", "Orléanie", false);

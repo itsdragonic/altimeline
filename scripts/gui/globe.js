@@ -190,6 +190,7 @@ function drawToGlobe() {
             globe.material.bumpMap = bumpTexture;
         }
         globe.material.needsUpdate = true;
+        dontSpin = false;
         
         //console.log('Globe texture updated successfully');
     } catch (error) {
@@ -472,7 +473,7 @@ function animate() {
         const isChangingDimensions = typeof changingDimensions !== 'undefined' ? changingDimensions : false;
         const mobileCheck = typeof isMobile !== 'undefined' ? isMobile : false;
 
-        if (!isDragging && !isSpinDisabled) {
+        if (!isDragging && !isSpinDisabled && !dontSpin) {
             const timeDir = isGoingBackwards ? -1 : 1;
 
             if (currentlyLoading) {
@@ -533,13 +534,14 @@ function animate() {
                         resetGlitchEffects(mobileCheck);
                         wasGlitching = false;
                     }
+                    dontSpin = false;
                 }
 
             } else {
                 // NOT LOADING
                 if (wasFastSpinning) {
                     targetRotation.y = fastSpinOriginY;
-                    targetRotation.x = 0; // Reset wobble
+                    //targetRotation.x = 0; // Reset wobble
                     wasFastSpinning = false;
                 }
 

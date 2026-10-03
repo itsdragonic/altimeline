@@ -131,7 +131,7 @@ const generateDownloadButton = document.getElementById('downloadButton');
 
 generateSeedButton.addEventListener('click', () => {
     seedInput.value = generateRandomString();
-
+    changingDimensions = enableGlitching ? true : false;
     calcSeed(seedInput.value);
     redraw();
     displayNews(timeline);
@@ -211,12 +211,15 @@ function removeOverlay() {
 }
 
 // Checkboxes
+var dontSpin = false;
 document.getElementById('phy').addEventListener('change', function() {
+    dontSpin = true;
     physicalMap = this.checked;
     updateCivs();
     fallback();
 });
 document.getElementById('names').addEventListener('change', function() {
+    dontSpin = true;
     showNames = this.checked;
     updateCivs();
     fallback();

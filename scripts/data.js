@@ -97,7 +97,7 @@ firstYear[oppositeYear] = {
 
         // 1800s
         louisiana_purchase: false, // true
-        manifest_destiny: true, // true
+        manifest_destiny: false, // true
         csa_victory: false, // false
         unified_germany: true, // true
         unified_italy: true, // true
@@ -450,7 +450,7 @@ function colonizingPercentage(RNG, array, bias, biasAmount, canBeFree) {
 }
 
 function owner(civ, id, colors, name, name2, nameFirst) {
-    if (colors == null) {
+    if (!colors) {
         colors = [100, 100, 100];
     }
     if (civ[id].owner == "none") {
@@ -465,7 +465,10 @@ function owner(civ, id, colors, name, name2, nameFirst) {
             civ[id].color = colors;
         }
     } else if (civ[id].owner != null) {
-        if (nameFirst || civ[id].nameFirst) {
+        if (civ[id].nameFirst != null) {
+            nameFirst = civ[id].nameFirst;
+        }
+        if (nameFirst) {
             civ[id].name = civ[civ[id].owner].adjective + " " + name2;
         } else {
             civ[id].name = `${name2} ( ${civ[civ[id].owner].adjective.slice(0, 2)}. )`;
@@ -498,6 +501,7 @@ function newLand(civ, nation) {
 }
 
 function annex(civ, country, annexed) {
+    if (civ[country].strength <= 0) return;
     civ[country].merge = [...civ[country].merge];
 
     annexed.forEach((value) => {
@@ -505,6 +509,7 @@ function annex(civ, country, annexed) {
             civ[country].merge.push(value);
         }
         civ[value].strength = 0;
+        civ[value].merge = [];
     });
 }
 
@@ -612,22 +617,25 @@ addCountry("AYR", "Tuaregs", null, 1265, 410, 5);
 addCountry("LUO", "Luo", null, 1475, 600, 7);
 addCountry("LUB", "Luba", null, 1400, 725, 5);
 addCountry("YOR", "Yoruba", null, 1220, 585, 5);
+addCountry("SAO", "Sao", null, 1360, 565, 7);
 addCountry("HAR", "Ifat", null, 1540, 580, 6);
 addCountry("MIS", "Mississippi", null, 610, 370, 6);
-
+addCountry("PUE", "Pueblo", null, 500, 357, 6);
 addCountry("INDg", "Genosha", null, 1620, 690, 6);
 
 // Civilizations
 addCountry("MES", "Assyria / Babylon", 1, 1500, 372, 5);
 addCountry("GEO", "Colchis", 1, 1520, 315, 5);
 addCountry("ARM", "Hayasha-Azzi", 1, 1486, 325, 5);
-addCountry("BUR", "Dhanyawadi", 1, 1900, 490, 5);
+addCountry("MYA", "Dhanyawadi", 1, 1900, 490, 5);
 addCountry("ROM", "Roman Empire", '1a', 1257, 330, 6);
 addCountry("KOR", "Jin", 2, 2115, 375, 7);
 addCountry("DRK", "Gojoseon", 2, 2080, 330, 5);
 
 addCountry("MON", "Xiongnu", 1, 1890, 290, 15);
 addCountry("HIT", "Hittites", 1, 1470, 343, 5);
+addCountry("MONi", "Ilkhanate", 1, 1569, 385, 11);
+addCountry("MONc", "Yuan Dynasty", 1, 1893, 356, 15);
 
 addCountry("VIE", "Van Land", 1, 1985, 480, 5);
 addCountry("LIB", "Libya", 1, 1365, 400, 5);
@@ -637,15 +645,16 @@ addCountry("KSH", "Kushite Empire", 2, 1395, 460, 8);
 addCountry("PER", "Median Empire", 1, 1543, 378, 7);
 addCountry("IND", "Indian Kingdoms", 1, 1710, 454, 8);
 addCountry("CHO", "Pandyas", 1, 1780, 560, 6);
-addCountry("INDc", "Satavahana", null, 1780, 560, 6);
+addCountry("CHOc", "Kadambas", 1, 1780, 540, 6);
+addCountry("INDc", "Satavahana", 1, 1780, 530, 6);
 
 addCountry("ABY", "Axum", 1, 1500, 530, 6);
-addCountry("SPAc", "New Spain", 1, 670, 490, 12);
+addCountry("SPAc", "New Spain", 1, 670, 490, 13);
 addCountry("CSA", "Confederate States of America", 1, 480, 390, 8);
 addCountry("CAM", "Funan", 1, 1970, 555, 8);
 addCountry("MOC", "Moche", 1, 640, 700, 6);
 addCountry("YEM", "Himyar", 1, 1560, 530, 6);
-addCountry("CHM", "Champa", 1, 2010, 540, 5);
+addCountry("CHM", "Champa", 1, 2045, 540, 5);
 addCountry("JAP", "Yamato", 1, 2185, 380, 8);
 addCountry("BYZ", "E. Roman Empire", 1, 1370, 340, 9);
 addCountry("GHA", "Ghana Empire", 1, 1145, 530, 5);
@@ -654,11 +663,15 @@ addCountry("HNN", "Hunnic Empire", 1, 1375, 266, 7);
 addCountry("AZX", "Teotihuacan", 1, 500, 500, 5);
 addCountry("NEP", "Nepal", 1, 1845, 430, 4);
 
-addCountry("GTH", "Gothic Kingdoms", 1, 1270, 300, 5);
+addCountry("SUE", "Suebi", 1, 1175, 315, 5);
+addCountry("GTH", "Gothic Kingdoms", 1, 1300, 300, 5);
 addCountry("FRK", "Gauls", null, 1245, 280, 7);
 addCountry("AQU", "Aquitaine", 1, 1235, 295, 5);
-addCountry("ENG", "Wessex", 1, 1210, 250, 5);
-addCountry("TUR", "Turkish Khaganate", 2, 1340, 280, 7);
+addCountry("ENG", "Wessex", 1, 1215, 250, 5);
+addCountry("BRIn", "Bernicia", 1, 1258, 215, 4);
+addCountry("BRIm", "Mercia", 1, 1258, 235, 4);
+addCountry("TUR", "Hephthalites", 1, 1660, 335, 7);
+addCountry("SEL", "Seljuqs", 1, 1627, 337, 5);
 addCountry("TIB", "Tibet", 1, 1860, 410, 8);
 addCountry("ISL", "Rashidun Caliphate", 1, 1360, 410, 11);
 addCountry("BUL", "Bulgaria", 1, 1450, 280, 5);
@@ -680,6 +693,7 @@ addCountry("DEN", "Denmark", 2, 1309, 210, 4);
 addCountry("HRE", "H.R.E.", 1, 1305, 250, 6);
 addCountry("FRA", "France", 1, 1250, 280, 6);
 addCountry("ITA", "", 1, 1240, 290, 5);
+addCountry("BUR", "Lotharingia", 1, 1275, 260, 5);
 addCountry("RUS", "Kieven Rus'", 1, 1411, 240, 14);
 addCountry("OMA", "Oman", 1, 1660, 480, 6);
 addCountry("ICE", "Iceland", 1, 1145, 143, 5);
@@ -694,6 +708,7 @@ addCountry("MOR", "Almoravids", 1, 1150, 390, 6);
 
 addCountry("NAP", "Sicily", 1, 1350, 320, 3.5);
 addCountry("POR", "Portugal", 1, 1150, 340, 4);
+addCountry("NAV", "Basq.", 1, 1224, 300, 4);
 addCountry("BUN", "Kitara", 1, 1425, 650, 5);
 addCountry("ZIM", "Mapungubwe", 1, 1420, 825, 5);
 addCountry("CZE", "Bohemia", 1, 1350, 255, 4);
@@ -710,6 +725,7 @@ addCountry("KIL", "Kilwa", 1, 1545, 720, 6);
 addCountry("NIG", "West African Kingdoms", 1, 1220, 585, 5);
 addCountry("ZEA", "Maori", 1, 2350, 960, 10);
 addCountry("MAJ", "Kediri", 1, 2050, 710, 7);
+addCountry("GOW", "Gowa", 1, 2118, 685, 4);
 addCountry("ROA", "Wallachia", 1, 1410, 290, 4);
 addCountry("JOL", "Jolof", 1, 1105, 535, 6);
 addCountry("CHIi", "New China", 1, 2000, 540, 8); // *
@@ -721,23 +737,27 @@ addCountry("IRO", "Iroquois", 1, 755, 305, 4);
 addCountry("QQO", "Qara Qoyunlu", 1, 1520, 360, 7);
 addCountry("KUW", "Kuwait", 1, 1575, 415, 4);
 addCountry("AUS", "Austria", 1, 1320, 275, 4);
-addCountry("SON", "Songhay", 1, 1200, 530, 8);
+addCountry("SON", "Songhai", 1, 1200, 530, 8);
 addCountry("BRA", "Portuguese Brazil", 1, 906, 700, 8);
 
 addCountry("KZH", "Yarkent", 1, 1735, 340, 9);
 addCountry("UYG", "Uyghur Khaganate", 1, 1835, 300, 8);
+addCountry("CHIt", "Liao", 1, 1970, 320, 14);
+
 addCountry("VEZ", "Klein-Venedig", "a", 710, 585, 7);
 addCountry("MAD", "Merina", 1, 1570, 790, 5);
-addCountry("PHI", "Philippines ( SP )", 1, 2130, 555, 7);
+addCountry("PHI", "Philippines (Sp.)", 1, 2130, 555, 7);
+addCountry("TON", "Tondo", 1, 2136, 530, 5);
+addCountry("BUT", "Butuan", 1, 2178, 584, 5);
 addCountry("PORa", "Portuguese Colonies", 1, 1345, 775, 7);
 addCountry("DUT", "U.P.", 1, 1290, 233, 4);
 addCountry("DAR", "Darfur Sennar", 1, 1380, 540, 6);
 
-addCountry("DENc", "Greenland ( Den. )", 2, 1000, 160, 8);
+addCountry("DENc", "Greenland ( Den. )", 2, 1000, 165, 9);
 addCountry("CAN", "Canada", 1, 810, 290, 9);
 addCountry("QUE", "Quebec", 1, 750, 270, 9);
 addCountry("DUTc", "New Netherlands", 1, 760, 330, 4);
-addCountry("GER", "Prussia", 1, 1340, 230, 5);
+addCountry("GER", "Brandenburg-Prus.", 1, 1340, 230, 5);
 addCountry("DUTi", "Dutch East Indies", 1, 2000, 680, 9);
 addCountry("FRAk", "St. Domingue", 1, 700, 505, 4);
 addCountry("DUTb", "Dutch Brazil", 1, 900, 680, 9);
@@ -764,9 +784,9 @@ addCountry("ENGs", "South Africa", 1, 1270, 910, 9);
 
 addCountry("LOU", "Louisiana", 1, 510, 320, 11);
 addCountry("GUY", "British Guiana", 1, 820, 585, 4);
-addCountry("FLO", "Spanish Florida", 2);
+addCountry("FLO", "Florida", 2, 685, 425, 6);
 addCountry("HAI", "Haiti", 1, 710, 500, 4);
-addCountry("SOK", "Sokoto", 1, 1270, 565, 10);
+addCountry("SOK", "Hausa", 1, 1270, 565, 8);
 addCountry("ARG", "Rio de la Plata", 1, 762, 885, 8);
 addCountry("PAR", "Paraguay", 1, 825, 845, 4);
 addCountry("CHL", "Chile", 1, 735, 910, 7);
@@ -786,7 +806,7 @@ addCountry("AUZ", "Australia", 1, 2120, 850, 15);
 addCountry("FRAx", "French Africa", 1, 1250, 365, 5);
 addCountry("FRAs", "French Sudan", 1);
 addCountry("DOM", "Dom. Rep.", 1, 745, 505, 4);
-addCountry("ORE", "", 1, 450, 270, 9);
+addCountry("ORE", "Columbia", 1, 450, 270, 9);
 addCountry("FRAi", "Indochina", 1, 1985, 500, 5); //fix
 addCountry("MEXa", "Mexican Empire", 1, 520, 490, 6);
 addCountry("PNG", "Papau New Guinea", 1, 2340, 725, 10);
@@ -805,11 +825,12 @@ addCountry("ENGb", "British Middle East", 1, 1440, 370, 7);
 addCountry("SYR", "Syria", 1, 1440, 375, 6);
 addCountry("UKR", "Ukraine", "a", 1445, 260, 6);
 addCountry("FIN", "Finland", 1, 1380, 160, 7);
-addCountry("GERe", "East Germany", 1, 1340, 225, 5)
+addCountry("GERe", "E. Germany", 1, 1340, 225, 5)
 addCountry("ANT", "Antarctica", 1, 1155, 1255, 20);
 addCountry("JAPn", "DPR Japan", 1, 2130, 325, 6);
 addCountry("PAK", "Pakistan", 1, 1670, 430, 8);
-addCountry("SRI", "Sri Lanka", 1, 1850, 590, 4);
+addCountry("BAN", "Pala Empire", 1, 1870, 470, 5);
+addCountry("SRI", "Upatissa Nuwara", 1, 1850, 590, 4);
 addCountry("nuclear", "Nuclear Armageddon", 1);
 addCountry("AFR", "", 1, 1010, 590, 10);
 addCountry("EU", "European Federation", 1, 1110, 270, 7);
@@ -830,7 +851,8 @@ var news = {
         major: true,
     }*/
 }
-function worldNews(title, subtext, image, altHistory, id, startDate, duration, major) {
+var id = 0;
+function worldNews(title, subtext, image, altHistory, redundant, startDate, duration, major) {
     news[title] = {
         subtext: subtext,
         image: image,
@@ -840,4 +862,5 @@ function worldNews(title, subtext, image, altHistory, id, startDate, duration, m
         duration: duration - 1,
         major: major,
     };
+    id++;
 }
